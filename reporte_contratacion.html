@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe Contratación | SaberBot Casalimpia</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Roboto:wght@400;500;700&display=swap');
+
+        :root {
+            --color-azul-logo: #0085CA; 
+            --color-verde-logo: #8DC63F;
+            --color-gris-texto: #334155;
+            --color-gris-claro: #64748B;
+            --color-blanco: #ffffff;
+            --bg-oscuro: #E2E8F0; 
+            --sombra-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-oscuro);
+            color: var(--color-gris-texto);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background-color: var(--color-blanco);
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 4px solid var(--color-azul-logo);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-volver {
+            text-decoration: none;
+            color: var(--color-azul-logo);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 15px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            transition: all 0.2s;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .btn-volver:hover {
+            background: #e2e8f0;
+            transform: translateX(-3px);
+        }
+
+        .page-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: var(--color-gris-texto);
+            font-size: 1.2rem;
+        }
+
+        /* --- CONTENEDOR PRINCIPAL DEL REPORTE --- */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Títulos de Sección */
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            color: var(--color-azul-logo);
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--color-verde-logo);
+            padding-left: 10px;
+        }
+
+        /* --- GRID DE KPIs (Métricas Superiores) --- */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--sombra-card);
+            border-top: 4px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .kpi-card.blue { border-top-color: var(--color-azul-logo); }
+        .kpi-card.green { border-top-color: var(--color-verde-logo); }
+        
+        .kpi-card.full-width {
+            grid-column: 1 / -1;
+            display: block; 
+        }
+
+        .kpi-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-gris-claro);
+            margin-bottom: 5px;
+            font-weight: 700;
+            min-height: 2.5em;
+        }
+
+        .kpi-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--color-gris-texto);
+        }
+        
+        .kpi-value.small-text { font-size: 1.4rem; }
+
+        .kpi-sub {
+            font-size: 0.8rem;
+            color: var(--color-verde-logo);
+            margin-bottom: 10px;
+        }
+
+        .kpi-explanation {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #e2e8f0;
+            font-size: 0.75rem;
+            color: #64748B;
+            line-height: 1.4;
+        }
+        .kpi-explanation strong { color: var(--color-gris-texto); }
+
+        /* --- SECCIÓN DE COSTOS --- */
+        .cost-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+        }
+
+        .col-span-full {
+            grid-column: 1 / -1;
+        }
+
+        .detail-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--sombra-card);
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        .detail-header h3 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--color-gris-texto);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        /* --- GRID DE 3 COLUMNAS HORIZONTAL --- */
+        .triple-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+            gap: 10px;
+            margin-top: 5px;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .triple-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .separator-col { display: none; }
+        }
+
+        .stat-box {
+            background: #F8FAFC;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #E2E8F0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .stat-box.highlight {
+            background: #F0F9FF;
+            border-color: #BAE6FD;
+        }
+
+        .stat-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #64748B;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .stat-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--color-azul-logo);
+            line-height: 1.2;
+        }
+
+        .stat-sub {
+            font-size: 0.75rem;
+            color: #64748B;
+            margin-top: 2px;
+        }
+        
+        .separator-col {
+            text-align: center;
+            color: #CBD5E1;
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+
+        /* --- INTERPRETACIÓN OPERATIVA --- */
+        .capacity-list {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .capacity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background-color: #FFF7ED; 
+            border-left: 4px solid #F97316; 
+            border-radius: 8px;
+        }
+
+        .capacity-icon {
+            font-size: 1.5rem;
+            color: #F97316;
+            margin-top: 2px;
+        }
+
+        .capacity-text {
+            font-size: 0.95rem;
+            color: #431407;
+            line-height: 1.5;
+        }
+
+        .capacity-text strong {
+            color: #9A3412;
+            font-weight: 700;
+        }
+
+        /* --- COMPARATIVA --- */
+        .big-cost {
+            text-align: center;
+            padding: 20px;
+            background: #F0F9FF;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+        
+        .big-cost.green-bg { background: #DCFCE7; border: 1px solid #86EFAC; }
+        
+        /* NUEVO ESTILO: Contenedor Amarillo Rojizo para Costo Humano */
+        .big-cost.red-warn-bg { 
+            background: #FFF7ED; /* Naranja muy suave */
+            border: 1px solid #FFEDD5; /* Naranja borde */
+        }
+
+        .big-cost .amount { display: block; font-family: 'Outfit', sans-serif; font-size: 2.5rem; font-weight: 700; color: var(--color-azul-logo); }
+        .big-cost.green-bg .amount { color: #15803d; }
+        .big-cost.red-warn-bg .amount { color: #C2410C; } /* Texto naranja oscuro/rojizo */
+        
+        .big-cost .desc { font-size: 0.9rem; color: var(--color-gris-claro); }
+        .big-cost.green-bg .desc { color: #166534; }
+        .big-cost.red-warn-bg .desc { color: #9A3412; }
+
+        /* Estilo para el botón del Drive */
+        .btn-drive {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            background-color: var(--color-azul-logo);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            text-transform: uppercase; /* Para asegurar mayúsculas */
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-drive:hover {
+            background-color: #006090;
+        }
+
+        /* Badges */
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
+        .badge-human { background: #fee2e2; color: #991b1b; }
+        .badge-robot { background: #dcfce7; color: #166534; }
+        .badge-warn { background: #FFEDD5; color: #C2410C; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Cabecera -->
+    <header>
+        <div class="header-left">
+            <a href="index.html" class="btn-volver">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                Volver
+            </a>
+            <div class="page-title">Envíos Masivos Contratación</div>
+        </div>
+        <img src="https://empresas.casalimpia.com/wp-content/uploads/2024/08/logo-casa-limpia.png" alt="Logo" style="height: 35px;">
+    </header>
+
+    <div class="dashboard-container">
+        
+        <!-- SECCIÓN 1: Métricas de Ejecución -->
+        <div>
+            <h2 class="section-title">Resumen de Ejecución</h2>
+            <div class="kpi-grid">
+                <!-- KPI 1 -->
+                <div class="kpi-card blue">
+                    <div class="kpi-label">Tiempo Total Ejecuciones</div>
+                    <div class="kpi-value">24h 26m</div>
+                    <div class="kpi-sub">Acumulado mensual</div>
+                </div>
+                <!-- KPI 2 -->
+                <div class="kpi-card green">
+                    <div class="kpi-label">Cantidad Registros</div>
+                    <div class="kpi-value">7.068</div>
+                    <div class="kpi-sub">Mensajes procesados</div>
+                </div>
+                <!-- KPI 3 -->
+                <div class="kpi-card blue">
+                    <div class="kpi-label">Tiempo por Mensaje (Auto)</div>
+                    <div class="kpi-value">12,5 seg</div>
+                    <div class="kpi-sub"><span class="badge badge-robot">AUTOMATIZADO</span></div>
+                </div>
+                
+                <!-- KPI 4: Ahorro Tiempo -->
+                <div class="kpi-card green">
+                    <div class="kpi-label">Ahorro Tiempo vs Humano</div>
+                    <div class="kpi-value">97%</div>
+                    <div class="kpi-sub">942h vs 24h</div>
+                    <div class="kpi-explanation">
+                        <strong>Manual:</strong> 7.068 x 8 min = 942h<br>
+                        <strong>Auto:</strong> 7.068 x 12.5 seg = 24h
+                    </div>
+                </div>
+                
+                <!-- KPI 5: Ahorro Costo Unitario -->
+                <div class="kpi-card blue">
+                    <div class="kpi-label">Ahorro Costo vs Humano</div>
+                    <div class="kpi-value">99%</div>
+                    <div class="kpi-sub">$1.591 vs $7.8</div>
+                    <div class="kpi-explanation">
+                        <strong>Manual:</strong> Costo 2026 ($1.591/u)<br>
+                        <strong>Auto:</strong> $55k Campaña / 7.068
+                    </div>
+                </div>
+
+                <!-- KPI 6: Ahorro TOTAL Campaña -->
+                <div class="kpi-card green">
+                    <div class="kpi-label">Costo Total: Humano vs Auto</div>
+                    <div class="kpi-value small-text">$11.2M vs $55k</div>
+                    <div class="kpi-sub">Ahorro Neto: ~$11.2 Millones</div>
+                    <div class="kpi-explanation">
+                        <strong>Manual:</strong> 7.068 x $1.591<br>
+                        <strong>Auto:</strong> 7.068 x $7.8
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: Análisis Financiero y Operativo -->
+        <div>
+            <h2 class="section-title">Análisis de Costos Reales</h2>
+            <div class="cost-grid">
+                
+                <!-- ESTRUCTURA DE COSTOS (Horizontal) -->
+                <div class="kpi-card blue full-width">
+                    <div class="detail-header" style="border-bottom: none; margin-bottom: 5px;">
+                        <h3 style="margin: 0; font-size: 1rem; color: var(--color-gris-claro); text-transform: uppercase; font-weight: 700;">Estructura de Costo Humano</h3>
+                    </div>
+
+                    <div class="triple-grid">
+                        <div class="stat-box">
+                            <div class="stat-title">1. Salario Percibido</div>
+                            <div class="stat-value">$2.000.000</div>
+                            <div class="stat-sub">Básico + Aux.</div>
+                        </div>
+                        <div class="separator-col">+</div>
+                        <div class="stat-box">
+                            <div class="stat-title">2. Carga Prestacional + SS</div>
+                            <div class="stat-value" style="color: #D97706;">$863.086</div>
+                            <div class="stat-sub">Costos Ocultos</div>
+                        </div>
+                        <div class="separator-col">=</div>
+                        <div class="stat-box highlight">
+                            <div class="stat-title">3. Costo Real Empresa</div>
+                            <div class="stat-value">$2.863.086</div>
+                            <div class="stat-sub">Mensual Total</div>
+                            <div style="margin-top: 5px; padding-top:5px; border-top: 1px dashed #BAE6FD; color: #0369A1; font-weight: 600; font-size: 0.8rem;">
+                                Unitario: $1.591 /msj
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NUEVA TARJETA: Interpretación de Capacidad Operativa -->
+                <div class="detail-card col-span-full">
+                    <div class="detail-header">
+                        <h3>Interpretación de Capacidad Operativa</h3>
+                        <span class="badge badge-warn">ESCENARIOS INVIABLES</span>
+                    </div>
+
+                    <p style="color: #64748B; margin-bottom: 15px;">
+                        Para lograr manualmente el resultado que la automatización entregó en <strong>24 horas y 26 minutos</strong>, la compañía habría requerido:
+                    </p>
+
+                    <div class="capacity-list">
+                        <!-- Escenario 1 Persona -->
+                        <div class="capacity-item">
+                            <div class="capacity-icon">👤</div>
+                            <div class="capacity-text">
+                                Asignar a <strong>1 persona</strong> a tiempo completo (220h/mes) durante <strong>4,3 meses</strong> continuos.
+                                <br><span style="font-size: 0.85rem; color: #9A3412;">(942 horas laborales requeridas vs 220 horas capacidad mensual)</span>
+                            </div>
+                        </div>
+
+                        <!-- Escenario Equipo Masivo -->
+                        <div class="capacity-item">
+                            <div class="capacity-icon">👥</div>
+                            <div class="capacity-text">
+                                Contratar un equipo temporal masivo de <strong>39 personas</strong> trabajando simultáneamente para ejecutar la tarea en las mismas 24 horas y 26 minutos.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TARJETA COMPARATIVA FINAL -->
+                <div class="detail-card col-span-full">
+                    <div class="detail-header">
+                        <h3>Eficiencia Operativa Final</h3>
+                        <span class="badge badge-robot">COMPARATIVA DEFINITIVA</span>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                        
+                        <!-- Fila Comparativa -->
+                        <div style="display: flex; justify-content: space-around; width: 100%; flex-wrap: wrap; gap: 20px; align-items: center;">
+                            
+                            <!-- Lado Humano (AHORA CON CONTENEDOR AMARILLO ROJIZO) -->
+                            <div class="big-cost red-warn-bg" style="min-width: 250px; margin-top: 0;">
+                                <span class="desc">Costo Unitario (Humano)</span>
+                                <span class="amount">$1.591</span>
+                                <span class="desc">Base $2.86M/mes</span>
+                            </div>
+
+                            <div style="font-size: 1.5rem; color: #CBD5E1; font-weight: 700;">VS</div>
+
+                            <!-- Lado Robot -->
+                            <div class="big-cost green-bg" style="min-width: 250px; margin-top: 0;">
+                                <span class="desc">Costo Unitario (Automatizado)</span>
+                                <span class="amount">$7.8</span>
+                                <span class="desc">por mensaje</span>
+                            </div>
+
+                        </div>
+
+                        <!-- Resumen Final -->
+                        <div style="width: 100%; margin-top: 20px; font-size: 0.9rem; color: #64748B; padding: 15px; background: #F8FAFC; border-radius: 8px; border: 1px solid #E2E8F0;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>Costo Total Campaña (Factura Real):</span>
+                                <strong style="color: var(--color-verde-logo); font-size: 1.1rem;">$55.000 COP</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                                <span>Costo Total Estimado (Humano):</span>
+                                <strong style="color: #EF4444;">~$11.245.188 COP</strong>
+                            </div>
+                            
+                            <!-- NUEVA LÍNEA DE AHORRO NETO -->
+                            <div style="border-top: 1px dashed #CBD5E1; padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: 700; color: var(--color-gris-texto); font-size: 1rem;">AHORRO NETO GENERADO:</span>
+                                <strong style="font-family: 'Outfit', sans-serif; color: #16A34A; font-size: 1.6rem;">$11.190.188 COP</strong>
+                            </div>
+                            
+                            <!-- Botón al Drive -->
+                            <a href="https://docs.google.com/spreadsheets/d/1PT5APulMe5J7AYAgZN03eLtxUigbETPJEdyWXtUENZQ/edit?usp=sharing" target="_blank" class="btn-drive">
+                                VER DETALLE DE REGISTROS ENVIADOS EN GOOGLE DRIVE
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

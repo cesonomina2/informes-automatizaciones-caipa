@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Informes | SaberBot Casalimpia</title>
+    
+    <!-- Fuente moderna de Google -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Roboto:wght@400;500&display=swap');
+
+        :root {
+            /* 🎨 PALETA DE COLORES EXTRAÍDA DEL LOGO */
+            --color-azul-logo: #0085CA; 
+            --color-verde-logo: #8DC63F; 
+            --color-robot-claro: #D4F1F9; 
+            --color-gris-texto: #334155;
+            --color-blanco: #ffffff;
+            --sombra-suave: 0 4px 20px rgba(0, 133, 202, 0.1);
+            --bg-oscuro: #E2E8F0; /* Fondo oscurecido para resaltar tarjetas */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-oscuro);
+            color: var(--color-gris-texto);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background-color: var(--color-blanco);
+            padding: 0.8rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 4px solid var(--color-azul-logo);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img { height: 50px; width: auto; }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            gap: 8px;
+            line-height: 1;
+        }
+
+        .text-verde { color: var(--color-verde-logo); font-size: 2rem; }
+        .text-azul { color: var(--color-azul-logo); font-size: 2rem; font-weight: 700; }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            background: var(--color-robot-claro);
+            padding: 8px 15px;
+            border-radius: 50px;
+            color: var(--color-azul-logo);
+            font-weight: 600;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            text-align: center;
+            padding: 2.5rem 1rem 1rem 1rem; 
+            background: linear-gradient(180deg, var(--color-blanco) 0%, var(--bg-oscuro) 100%);
+        }
+
+        .hero h1 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--color-azul-logo);
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            color: #64748B;
+            max-width: 600px;
+            margin: 0 auto 0.5rem auto; 
+        }
+
+        /* --- GRID DE INFORMES --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 40px 20px;
+            flex: 1;
+        }
+
+        .informes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            justify-content: center;
+        }
+
+        /* Tarjeta de Informe (Estilo Enlace) */
+        .card {
+            background: var(--color-blanco);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none; /* Quita el subrayado de enlace */
+            color: inherit;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--color-verde-logo);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+        }
+
+        .card:hover::before { opacity: 1; }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--color-robot-claro);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: var(--color-azul-logo);
+            font-size: 1.5rem;
+        }
+
+        .card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            color: var(--color-azul-logo);
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cabecera -->
+    <header>
+        <div class="logo-container">
+            <img src="https://empresas.casalimpia.com/wp-content/uploads/2024/08/logo-casa-limpia.png" alt="Logo Casalimpia" class="logo-img">
+            <div class="logo-text">
+                <span class="text-verde">SaberBot</span> 
+                <span class="text-azul">Casalimpia</span>
+            </div>
+        </div>
+        <div class="user-profile">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Juan Esteban Caipa</span>
+        </div>
+    </header>
+
+    <!-- Sección Principal -->
+    <section class="hero">
+        <h1>Informes de Gestión</h1>
+        <p>Seleccione el informe que requiere consultar.</p>
+    </section>
+
+    <!-- Grilla de Tarjetas -->
+    <div class="container">
+        <div class="informes-grid">
+
+            <!-- Tarjeta 1: Contratación (CONECTADA) -->
+            <!-- Al hacer clic, te lleva a reporte_contratacion.html -->
+            <a href="reporte_contratacion.html" class="card">
+                <div class="card-icon">📄</div>
+                <h3>Envíos Masivos Contratación</h3>
+            </a>
+
+            <!-- Tarjeta 2: Bienestar (Placeholder) -->
+            <a href="#" class="card" onclick="alert('Este módulo aún está en construcción.')">
+                <div class="card-icon">❤️</div>
+                <h3>Envíos Masivos Bienestar</h3>
+            </a>
+
+            <!-- Tarjeta 3: Tecnología (Placeholder) -->
+            <a href="#" class="card" onclick="alert('Este módulo aún está en construcción.')">
+                <div class="card-icon">💻</div>
+                <h3>Envíos Masivos Tecnología</h3>
+            </a>
+
+        </div>
+    </div>
+
+</body>
+</html>

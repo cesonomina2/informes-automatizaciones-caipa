@@ -5,19 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal de Informes | SaberBot Casalimpia</title>
     
-    <!-- Fuente moderna de Google -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Roboto:wght@400;500&display=swap');
 
         :root {
-            /* 🎨 PALETA DE COLORES EXTRAÍDA DEL LOGO */
             --color-azul-logo: #0085CA; 
             --color-verde-logo: #8DC63F; 
             --color-robot-claro: #D4F1F9; 
             --color-gris-texto: #334155;
             --color-blanco: #ffffff;
             --sombra-suave: 0 4px 20px rgba(0, 133, 202, 0.1);
-            --bg-oscuro: #E2E8F0; /* Fondo oscurecido para resaltar tarjetas */
+            --bg-oscuro: #E2E8F0;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,7 +29,7 @@
             flex-direction: column;
         }
 
-        /* --- HEADER --- */
+        /* --- HEADER ADAPTABLE --- */
         header {
             background-color: var(--color-blanco);
             padding: 0.8rem 5%;
@@ -43,6 +41,8 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            flex-wrap: wrap; /* Permite que los elementos bajen si no caben */
+            gap: 10px;
         }
 
         .logo-container {
@@ -51,7 +51,7 @@
             gap: 15px;
         }
 
-        .logo-img { height: 50px; width: auto; }
+        .logo-img { height: 40px; width: auto; } /* Reducido un poco para móviles */
 
         .logo-text {
             font-family: 'Outfit', sans-serif;
@@ -59,43 +59,36 @@
             display: flex;
             flex-direction: row;
             align-items: baseline;
-            gap: 8px;
-            line-height: 1;
+            gap: 5px;
         }
 
-        .text-verde { color: var(--color-verde-logo); font-size: 2rem; }
-        .text-azul { color: var(--color-azul-logo); font-size: 2rem; font-weight: 700; }
+        .text-verde { color: var(--color-verde-logo); font-size: 1.5rem; }
+        .text-azul { color: var(--color-azul-logo); font-size: 1.5rem; }
 
         .user-profile {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             background: var(--color-robot-claro);
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: 50px;
             color: var(--color-azul-logo);
             font-weight: 600;
         }
 
-        /* --- HERO SECTION --- */
+        /* --- HERO SECTION ADAPTABLE --- */
         .hero {
             text-align: center;
-            padding: 2.5rem 1rem 1rem 1rem; 
+            padding: 2rem 1rem; 
             background: linear-gradient(180deg, var(--color-blanco) 0%, var(--bg-oscuro) 100%);
         }
 
         .hero h1 {
             font-family: 'Outfit', sans-serif;
             color: var(--color-azul-logo);
-            font-size: 2.2rem;
+            font-size: clamp(1.5rem, 5vw, 2.2rem); /* Tamaño fluido según pantalla */
             margin-bottom: 0.5rem;
-        }
-
-        .hero p {
-            color: #64748B;
-            max-width: 600px;
-            margin: 0 auto 0.5rem auto; 
         }
 
         /* --- GRID DE INFORMES --- */
@@ -104,76 +97,67 @@
             margin: 0 auto;
             padding: 0 20px 40px 20px;
             flex: 1;
+            width: 100%;
         }
 
         .informes-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            justify-content: center;
+            /* Cambiamos a 280px para que quepa mejor en teléfonos pequeños */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
         }
 
-        /* Tarjeta de Informe (Estilo Enlace) */
         .card {
             background: var(--color-blanco);
             border-radius: 16px;
             padding: 25px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--sombra-suave);
+            transition: transform 0.3s ease;
             border: 1px solid rgba(0,0,0,0.03);
+            text-decoration: none;
+            color: inherit;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-            text-decoration: none; /* Quita el subrayado de enlace */
-            color: inherit;
+            align-items: center; /* Centramos el contenido en móvil */
+            text-align: center;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: var(--color-verde-logo);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            cursor: pointer;
-        }
-
-        .card:hover::before { opacity: 1; }
+        .card:hover { transform: translateY(-5px); }
 
         .card-icon {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             background-color: var(--color-robot-claro);
-            border-radius: 12px;
+            border-radius: 50%; /* Iconos circulares se ven más modernos */
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
-            color: var(--color-azul-logo);
-            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
         }
 
-        .card h3 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.25rem;
-            color: var(--color-azul-logo);
-            margin-bottom: 10px;
+        /* --- MEDIA QUERIES PARA CELULARES --- */
+        @media (max-width: 600px) {
+            header {
+                justify-content: center; /* Centra el logo y perfil en móviles */
+                padding: 1rem;
+            }
+            
+            .logo-text { font-size: 1.2rem; }
+            
+            .user-profile {
+                width: 100%; /* El nombre ocupa todo el ancho abajo del logo */
+                justify-content: center;
+            }
+
+            .informes-grid {
+                grid-template-columns: 1fr; /* Una sola columna en teléfonos */
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Cabecera -->
     <header>
         <div class="logo-container">
             <img src="https://empresas.casalimpia.com/wp-content/uploads/2024/08/logo-casa-limpia.png" alt="Logo Casalimpia" class="logo-img">
@@ -191,35 +175,27 @@
         </div>
     </header>
 
-    <!-- Sección Principal -->
     <section class="hero">
         <h1>Informes de Gestión</h1>
         <p>Seleccione el informe que requiere consultar.</p>
     </section>
 
-    <!-- Grilla de Tarjetas -->
     <div class="container">
         <div class="informes-grid">
-
-            <!-- Tarjeta 1: Contratación (CONECTADA) -->
-            <!-- Al hacer clic, te lleva a reporte_contratacion.html -->
             <a href="reporte_contratacion.html" class="card">
                 <div class="card-icon">📄</div>
                 <h3>Envíos Masivos Contratación</h3>
             </a>
 
-            <!-- Tarjeta 2: Bienestar (Placeholder) -->
             <a href="#" class="card" onclick="alert('Este módulo aún está en construcción.')">
                 <div class="card-icon">❤️</div>
                 <h3>Envíos Masivos Bienestar</h3>
             </a>
 
-            <!-- Tarjeta 3: Tecnología (Placeholder) -->
             <a href="#" class="card" onclick="alert('Este módulo aún está en construcción.')">
                 <div class="card-icon">💻</div>
                 <h3>Envíos Masivos Tecnología</h3>
             </a>
-
         </div>
     </div>
 

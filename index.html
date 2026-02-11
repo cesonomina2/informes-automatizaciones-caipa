@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Informes | SaberBot Casalimpia</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Roboto:wght@400;500;700&display=swap');
+
+        :root {
+            --color-azul-logo: #0085CA; 
+            --color-verde-logo: #8DC63F; 
+            --color-robot-claro: #D4F1F9; 
+            --color-gris-texto: #334155;
+            --color-blanco: #ffffff;
+            --sombra-suave: 0 4px 20px rgba(0, 133, 202, 0.1);
+            --bg-oscuro: #E2E8F0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-oscuro);
+            color: var(--color-gris-texto);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- HEADER ADAPTABLE --- */
+        header {
+            background-color: var(--color-blanco);
+            padding: 0.8rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 4px solid var(--color-azul-logo);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img { height: 40px; width: auto; }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            gap: 5px;
+        }
+
+        .text-verde { color: var(--color-verde-logo); font-size: 1.5rem; }
+        .text-azul { color: var(--color-azul-logo); font-size: 1.5rem; }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* --- BOTÓN SIMULADOR --- */
+        .btn-simulator {
+            background-color: var(--color-verde-logo);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .btn-simulator:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background-color: #7ab32e;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            background: var(--color-robot-claro);
+            padding: 6px 12px;
+            border-radius: 50px;
+            color: var(--color-azul-logo);
+            font-weight: 600;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            text-align: center;
+            padding: 2rem 1rem; 
+            background: linear-gradient(180deg, var(--color-blanco) 0%, var(--bg-oscuro) 100%);
+        }
+
+        .hero h1 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--color-azul-logo);
+            font-size: clamp(1.5rem, 5vw, 2.2rem);
+            margin-bottom: 0.5rem;
+        }
+
+        /* --- GRID DE INFORMES --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 40px 20px;
+            flex: 1;
+            width: 100%;
+        }
+
+        .informes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--color-blanco);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--sombra-suave);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.03);
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background-color: var(--color-robot-claro);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        /* --- ESTILOS DE LISTA --- */
+        .card-list {
+            width: 100%;
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .list-item {
+            display: block;
+            padding: 10px 12px;
+            background-color: #F1F5F9;
+            color: var(--color-azul-logo);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid #E2E8F0;
+            transition: background-color 0.2s, color 0.2s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .list-item:hover {
+            background-color: var(--color-robot-claro);
+            border-color: #BAE6FD;
+        }
+
+        .list-item::before {
+            content: "•";
+            color: var(--color-verde-logo);
+            font-size: 1.2rem;
+            line-height: 0;
+        }
+
+        /* --- MODAL CALCULADORA --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            animation: slideUp 0.3s ease-out;
+            position: relative;
+            max-height: 90vh; 
+            overflow-y: auto;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .modal-title {
+            font-family: 'Outfit', sans-serif;
+            color: var(--color-azul-logo);
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #64748B;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 5px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #E2E8F0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: 'Roboto', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: var(--color-azul-logo);
+            outline: none;
+        }
+
+        /* --- EXPLICACIÓN DE COSTO --- */
+        .cost-explanation {
+            background-color: #FFF7ED;
+            border: 1px solid #FFEDD5;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 0.75rem;
+            color: #9A3412;
+            margin-top: 10px; 
+            line-height: 1.4;
+            display: block; /* Siempre visible */
+        }
+        
+        .cost-formula-detail {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            display: block;
+            margin-top: 3px;
+            color: #C2410C;
+        }
+
+        /* Grid de Meses */
+        .months-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .month-check { display: none; }
+
+        .month-label {
+            display: block;
+            text-align: center;
+            padding: 8px 2px;
+            background: #F1F5F9;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #64748B;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .month-check:checked + .month-label {
+            background-color: var(--color-verde-logo);
+            color: white;
+            border-color: var(--color-verde-logo);
+        }
+
+        /* --- RESULTADOS DUAL --- */
+        .results-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .result-box {
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .result-box.money {
+            background: #F0F9FF;
+            border: 2px solid #BAE6FD;
+        }
+
+        .result-box.time {
+            background: #F0FDF4;
+            border: 2px solid #86EFAC;
+        }
+
+        .result-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .result-title.money { color: #0369A1; }
+        .result-title.time { color: #15803d; }
+
+        .result-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .result-value.money { color: var(--color-azul-logo); }
+        .result-value.time { color: var(--color-verde-logo); }
+
+        .result-sub {
+            font-size: 0.75rem;
+            color: #64748B;
+            background: rgba(255,255,255,0.6);
+            padding: 2px 5px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
+        /* FÓRMULAS VISIBLES */
+        .result-formula {
+            font-size: 0.65rem;
+            color: #64748B;
+            font-family: 'Courier New', monospace;
+            border-top: 1px dashed rgba(0,0,0,0.1);
+            padding-top: 5px;
+            margin-top: 5px;
+            word-break: break-all;
+        }
+
+        /* --- MEDIA QUERIES --- */
+        @media (max-width: 600px) {
+            header { justify-content: center; padding: 1rem; flex-direction: column; gap: 15px;}
+            .logo-text { font-size: 1.2rem; }
+            .header-right { width: 100%; justify-content: center; flex-wrap: wrap; }
+            .informes-grid { grid-template-columns: 1fr; }
+            .months-grid { grid-template-columns: repeat(4, 1fr); }
+            .results-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://empresas.casalimpia.com/wp-content/uploads/2024/08/logo-casa-limpia.png" alt="Logo Casalimpia" class="logo-img">
+            <div class="logo-text">
+                <span class="text-verde">SaberBot</span> 
+                <span class="text-azul">Casalimpia</span>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <button class="btn-simulator" onclick="openModal()">
+                <span>🧮</span> Calculadora ROI
+            </button>
+
+            <div class="user-profile">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Juan Esteban Caipa</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Informes de Gestión</h1>
+        <p>Seleccione el informe que requiere consultar.</p>
+    </section>
+
+    <div class="container">
+        <div class="informes-grid">
+            <a href="reporte_contratacion.html" class="card">
+                <div class="card-icon">📄</div>
+                <h3>Envíos Masivos Contratación</h3>
+            </a>
+
+            <a href="reporte_bienestar.html" class="card">
+                <div class="card-icon">❤️</div>
+                <h3>Envíos Masivos Bienestar</h3>
+            </a>
+
+            <a href="reporte_tecnologia.html" class="card">
+                <div class="card-icon">💻</div>
+                <h3>Envíos Masivos Tecnología</h3>
+            </a>
+
+            <div class="card">
+                <div class="card-icon">📒</div>
+                <h3 style="margin-bottom: 5px;">Documentación Automatizaciones</h3>
+                
+                <div class="card-list">
+                    <a href="DOCUMENTACION_AUTOMATIZACIONES/desprendibles_certificadolab.html" class="list-item">
+                        Portal de Autogestión Desprendibles de Pago y Certificado Laboral
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="roiModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Simulador de Ahorro</div>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">Salario Base Mensual (Editable)</label>
+                <input type="number" id="inputSalary" class="input-field" value="2863086" oninput="calculateSavings()">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Cantidad de Ejecuciones (Mes)</label>
+                <input type="number" id="inputQty" class="input-field" placeholder="0" oninput="calculateSavings()">
+            </div>
+
+            <div class="input-group" style="display: flex; gap: 20px; align-items: flex-start;">
+                
+                <div style="flex: 1;">
+                    <label class="input-label">Tiempo Manual (Min)</label>
+                    <input type="number" id="inputTime" class="input-field" placeholder="0" oninput="calculateSavings()">
+                    
+                    <div class="cost-explanation">
+                        <strong>Origen del Costo Unitario:</strong>
+                        <span class="cost-formula-detail" id="costOriginText">
+                            ($2.863.086 ÷ 220h ÷ 60m) × 0m = $0
+                        </span>
+                    </div>
+                </div>
+                
+                <div style="flex: 1;">
+                    <label class="input-label">Tiempo Bot (Seg)</label>
+                    <input type="number" id="inputBotTime" class="input-field" placeholder="0" oninput="calculateSavings()">
+                    
+                    <label class="input-label" style="margin-top: 15px;">Costo Bot (Unitario $)</label>
+                    <input type="number" id="inputBotCost" class="input-field" placeholder="0" step="0.1" oninput="calculateSavings()">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Proyección de Ahorro (Selecciona la cantidad de meses)</label>
+                <div class="months-grid">
+                    <input type="checkbox" id="m1" class="month-check" onchange="calculateSavings()"><label for="m1" class="month-label">Ene</label>
+                    <input type="checkbox" id="m2" class="month-check" onchange="calculateSavings()"><label for="m2" class="month-label">Feb</label>
+                    <input type="checkbox" id="m3" class="month-check" onchange="calculateSavings()"><label for="m3" class="month-label">Mar</label>
+                    <input type="checkbox" id="m4" class="month-check" onchange="calculateSavings()"><label for="m4" class="month-label">Abr</label>
+                    <input type="checkbox" id="m5" class="month-check" onchange="calculateSavings()"><label for="m5" class="month-label">May</label>
+                    <input type="checkbox" id="m6" class="month-check" onchange="calculateSavings()"><label for="m6" class="month-label">Jun</label>
+                    <input type="checkbox" id="m7" class="month-check" onchange="calculateSavings()"><label for="m7" class="month-label">Jul</label>
+                    <input type="checkbox" id="m8" class="month-check" onchange="calculateSavings()"><label for="m8" class="month-label">Ago</label>
+                    <input type="checkbox" id="m9" class="month-check" onchange="calculateSavings()"><label for="m9" class="month-label">Sep</label>
+                    <input type="checkbox" id="m10" class="month-check" onchange="calculateSavings()"><label for="m10" class="month-label">Oct</label>
+                    <input type="checkbox" id="m11" class="month-check" onchange="calculateSavings()"><label for="m11" class="month-label">Nov</label>
+                    <input type="checkbox" id="m12" class="month-check" onchange="calculateSavings()"><label for="m12" class="month-label">Dic</label>
+                </div>
+                <div style="font-size: 0.8rem; text-align: right; color: #64748B; margin-top: 5px;">
+                    Meses seleccionados: <span id="monthCount">0</span>
+                </div>
+            </div>
+
+            <div class="results-container">
+                <div class="result-box money">
+                    <div class="result-title money">AHORRO NETO ($)</div>
+                    <div class="result-value money" id="resultSavings">$0</div>
+                    <div class="result-sub">vs Costo Humano</div>
+                    <div class="result-formula" id="formulaMoney">(0 × $0) - (0 × $0)</div>
+                </div>
+                <div class="result-box time">
+                    <div class="result-title time">TIEMPO LIBERADO</div>
+                    <div class="result-value time" id="resultHours">0h 0m</div>
+                    <div class="result-sub" id="resultDays">0 Días laborales (7.33h)</div>
+                    <div class="result-sub" id="resultMonths">0 Meses hombre</div>
+                    <div class="result-formula" id="formulaTime">(0 × (0m - 0m)) ÷ 60</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURACIÓN CONSTANTE
+        const HORAS_MES = 220;
+        const HORAS_DIA = 7.33;
+        const HORAS_SEMANA = 55; // 220 / 4
+
+        const modal = document.getElementById('roiModal');
+        const checkboxes = document.querySelectorAll('.month-check');
+        const displayMonths = document.getElementById('monthCount');
+        
+        // Elementos de resultados
+        const displaySavings = document.getElementById('resultSavings');
+        const displayHours = document.getElementById('resultHours');
+        const displayDays = document.getElementById('resultDays');
+        const displayMonthsHuman = document.getElementById('resultMonths');
+        
+        // Elementos de fórmulas y explicación
+        const formulaMoney = document.getElementById('formulaMoney');
+        const formulaTime = document.getElementById('formulaTime');
+        const costOriginText = document.getElementById('costOriginText');
+
+        const formatter = new Intl.NumberFormat('es-CO', {
+            style: 'currency',
+            currency: 'COP',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        });
+
+        const numFormat = new Intl.NumberFormat('es-CO');
+
+        function openModal() {
+            modal.style.display = 'flex';
+            calculateSavings(); 
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        function calculateSavings() {
+            // Obtenemos valores de los inputs (ahora el salario también)
+            const inputSalary = parseFloat(document.getElementById('inputSalary').value) || 0;
+            const qty = parseFloat(document.getElementById('inputQty').value) || 0;
+            const timeManual = parseFloat(document.getElementById('inputTime').value) || 0;
+            const botCostUnit = parseFloat(document.getElementById('inputBotCost').value) || 0;
+            const botTimeSec = parseFloat(document.getElementById('inputBotTime').value) || 0;
+
+            // Recalcular Costo Minuto Humano con el salario ingresado
+            const costoMinutoDinamico = (inputSalary / HORAS_MES) / 60;
+
+            let activeMonths = 0;
+            checkboxes.forEach(chk => {
+                if(chk.checked) activeMonths++;
+            });
+            displayMonths.innerText = activeMonths;
+
+            // Actualizar Texto Origen del Cálculo (Siempre visible)
+            const unitCost = timeManual * costoMinutoDinamico;
+            costOriginText.innerHTML = `($${numFormat.format(inputSalary)} ÷ 220h ÷ 60m) × ${timeManual}m = ${formatter.format(unitCost)}`;
+
+            if (qty > 0 && activeMonths > 0) {
+                // TOTALIZADORES
+                const totalExecutions = qty * activeMonths;
+
+                // 1. CÁLCULO DINERO
+                const totalHumanCost = totalExecutions * unitCost;
+                const totalBotCost = totalExecutions * botCostUnit;
+                const savings = totalHumanCost - totalBotCost;
+
+                // 2. CÁLCULO TIEMPO (NETO)
+                const botTimeMin = botTimeSec / 60;
+                const netTimePerUnit = timeManual - botTimeMin;
+                const totalMinutesSaved = totalExecutions * netTimePerUnit;
+                
+                const hoursPart = Math.floor(Math.abs(totalMinutesSaved) / 60);
+                const minutesPart = Math.round(Math.abs(totalMinutesSaved) % 60);
+                const totalHoursFloat = Math.abs(totalMinutesSaved) / 60;
+
+                // Cálculo Días Laborales (Base 7.33h)
+                const workingDays = (totalHoursFloat / HORAS_DIA).toFixed(1);
+
+                // Cálculo Meses y Semanas
+                const monthsPart = Math.floor(totalHoursFloat / HORAS_MES);
+                const remainingHours = totalHoursFloat % HORAS_MES;
+                const weeksDecimal = (remainingHours / HORAS_SEMANA).toFixed(1);
+
+                // 3. MOSTRAR RESULTADOS
+                displaySavings.innerText = formatter.format(savings);
+                displaySavings.style.color = savings < 0 ? "#ef4444" : "#0085CA";
+
+                let timeText = `${numFormat.format(hoursPart)}h ${minutesPart}m`;
+                if(totalMinutesSaved < 0) timeText = "-" + timeText;
+                displayHours.innerText = timeText;
+                
+                displayDays.innerText = `${workingDays} Días laborales (7.33h)`;
+
+                let monthStr = "";
+                if(monthsPart > 0) monthStr += `${monthsPart} Mes(es) `;
+                if(weeksDecimal > 0 || monthsPart === 0) {
+                    monthStr += `${weeksDecimal} Semana(s)`;
+                }
+                displayMonthsHuman.innerText = monthStr;
+
+                // 4. ACTUALIZAR FÓRMULAS VISIBLES
+                formulaMoney.innerText = `(${numFormat.format(totalExecutions)} un. × ${formatter.format(unitCost)}) - (${numFormat.format(totalExecutions)} un. × ${formatter.format(botCostUnit)})`;
+                
+                const botTimeMinFixed = botTimeMin.toFixed(1).replace(/\.0$/, ''); 
+                formulaTime.innerText = `(${numFormat.format(totalExecutions)} un. × (${timeManual}m - ${botTimeMinFixed}m)) ÷ 60`;
+
+            } else {
+                // Reset
+                displaySavings.innerText = "$0";
+                displaySavings.style.color = "#0085CA";
+                displayHours.innerText = "0h 0m";
+                displayDays.innerText = "0 Días laborales";
+                displayMonthsHuman.innerText = "0 Meses hombre";
+                formulaMoney.innerText = "(0 × $0) - (0 × $0)";
+                formulaTime.innerText = "(0 × (0m - 0m)) ÷ 60";
+            }
+        }
+    </script>
+
+</body>
+</html>

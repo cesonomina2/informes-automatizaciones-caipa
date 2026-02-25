@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación Técnica | SaberBot Casalimpia</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@500&display=swap');
+
+        :root {
+            --color-principal: #0085CA; 
+            --color-texto: #333333;
+            --color-gris-suave: #666666;
+            --bg-body: #525659;
+            --bg-doc: #ffffff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--color-texto);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        /* --- NAVEGACIÓN (NO SE IMPRIME) --- */
+        .nav-bar {
+            max-width: 21.6cm;
+            margin: 0 auto 15px auto;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .btn-volver {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        
+        .btn-volver:hover { background: rgba(255,255,255,0.2); }
+
+        /* --- HOJA CARTA --- */
+        .document-sheet {
+            background-color: var(--bg-doc);
+            width: 100%;
+            max-width: 21.59cm;
+            min-height: 27.94cm;
+            margin: 0 auto;
+            padding: 2.54cm;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 2px;
+        }
+
+        /* --- ENCABEZADO (LOGO + TITULO) --- */
+        .header-container {
+            display: flex;
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 30px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #eee; 
+        }
+
+        .brand-logo {
+            height: 75px; 
+            width: auto;
+            flex-shrink: 0; 
+            display: block;
+        }
+
+        .title-block {
+            flex-grow: 1; 
+            text-align: center; 
+        }
+
+        h1 {
+            color: var(--color-principal);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            margin: 0;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--color-gris-suave);
+            margin-top: 5px;
+            font-weight: 400;
+        }
+
+        /* --- ESTILOS DEL DOCUMENTO --- */
+        h2 { font-size: 1.2rem; color: #2c3e50; border-left: 5px solid var(--color-principal); padding-left: 10px; margin-top: 35px; margin-bottom: 15px; }
+        h3 { font-size: 1rem; color: #444; margin-top: 20px; margin-bottom: 10px; font-weight: 700; }
+        p, li { font-size: 10pt; color: #333; text-align: justify; margin-bottom: 10px; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        
+        /* Tablas */
+        .tech-info-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 9pt; border: 1px solid #ddd; }
+        .tech-info-table td { padding: 6px 10px; border: 1px solid #ddd; vertical-align: top; }
+        .td-label { background-color: #f4f4f4; font-weight: 700; width: 25%; color: #444; }
+
+        /* Diagramas y Extras */
+        .diagram-container { margin-top: 30px; text-align: center; page-break-inside: avoid; }
+        .diagram-title { font-size: 0.95rem; color: #444; font-weight: 700; margin-bottom: 10px; text-align: left; border-left: 3px solid var(--color-principal); padding-left: 10px; }
+        .use-case-box { background-color: #f9fafb; border: 1px solid #e5e7eb; border-left: 3px solid #9ca3af; padding: 12px; margin: 10px 0; font-size: 9pt; font-family: 'Source Code Pro', monospace; page-break-inside: avoid; }
+        .dialogue-user { color: #0085CA; font-weight: 600; }
+        .dialogue-bot { color: #555; font-style: italic; margin-left: 15px; display: block; margin-bottom: 4px; }
+        .alert-box { background: #fff8e1; padding: 10px; border: 1px solid #ffe082; border-radius: 4px; color: #856404; font-size: 9pt; margin-top: 10px; }
+        code { font-family: 'Source Code Pro', monospace; background-color: #f7f7f9; padding: 1px 4px; border-radius: 3px; font-size: 0.9em; color: #c0392b; border: 1px solid #e1e1e8; }
+
+        /* Etiquetas (Badges) */
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 8pt; font-weight: bold; color: white; text-transform: uppercase; }
+        .badge-api { background-color: #0085CA; }
+
+        /* Botón PDF */
+        .pdf-section { text-align: center; margin-top: 50px; padding-top: 20px; border-top: 2px solid #eee; }
+        .btn-pdf { background-color: #2d3436; color: white; border: none; padding: 10px 20px; font-size: 0.9rem; cursor: pointer; border-radius: 4px; font-family: 'Roboto', sans-serif; display: inline-flex; align-items: center; gap: 8px; transition: background 0.3s; }
+        .btn-pdf:hover { background-color: #1a1e1f; }
+
+        /* --- ESTILOS DEL DASHBOARD --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .metric-card {
+            background: #f4f6f8;
+            border-left: 5px solid var(--color-principal);
+            padding: 20px;
+            border-radius: 4px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-principal);
+            margin: 10px 0 0 0;
+        }
+        .metric-title {
+            font-size: 0.9rem;
+            color: var(--color-gris-suave);
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .chart-container {
+            background: #fff;
+            border: 1px solid #eee;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        /* --- MÓVILES --- */
+        @media (max-width: 768px) {
+            body { padding: 0; background-color: #f0f0f0; }
+            .nav-bar { padding: 10px; background: #333; max-width: 100%; }
+            .document-sheet { width: 100%; max-width: 100%; margin: 0; padding: 20px; box-shadow: none; min-height: 100vh; }
+            .header-container { flex-direction: column; text-align: center; gap: 15px; }
+            .brand-logo { height: 60px; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        /* --- IMPRESIÓN --- */
+        @media print {
+            @page { size: letter; margin: 2cm; }
+            body { background-color: white; padding: 0; margin: 0; -webkit-print-color-adjust: exact; }
+            .document-sheet { box-shadow: none; margin: 0; width: 100%; max-width: 100%; border: none; padding: 0; }
+            .nav-bar, .pdf-section, .btn-volver { display: none !important; }
+            a { text-decoration: none; color: black; }
+            h2, h3, .diagram-container, .dashboard-grid { page-break-inside: avoid; }
+            
+            .header-container {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
+                border-bottom: 2px solid #ccc !important;
+            }
+            .brand-logo { height: 75px !important; margin-right: 30px !important; display: block !important; }
+            .title-block { text-align: center !important; flex: 1 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <a href="../index.html" class="btn-volver">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+            Volver al Portal
+        </a>
+    </div>
+
+    <div class="document-sheet">
+        
+        <div class="header-container">
+            <img src="https://empresas.casalimpia.com/wp-content/uploads/2024/08/logo-casa-limpia.png" alt="Casalimpia S.A." class="brand-logo">
+            
+            <div class="title-block">
+                <h1>Informe Técnico de Automatización</h1>
+                <div class="subtitle">Portal de Autogestión WhatsApp: Nómina y Certificaciones</div>
+            </div>
+        </div>
+
+        <table class="tech-info-table">
+            <tr>
+                <td class="td-label">Cliente Interno:</td>
+                <td>Casalimpia</td>
+            </tr>
+            <tr>
+                <td class="td-label">Plataforma:</td>
+                <td>n8n (Workflow Automation)</td>
+            </tr>
+            <tr>
+                <td class="td-label">Carpeta N8N:</td>
+                <td>DESPRENDIBLES CARTA LAB Y WEB</td>
+            </tr>
+            <tr>
+                <td class="td-label">Canal:</td>
+                <td>WhatsApp Business API (3044985556)</td>
+            </tr>
+            <tr>
+                <td class="td-label">Motor de Base de Datos:</td>
+                <td>Supabase (PostgreSQL) y Google Drive API</td>
+            </tr>
+            <tr>
+                <td class="td-label">Estado:</td>
+                <td>Producción (Desprendibles de Nómina y Certificaciones Laborales)</td>
+            </tr>
+        </table>
+
+        <h2>1. Resumen Ejecutivo</h2>
+        <p>
+            La automatización "Portal de Autogestión Casalimpia" es una solución madura desplegada en WhatsApp que permite a los colaboradores (activos y retirados) consultar y descargar sus desprendibles de nómina y certificaciones laborales de manera autónoma. La arquitectura emplea <strong>Supabase</strong> para un control transaccional estricto de las sesiones y logs de auditoría, y utiliza automatización robótica de procesos (RPA) combinando n8n con <strong>Google Docs</strong> para la generación dinámica de certificados legales con reglas de negocio complejas, garantizando que el documento se adapte al contexto específico de cada empleado (género, estado de contratación, formatos monetarios).
+        </p>
+
+        <h2>2. Arquitectura de la Solución</h2>
+        
+        <h3>2.1. Componentes Tecnológicos</h3>
+        <ul>
+            <li><strong>Orquestador:</strong> n8n (Gestión de lógica, conexiones API y transformación de datos).</li>
+            <li><strong>Interfaz de Usuario:</strong> WhatsApp Business API (Recepción Webhook y envío de archivos PDF).</li>
+            <li><strong>Backend de Datos (ERP):</strong> Novasoft Web API (Autenticación nativa y generación de desprendibles en Base64).</li>
+            <li><strong>Base de Datos Relacional:</strong> Supabase (PostgreSQL) para manejo seguro de sesiones y logs de auditoría transaccional.</li>
+            <li><strong>Motor de Plantillas:</strong> Google Drive / Google Docs API (Para manipulación de documentos en tiempo real).</li>
+        </ul>
+
+        <h3>2.2. Estructura de Base de Datos (Supabase)</h3>
+        <p>El sistema utiliza tablas relacionales en Supabase, ofreciendo consultas veloces y un alto nivel de seguridad concurrente.</p>
+        <ul>
+            <li><strong>Tabla: 1-sesiones_bot (Control de Acceso)</strong>
+                <ul>
+                    <li>Almacena los usuarios que han validado su identidad correctamente. Posee un límite de tiempo (10 minutos) gestionado para prevenir accesos no autorizados si el dispositivo queda desatendido.</li>
+                    <li><strong>Columnas Clave:</strong> <code>celular</code>, <code>cedula</code>, <code>nombre</code>, <code>estado</code> (ACTIVO), <code>centro_costos</code>, <code>fecha_actualizacion</code>.</li>
+                </ul>
+            </li>
+            <li><strong>Tabla: 1-historial_bot (Auditoría)</strong>
+                <ul>
+                    <li>Registra cada transacción para trazabilidad detallada y reportes de uso.</li>
+                    <li><strong>Columnas Clave:</strong> <code>fecha</code>, <code>celular</code>, <code>cedula</code>, <code>accion</code> (ej. VALIDACION IDENTIDAD, DESCARGA DESPRENDIBLE, CERTIFICADO LABORAL), <code>detalle</code>.</li>
+                </ul>
+            </li>
+            <li><strong>Tabla: empleados_datos</strong>
+                <ul>
+                    <li>Tabla espejo utilizada para nutrir las variables del certificado laboral (cargos, salarios, fechas de ingreso/egreso) sin sobrecargar y saturar la API en vivo de Novasoft.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>3. Descripción Detallada del Flujo (Workflow)</h2>
+        <p>
+            El flujo se inicia con un Trigger de WhatsApp y utiliza un nodo Switch central <strong>(ENRUTADOR)</strong> con reglas Regex (expresiones regulares) para direccionar la lógica de forma invisible para el usuario, sin obligarlo a interactuar con menús rígidos en un orden estricto.
+        </p>
+
+        <h3>3.1. Flujo de Validación de Identidad (Inicio de Sesión)</h3>
+        <p>Se activa cuando el usuario envía un número identificable como documento (Regex: <code>^\d{5,15}$</code>).</p>
+        <ol>
+            <li><strong>Autenticación al ERP:</strong> El bot realiza un login administrativo en Novasoft (<code>/api/Cuenta/Login</code>) con credenciales autorizadas (APIclia) para obtener el Bearer Token.</li>
+            <li><strong>Consulta de Datos:</strong> Se realiza un GET a <code>/api/NOM/ConsultaDatos/{cedula}</code>.</li>
+            <li><strong>Verificación de Seguridad (MFA Implícito):</strong>
+                <ul>
+                    <li>El sistema cruza el número de WhatsApp emisor (<code>from</code>) para confirmar que termine exactamente igual que el campo <code>telCel</code> retornado por Novasoft.</li>
+                    <li>Si hay coincidencia positiva, se crea la sesión ACTIVA en Supabase y se despliega el menú de opciones (1 o 2). Si la coincidencia es negativa, se rechaza la solicitud permanentemente.</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h3>3.2. Módulo de Desprendibles de Pago (Opción "1")</h3>
+        <p>Se activa cuando el usuario responde "1" y posteriormente ingresa un periodo válido (Regex: <code>^\d{1,2}-\d{4}$</code>). Requiere sesión ACTIVA.</p>
+        <ol>
+            <li><strong>Cálculo Dinámico de Fechas (JS Code):</strong> Transforma el input de usuario (ej. "12-2025") a fechas ISO del inicio del mes (<code>2025-12-01T05:00:00Z</code>) y fin de mes (<code>2025-12-31T23:59:59Z</code>) operando en zona UTC de Bogotá.</li>
+            <li><strong>Consumo de API Novasoft:</strong> Realiza el POST a <code>/api/NOM/CertificadoComprobantePagoPdf</code> enviando el rango de fechas procesado.</li>
+            <li><strong>Decodificación de Base64:</strong> La API de nómina entrega el atributo <code>certificadoPdf</code> en texto plano Base64. El flujo lo captura mediante un nodo de código y lo transforma en un <code>Buffer</code> binario, forzando el tipo <code>application/pdf</code>.</li>
+            <li><strong>Entrega y Trazabilidad:</strong> Envía el PDF final por WhatsApp y guarda en el historial el periodo exacto que el empleado consultó.</li>
+        </ol>
+
+        <h3>3.3. Módulo de Certificaciones Laborales (Opción "2")</h3>
+        <p>Se activa al responder "2". Verifica la sesión en Supabase y extrae toda la metadata del colaborador desde la tabla <code>empleados_datos</code>.</p>
+        <ol>
+            <li><strong>Identificación de Estado (Activo vs. Retirado):</strong> Un nodo IF evalúa el campo <code>nomEst</code>. Dependiendo si el empleado dice "Retirados", el flujo toma un camino divergente hacia plantillas legales distintas.</li>
+            <li><strong>Procesamiento Semántico e Inyección (JS):</strong> 
+                <ul>
+                    <li><strong>Lógica de Género:</strong> Valida el campo <code>sexo</code> ('F' o 'M') para generar artículos precisos (El/La, señor/señora, suscrito/suscrita) haciendo que la carta esté correctamente redactada.</li>
+                    <li><strong>Manejo de Moneda:</strong> Convierte salarios planos (ej. 1500000) en formato de moneda local <code>$1.500.000</code>.</li>
+                    <li><strong>Manejo de Fechas y Nombres Legales:</strong> Formatea los timestamps ISO en texto (ej. "25 de febrero de 2024"). Convierte acrónimos (CC, PT, CE) en su definición legal ("Cédula de Ciudadanía"). Si está Activo, la fecha de retiro se marca internamente como "la fecha actual".</li>
+                </ul>
+            </li>
+            <li><strong>RPA en la Nube (Google Drive + Docs):</strong>
+                <ul>
+                    <li><strong>Copia Automática:</strong> Duplica la plantilla maestra de Casalimpia en Google Drive generando un archivo temporal llamado <code>Certificado_Temp_{Num}</code>.</li>
+                    <li><strong>Inyección Dinámica (Docs API):</strong> Utiliza acciones <code>replaceAll</code> para incrustar simultáneamente 14 variables dentro del documento (ej. <code>{{salario}}</code>, <code>{{fecha vinculacion}}</code>).</li>
+                    <li><strong>Compilación:</strong> Descarga el archivo de Google Docs realizando una conversión "on-the-fly" a PDF.</li>
+                    <li><strong>Sanitización de Datos (Borrado):</strong> El bot elimina permanentemente el documento de Drive en milisegundos para cumplir con leyes de protección de datos (Habeas Data).</li>
+                </ul>
+            </li>
+            <li><strong>Entrega Final:</strong> El PDF oficial de la certificación laboral es enviado instantáneamente al chat de WhatsApp.</li>
+        </ol>
+
+        <h2>4. Reglas de Negocio y Seguridad</h2>
+        <ul>
+            <li><strong>Prevención de Fallos en Terceros:</strong> Si la API de Novasoft presenta caídas o tiempos de espera prolongados, la rama <code>onError</code> intercepta el fallo y envía un mensaje de "mantenimiento en curso" en lugar de ignorar al usuario.</li>
+            <li><strong>Sanitización de Archivos Temporales:</strong> La arquitectura garantiza que no queden datos sensibles, contratos, ni salarios de empleados flotando en cuentas corporativas de Google Drive.</li>
+            <li><strong>Expiración de Sesión:</strong> La ventana de consulta tiene una vida útil inamovible de 10 minutos. Una vez pasada, el usuario vuelve a ser un perfil "desconocido" para el bot.</li>
+        </ul>
+
+        <h2>5. Casos de Uso y Escenarios del Usuario (User Journey)</h2>
+        <p>A continuación, se documentan los 7 posibles caminos que puede tomar el bot dependiendo de las acciones y el contexto del colaborador:</p>
+
+        <div class="use-case-box">
+            <strong>Caso 1: Autenticación Exitosa (Primer contacto)</strong><br><br>
+            <span class="dialogue-user">Usuario: "Hola, necesito un certificado"</span>
+            <span class="dialogue-bot">Bot: "👋 Bienvenido al Portal de Casalimpia... Por favor digite su numero de documento sin espacios, comas o caracteres especiales."</span>
+            <span class="dialogue-user">Usuario: "1020304050"</span>
+            <span class="dialogue-bot">Bot: [Cruza el número de celular entrante con la DB de Novasoft para la cédula dada. Coincide. Crea sesión de 10 min en Supabase].</span>
+            <span class="dialogue-bot">Bot: "✅ Identidad Validada. Hola Carlos Perez. Por favor Selecciona una opción... 1️⃣ Desprendibles de Pago 2️⃣ Certificación Laboral"</span>
+        </div>
+
+        <div class="use-case-box">
+            <strong>Caso 2: Autenticación Fallida (Intento de fraude o desactualización)</strong><br><br>
+            <span class="dialogue-user">Usuario: "1020304050" (Escribiendo desde un celular nuevo o prestado)</span>
+            <span class="dialogue-bot">Bot: [El celular de WhatsApp no es igual al 'telCel' de Novasoft. Bloquea el proceso y anota el intento fallido].</span>
+            <span class="dialogue-bot">Bot: "🔒 Acceso Denegado. El número de celular desde el que escribes no coincide con el registrado en nuestra base de datos para la cédula 1020304050. Por favor actualiza tus datos en la compañía..."</span>
+        </div>
+
+        <div class="use-case-box">
+            <strong>Caso 3: Descarga de Desprendible de Pago Normal</strong><br><br>
+            <span class="dialogue-user">Usuario (Ya autenticado): "1"</span>
+            <span class="dialogue-bot">Bot: "Para descargar tu desprendible, por favor escribe el periodo (Mes-Año)... Ejemplo: 1-2024"</span>
+            <span class="dialogue-user">Usuario: "05-2024"</span>
+            <span class="dialogue-bot">Bot: [Calcula fechas del 1 al 31 de mayo de 2024. Pide el Base64 a Novasoft, lo decodifica a PDF].</span>
+            <span class="dialogue-bot">Bot: 📄 Envía archivo adjunto: <code>Desprendible_1020304050.pdf</code></span>
+        </div>
+
+        <div class="use-case-box">
+            <strong>Caso 4: Certificado Laboral (Empleado Activo)</strong><br><br>
+            <span class="dialogue-user">Usuario (Ya autenticado): "2"</span>
+            <span class="dialogue-bot">Bot: [Consulta estado: ACTIVO. Entra a rama de edición de Google Docs plantilla activa].</span>
+            <span class="dialogue-bot">Bot: [Ejecuta JS] Formatea "1300000" a "$1.300.000", ajusta género a "El señor" y fecha de egreso a "actualmente". Genera y borra Doc temporal.</span>
+            <span class="dialogue-bot">Bot: 📄 Envía archivo adjunto: Certificado laboral con formato de activos.</span>
+        </div>
+
+        <div class="use-case-box">
+            <strong>Caso 5: Certificado Laboral (Empleado Retirado)</strong><br><br>
+            <span class="dialogue-user">Usuario (Ya autenticado): "2"</span>
+            <span class="dialogue-bot">Bot: [Consulta estado en DB y detecta 'Retirados'. Toma la ruta inferior del nodo IF y usa la plantilla ID: 1pK2... de Retirados].</span>
+            <span class="dialogue-bot">Bot: [Ejecuta JS] Detecta sexo 'F'. Cambia la redacción a "La señora" y "suscrita a". Aplica la fecha de liquidación real (ej. 15 de marzo de 2023).</span>
+            <span class="dialogue-bot">Bot: 📄 Envía archivo adjunto: Certificado laboral indicando las fechas de ingreso y retiro.</span>
+        </div>
+
+        <div class="use-case-box">
+            <strong>Caso 6: Timeout / Intento de Acceso Directo</strong><br><br>
+            <span class="dialogue-user">Usuario: (Entra al chat y sin saludar escribe de frente) "12-2023" o "2"</span>
+            <span class="dialogue-bot">Bot: [Va al nodo 'Busca Login' en Supabase y no encuentra ningún registro activo para ese celular, ya sea porque es primera vez o pasaron los 10 minutos].</span>
+            <span class="dialogue-bot">Bot: "⚠️ No te reconozco. Antes de generar un certificado, necesito validar tu identidad. Por favor, escribe tu número de cédula para registrarte."</span>
+        </div>
+
+        <div class="use-case-box">
+            <strong>Caso 7: Interrupción de Servicio de Novasoft</strong><br><br>
+            <span class="dialogue-user">Usuario: "1020304050"</span>
+            <span class="dialogue-bot">Bot: [Intenta hacer el Login a la API de Novasoft y recibe un error 500, o el servidor no responde (Timeout). Se va por la rama 'OnError'].</span>
+            <span class="dialogue-bot">Bot: "En este momento nuestro sistema de nómina está en mantenimiento. Por favor, intenta de nuevo en unos minutos"</span>
+        </div>
+
+        <h2>6. Próximos Pasos Tecnológicos</h2>
+        <ul>
+            <li><strong>Migración a Base de Datos Vectorial y RAG (Retrieval-Augmented Generation):</strong> Para habilitar lectura semántica profunda. Al conectar los historiales de los desprendibles a una base de datos vectorial (ej. Pinecone / pgvector) y pasar el Buffer del PDF de nómina por un motor OCR, se puede conectar un Modelo de Lenguaje Grande (LLM).
+                <ul>
+                    <li><strong>Impacto en UX:</strong> El colaborador no solo descargará el papel, sino que podrá preguntar: <em>"¿Cuántas horas extras me pagaron en el periodo 01-2024?"</em> o <em>"¿Por qué me descontaron salud este mes?"</em>, y el bot responderá de forma conversacional basándose única y exclusivamente en sus propios datos de nómina, descongestionando el área de Recursos Humanos.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>7. Anexos y Recursos</h2>
+        <p><strong>Repositorio de Datos (Acceso Restringido)</strong><br>
+        Recurso: Panel Administrativo de Supabase (Tablas <code>1-sesiones_bot</code>, <code>1-historial_bot</code>, <code>empleados_datos</code>).</p>
+        
+        <div class="alert-box">
+            <strong>⚠️ Política de Seguridad:</strong> Este sistema gestiona información confidencial de nómina en tiempo real. La inyección de código JavaScript (RPA), los accesos a Google Drive y las credenciales del Bearer Token de Novasoft no deben ser modificadas ni compartidas bajo ninguna circunstancia sin autorización.
+        </div>
+
+        <h2>8. Dashboard de Uso en Tiempo Real</h2>
+        <p>Este panel extrae los datos directamente de la tabla <code>1-historial_bot</code> en Supabase, mostrando el volumen de uso y los centros de costos con mayor adopción de la herramienta.</p>
+
+        <div class="dashboard-grid">
+            <div class="metric-card">
+                <div class="metric-title">Total Peticiones Procesadas</div>
+                <div class="metric-value" id="total-peticiones">...</div>
+            </div>
+
+            <div class="chart-container">
+                <div class="diagram-title">Top 5: Centros de Costos más Activos</div>
+                <canvas id="chartCentroCostos" height="120"></canvas>
+            </div>
+        </div>
+
+        <h3>Últimas 5 Interacciones de Usuarios</h3>
+        <table class="tech-info-table" id="tabla-recientes">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Nombre del Empleado</th>
+                    <th>Centro de Costo</th>
+                    <th>Acción Solicitada</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="4" style="text-align:center;">Cargando datos en tiempo real...</td></tr>
+            </tbody>
+        </table>
+
+        <div class="pdf-section">
+            <button onclick="window.print()" class="btn-pdf">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+                Imprimir Documento / Guardar PDF
+            </button>
+        </div>
+
+    </div> <script>
+            // 1. CONFIGURACIÓN DE SUPABASE
+                const SUPABASE_URL = 'https://tyhdwpdefiatmxihycae.supabase.co';
+                const SUPABASE_KEY = 'sb_publishable_LH1iVez6V1qmj8Lk_YVZFA_Y2nYwdKw';
+                
+                // CAMBIO AQUÍ: Le pusimos "supabaseClient" para que no choque con la librería
+                const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+                async function cargarDashboard() {
+                    try {
+                        // 2. EXTRAER DATOS
+                        // CAMBIO AQUÍ: Usamos "supabaseClient"
+                        const { data, error } = await supabaseClient
+                            .from('1-historial_bot')
+                            .select('fecha, nombre, jefatura, accion');
+
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    document.getElementById('total-peticiones').innerText = 0;
+                    document.querySelector('#tabla-recientes tbody').innerHTML = '<tr><td colspan="4" style="text-align:center;">No hay datos aún.</td></tr>';
+                    return;
+                }
+
+                // 3. ORDENAR FECHAS EN JAVASCRIPT
+                // n8n guarda: "25/02/2026 - 8:00 AM" (dd/MM/yyyy - h:mm a)
+                data.sort((a, b) => {
+                    function parsearFecha(fechaStr) {
+                        if (!fechaStr) return 0;
+                        try {
+                            const partes = fechaStr.split(' - ');
+                            if(partes.length < 2) return 0;
+                            
+                            const fechaPartes = partes[0].split('/'); // [dd, MM, yyyy]
+                            const tiempoPartes = partes[1].split(' '); // ["8:00", "AM"]
+                            
+                            const [horaStr, minStr] = tiempoPartes[0].split(':');
+                            let horas = parseInt(horaStr);
+                            const amPm = tiempoPartes[1] ? tiempoPartes[1].toUpperCase() : '';
+
+                            if (amPm === 'PM' && horas !== 12) horas += 12;
+                            if (amPm === 'AM' && horas === 12) horas = 0;
+
+                            // Mes en JS es 0-11
+                            return new Date(fechaPartes[2], fechaPartes[1] - 1, fechaPartes[0], horas, parseInt(minStr)).getTime();
+                        } catch (e) {
+                            return 0; // Si hay error de formato, lo manda al fondo
+                        }
+                    }
+                    return parsearFecha(b.fecha) - parsearFecha(a.fecha); // Orden Descendente (Más nuevo primero)
+                });
+
+                // 4. ACTUALIZAR MÉTRICA TOTAL
+                document.getElementById('total-peticiones').innerText = data.length;
+
+                // 5. ACTUALIZAR TABLA DE ÚLTIMOS 5 USUARIOS
+                const tbody = document.querySelector('#tabla-recientes tbody');
+                tbody.innerHTML = ''; 
+                
+                const ultimos = data.slice(0, 5);
+                ultimos.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${row.fecha || 'N/A'}</td>
+                        <td><strong>${row.nombre || 'Desconocido'}</strong></td>
+                        <td>${row.jefatura || 'N/A'}</td>
+                        <td><span class="badge badge-api">${row.accion || 'N/A'}</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                // 6. AGRUPAR DATOS PARA EL GRÁFICO (Top Centros de Costos)
+                const conteoPorCentro = {};
+                data.forEach(row => {
+                    let centro = row.jefatura || 'Sin Centro Definido';
+                    // Cortar si el texto es muy largo para que el gráfico no se deforme
+                    centro = centro.split('-')[0].trim() || centro; 
+                    conteoPorCentro[centro] = (conteoPorCentro[centro] || 0) + 1;
+                });
+
+                // Ordenar de mayor a menor y tomar los Top 5
+                const topCentros = Object.entries(conteoPorCentro)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+
+                const labels = topCentros.map(item => item[0]);
+                const valores = topCentros.map(item => item[1]);
+
+                // 7. DIBUJAR EL GRÁFICO CON CHART.JS
+                const ctx = document.getElementById('chartCentroCostos').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Peticiones procesadas',
+                            data: valores,
+                            backgroundColor: '#0085CA',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: { beginAtZero: true, ticks: { precision: 0 } }
+                        },
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+
+            } catch (err) {
+                console.error('Error al cargar datos de Supabase:', err);
+                document.getElementById('total-peticiones').innerText = "Error";
+                document.querySelector('#tabla-recientes tbody').innerHTML = '<tr><td colspan="4" style="text-align:center; color: red;">Error conectando con la base de datos.</td></tr>';
+            }
+        }
+
+        // Ejecutar la función cuando la página cargue
+        window.onload = cargarDashboard;
+    </script>
+
+</body>
+</html>

@@ -114,7 +114,7 @@
         input[type=range] { width: 100%; cursor: pointer; margin: 10px 0; }
 
         /* --- KPI GRID --- */
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
         .kpi-card { background: white; padding: 20px; border-radius: 12px; box-shadow: var(--sombra-card); border-top: 4px solid transparent; display: flex; flex-direction: column; justify-content: space-between; }
         
         .kpi-card.blue { border-top-color: var(--color-azul-logo); }
@@ -129,12 +129,12 @@
         .kpi-explanation { font-size: 0.75rem; color: #64748B; margin-top: 10px; border-top: 1px dashed #e2e8f0; padding-top: 10px; line-height: 1.4; }
 
         /* --- TIMELINES & VISUALS --- */
-        .timeline-container { background: white; padding: 20px; border-radius: 12px; box-shadow: var(--sombra-card); display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; text-align: center; border: 1px solid #e2e8f0; }
+        .timeline-container { background: white; padding: 20px; border-radius: 12px; box-shadow: var(--sombra-card); display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; text-align: center; border: 1px solid #e2e8f0; }
         .time-item { position: relative; }
         .time-item:not(:last-child)::after { content: '→'; position: absolute; right: -10px; top: 50%; transform: translateY(-50%); color: #cbd5e1; font-weight: bold; }
-        .time-label { font-size: 0.75rem; text-transform: uppercase; color: #64748B; font-weight: 700; margin-bottom: 5px; }
-        .time-value { font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--color-azul-logo); line-height: 1.2; }
-        .time-date-small { font-size: 0.8rem; font-weight: 500; color: #64748B; display: block; margin-top: 2px; }
+        .time-label { font-size: 0.7rem; text-transform: uppercase; color: #64748B; font-weight: 700; margin-bottom: 5px; }
+        .time-value { font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--color-azul-logo); line-height: 1.2; }
+        .time-date-small { font-size: 0.75rem; font-weight: 500; color: #64748B; display: block; margin-top: 2px; }
 
         .channel-section { background: white; padding: 25px; border-radius: 12px; box-shadow: var(--sombra-card); }
         .channel-row { margin-bottom: 20px; }
@@ -175,7 +175,7 @@
         @media (max-width: 768px) {
             header { justify-content: center; padding: 1rem; }
             .header-left { justify-content: center; text-align: center; width: 100%; }
-            .timeline-container { grid-template-columns: 1fr; gap: 10px; }
+            .timeline-container { grid-template-columns: 1fr 1fr; gap: 10px; }
             .time-item:not(:last-child)::after { content: none; }
             .triple-grid { grid-template-columns: 1fr; gap: 5px; }
             .separator-col { transform: rotate(90deg); margin: 5px 0; }
@@ -216,27 +216,27 @@
                 <div class="kpi-card green">
                     <div class="kpi-label">Ahorro Tiempo vs Humano</div>
                     <div class="kpi-value"><span id="kpi-time-percent">98</span>%</div>
-                    <div class="kpi-sub"><span id="kpi-manual-hours">937h</span> vs 18.6h</div>
+                    <div class="kpi-sub"><span id="kpi-manual-hours">722h</span> vs 18.7h</div>
                     <div class="kpi-explanation">
-                        <strong>Manual:</strong> 7.028 x <span class="dynamic-min">6</span> min = <span id="kpi-manual-hours-calc">937h</span><br>
-                        <strong>Auto:</strong> Ejecución Total = 18.6h
+                        <strong>Manual:</strong> 7.222 x <span class="dynamic-min">6</span> min = <span id="kpi-manual-hours-calc">722h</span><br>
+                        <strong>Auto:</strong> Ejecución Total = 18.7h
                     </div>
                 </div>
                 <div class="kpi-card blue">
                     <div class="kpi-label">Ahorro Costo vs Humano</div>
                     <div class="kpi-value"><span id="kpi-cost-percent">99</span>%</div>
-                    <div class="kpi-sub"><span id="kpi-unit-cost-mini">$1.735</span> vs $5,7</div>
+                    <div class="kpi-sub"><span id="kpi-unit-cost-mini">$1.735</span> vs $5,5</div>
                     <div class="kpi-explanation">
                         <strong>Manual:</strong> Costo Unitario <span id="kpi-unit-cost-mini-2">$1.735</span><br>
-                        <strong>Auto:</strong> $40k Totales / 7.028
+                        <strong>Auto:</strong> $40k Totales / 7.222
                     </div>
                 </div>
                 <div class="kpi-card green">
                     <div class="kpi-label">Costo Total: Humano vs Auto</div>
-                    <div class="kpi-value-small"><span id="kpi-total-cost-manual-top">$12.2M</span> vs $40k</div>
-                    <div class="kpi-sub">Ahorro Neto: <span id="kpi-net-savings-top">~$12.1 Millones</span></div>
+                    <div class="kpi-value-small"><span id="kpi-total-cost-manual-top">$12.5M</span> vs $40k</div>
+                    <div class="kpi-sub">Ahorro Neto: <span id="kpi-net-savings-top">~$12.4 Millones</span></div>
                     <div class="kpi-explanation">
-                        <strong>Manual:</strong> 7.028 x <span class="dynamic-unit-cost">$1.735</span><br>
+                        <strong>Manual:</strong> 7.222 x <span class="dynamic-unit-cost">$1.735</span><br>
                         <strong>Auto:</strong> Factura Real $40.000
                     </div>
                 </div>
@@ -244,33 +244,34 @@
         </section>
 
         <section>
-            <h2 class="section-title">Resumen de Impacto por Bases (Independientes)</h2>
+            <h2 class="section-title">Resumen de Impacto por Bases Sectorizadas</h2>
             <div class="kpi-grid">
                 <div class="kpi-card blue">
-                    <div class="kpi-label">Base 1: Invitación</div>
-                    <div class="kpi-value">4.410</div>
-                    <div class="kpi-sub">300 fallos (Sin WA)</div>
+                    <div class="kpi-label">Base 1: Invitación Regional</div>
+                    <div class="kpi-value">4.604</div>
+                    <div class="kpi-sub" style="font-size: 0.75rem;">Bog: 4.236 | Cali: 174 | Med: 194</div>
+                    <div class="kpi-explanation">Suma de las 3 regionales</div>
                 </div>
                 <div class="kpi-card green">
                     <div class="kpi-label">Base 2: Confirmados</div>
                     <div class="kpi-value" style="color: var(--color-wa);">2.406</div>
-                    <div class="kpi-sub">120 fallos (Sin WA)</div>
+                    <div class="kpi-sub">Direcciones enviadas</div>
                 </div>
                 <div class="kpi-card warning">
                     <div class="kpi-label">Base 3: No Autorizados</div>
                     <div class="kpi-value" style="color: var(--color-alerta);">212</div>
-                    <div class="kpi-sub">10 fallos (Sin WA)</div>
+                    <div class="kpi-sub">Personal no autorizado</div>
                 </div>
                 <div class="kpi-card blue" style="border-top-color: var(--color-azul-logo);">
                     <div class="kpi-label">Total Procesado</div>
-                    <div class="kpi-value">7.028</div>
+                    <div class="kpi-value">7.222</div>
                     <div class="kpi-sub">Suma 3 bases independientes</div>
                 </div>
             </div>
 
             <div class="strategy-box">
                 <strong>💡 Estrategia de Segmentación Exclusiva por WhatsApp:</strong> 
-                Se procesaron tres bases de datos completamente independientes con mensajes personalizados según el estado del usuario (invitados, confirmados para dirección, y no autorizados), garantizando la entrega de la información correcta sin cruce de bases.
+                Se procesaron tres bases de datos completamente independientes con mensajes personalizados. La Base de Invitación fue dividida y ejecutada en tres ventanas de tiempo según la ciudad (Bogotá, Cali y Medellín) para optimizar el impacto local.
             </div>
         </section>
 
@@ -278,19 +279,29 @@
             <h2 class="section-title">Cronología Operativa</h2>
             <div class="timeline-container" style="margin-bottom: 20px;">
                 <div class="time-item">
-                    <div class="time-label">Envío 1 (Base Invitación)</div>
-                    <div class="time-value">13h 07m</div>
-                    <span class="time-date-small">18 Feb 2026 (7:53 AM - 9:00 PM)</span>
+                    <div class="time-label">Invitación Bogotá</div>
+                    <div class="time-value">12h 54m</div>
+                    <span class="time-date-small">18 Feb (7:53am - 8:47pm)</span>
                 </div>
                 <div class="time-item">
-                    <div class="time-label">Envío 2 (Base Confirmados)</div>
+                    <div class="time-label">Invitación Cali</div>
+                    <div class="time-value">15m</div>
+                    <span class="time-date-small">19 Feb (6:58pm - 7:13pm)</span>
+                </div>
+                <div class="time-item">
+                    <div class="time-label">Invitación Medellín</div>
+                    <div class="time-value">4m</div>
+                    <span class="time-date-small">10 Mar (10:15am - 10:19am)</span>
+                </div>
+                <div class="time-item">
+                    <div class="time-label">Confirmados</div>
                     <div class="time-value">5h 11m</div>
-                    <span class="time-date-small">25 Feb 2026 (2:55 PM - 8:06 PM)</span>
+                    <span class="time-date-small">25 Feb 2026</span>
                 </div>
                 <div class="time-item">
-                    <div class="time-label">Envío 3 (Base No Autorizados)</div>
+                    <div class="time-label">No Asisten</div>
                     <div class="time-value">18m</div>
-                    <span class="time-date-small">28 Feb 2026 (4:53 PM - 5:11 PM)</span>
+                    <span class="time-date-small">28 Feb 2026</span>
                 </div>
             </div>
         </section>
@@ -300,12 +311,12 @@
             <div class="channel-section">
                 <div class="channel-row">
                     <div class="channel-header">
-                        <span style="display: flex; align-items: center; gap: 5px;">Rendimiento Canal WhatsApp (Total 3 Bases)</span>
-                        <span>7.028 Procesados</span>
+                        <span style="display: flex; align-items: center; gap: 5px;">Rendimiento Canal WhatsApp (Total General)</span>
+                        <span>7.222 Procesados</span>
                     </div>
                     <div class="progress-bar-wrapper" style="height: 30px;">
-                        <div class="bar-segment bg-wa" style="width: 93.9%;">6.598 OK (93.9%)</div>
-                        <div class="bar-segment bg-err" style="width: 6.1%;">430 ERROR (6.1%)</div>
+                        <div class="bar-segment bg-wa" style="width: 94%;">6.792 OK (94%)</div>
+                        <div class="bar-segment bg-err" style="width: 6%;">430 ERROR (6%)</div>
                     </div>
                     <p style="font-size: 0.8rem; color: #64748B; margin-top: 5px;">* 430 registros consolidados fallaron por no tener cuenta de WhatsApp activa al momento del envío.</p>
                 </div>
@@ -343,19 +354,19 @@
                     Interpretación de Capacidad Operativa <span class="badge-warn">ESCENARIOS INVIABLES</span>
                 </div>
                 <p style="color: #64748B; margin-bottom: 15px; font-size: 0.9rem;">
-                    Para procesar manualmente 7.028 transacciones (<span class="dynamic-min">6</span> min c/u) se requieren <strong id="scenario-hours-txt">937 horas hombre</strong>.
+                    Para procesar manualmente 7.222 transacciones (<span class="dynamic-min">6</span> min c/u) se requieren <strong id="scenario-hours-txt">722 horas hombre</strong>.
                 </p>
                 <div class="capacity-item">
                     <div class="capacity-icon">👤</div>
                     <div style="font-size: 0.9rem; color: #431407;">
-                        Una sola persona habría tardado <strong id="scenario-months">4,3 meses</strong> dedicados exclusivamente a esta labor.
+                        Una sola persona habría tardado <strong id="scenario-months">3,3 meses</strong> dedicados exclusivamente a esta labor.
                     </div>
                 </div>
                 <div class="capacity-item">
                     <div class="capacity-icon">👥</div>
                     <div style="font-size: 0.9rem; color: #431407;">
-                        Para igualar el tiempo total de operación del bot (~18.6h), se habrían requerido <strong id="scenario-people">50 personas</strong> trabajando simultáneamente.
-                        <span class="calc-detail-people">(<span id="scenario-hours-calc">937h</span> Manuales / 18.6h Bot)</span>
+                        Para igualar el tiempo total de operación del bot (~18.7h), se habrían requerido <strong id="scenario-people">39 personas</strong> trabajando simultáneamente.
+                        <span class="calc-detail-people">(<span id="scenario-hours-calc">722h</span> Manuales / 18.7h Bot)</span>
                     </div>
                 </div>
             </div>
@@ -375,7 +386,7 @@
                     <div style="font-weight: bold; color: #CBD5E1; font-size: 1.2rem;">VS</div>
                     <div class="big-cost green-bg">
                         <span style="font-size: 0.8rem; color: #166534; font-weight: bold; text-transform: uppercase;">Costo Unitario Auto</span>
-                        <span class="amount" style="color: #15803d;">$5,7</span>
+                        <span class="amount" style="color: #15803d;">$5,5</span>
                         <span style="font-size: 0.75rem; color: #166534;">por transacción</span>
                     </div>
                 </div>
@@ -387,11 +398,11 @@
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; border-bottom: 1px dashed #cbd5e1; padding-bottom: 10px;">
                         <span style="color: #64748B;">Costo Total Estimado (Humano):</span>
-                        <span style="font-weight: bold; color: #C2410C;" id="final-total-cost-manual">~$12.195.122 COP</span>
+                        <span style="font-weight: bold; color: #C2410C;" id="final-total-cost-manual">~$12.530.170 COP</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
                         <span style="font-weight: 700; color: #334155;">AHORRO NETO GENERADO:</span>
-                        <span style="font-size: 1.5rem; font-weight: 700; color: #16A34A;" id="final-net-savings-bottom">$12.155.122 COP</span>
+                        <span style="font-size: 1.5rem; font-weight: 700; color: #16A34A;" id="final-net-savings-bottom">$12.490.170 COP</span>
                     </div>
 
                     <a href="https://docs.google.com/spreadsheets/d/1g2YanehMtyY7UECTa-p3980yiVa1LlvRsDiscwfVU3o" target="_blank" class="btn-drive">
@@ -405,13 +416,13 @@
     </div>
 
     <script>
-        // Constantes del sistema para FIESTA GRATITUD
-        const TOTAL_REGISTROS = 7028; // 4410 + 2406 + 212
+        // Constantes del sistema para FIESTA GRATITUD (Actualizado con regionales)
+        const TOTAL_REGISTROS = 7222; // 4604 (Base 1) + 2406 (Base 2) + 212 (Base 3)
         const COSTO_REAL_EMPRESA = 2863086;
         const HORAS_LABORALES = 220;
-        const HORAS_BOT = 18.6; // Suma de los 3 tiempos de ejecución en horas
+        const HORAS_BOT = 18.7; // Suma de todos los tiempos de ejecución en horas
         const COSTO_TOTAL_BOT = 40000;
-        const COSTO_UNITARIO_BOT = COSTO_TOTAL_BOT / TOTAL_REGISTROS; // Aprox $5.7
+        const COSTO_UNITARIO_BOT = COSTO_TOTAL_BOT / TOTAL_REGISTROS;
 
         // Costo por minuto humano (Fijo)
         const COSTO_MINUTO_HUMANO = (COSTO_REAL_EMPRESA / HORAS_LABORALES) / 60;
@@ -433,7 +444,7 @@
             // 1. Actualizar visualización de minutos en el slider
             document.getElementById('minutesDisplay').innerText = minutes;
             
-            // Actualizar todos los textos que dicen "8m" o "8"
+            // Actualizar todos los textos que dicen "6m"
             const dynamicMinLabels = document.querySelectorAll('.dynamic-min');
             dynamicMinLabels.forEach(el => el.innerText = minutes);
 

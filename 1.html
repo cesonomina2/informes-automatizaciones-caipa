@@ -12,7 +12,7 @@
             --color-azul-logo: #0085CA; 
             --color-verde-logo: #8DC63F;
             --color-gris-texto: #334155;
-            --bg-body: #94A3B8; /* Fondo del navegador */
+            --bg-body: #94A3B8; 
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -87,7 +87,7 @@
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 25px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             line-height: 1.5;
             color: #1E3A8A;
         }
@@ -142,15 +142,15 @@
             color: white;
             font-family: 'Outfit', sans-serif;
             font-weight: 600;
-            padding: 10px;
+            padding: 8px 10px;
             text-align: left;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         td {
-            padding: 10px;
+            padding: 8px 10px;
             border-bottom: 1px solid #e2e8f0;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #334155;
             word-wrap: break-word;
         }
@@ -158,31 +158,32 @@
         tr:last-child td { border-bottom: none; }
         tr.total-row td { background-color: #f1f5f9; font-weight: bold; font-family: 'Outfit', sans-serif; color: var(--color-azul-logo); }
 
-        /* --- TARJETAS INDIVIDUALES --- */
+        /* --- TARJETAS INDIVIDUALES (3 COLUMNAS PARA AHORRAR ESPACIO) --- */
         .campaign-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
         }
 
         .campaign-card {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 10px;
-            padding: 20px;
+            padding: 15px;
         }
 
         .campaign-title {
             font-family: 'Outfit', sans-serif;
             font-weight: 700;
             color: var(--color-azul-logo);
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             margin-bottom: 15px;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 5px;
         }
 
-        .data-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; border-bottom: 1px dashed #e2e8f0; padding-bottom: 4px; }
+        .data-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.75rem; border-bottom: 1px dashed #e2e8f0; padding-bottom: 3px; }
         .data-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .data-label { color: #64748B; font-weight: 500; }
         .data-value { font-weight: 700; color: #334155; }
@@ -218,23 +219,24 @@
             border-radius: 8px;
             border-left: 4px solid #F97316;
         }
+        .capacity-item:last-child { margin-bottom: 0; }
 
-        .capacity-text { font-size: 0.95rem; color: #431407; line-height: 1.5; }
+        .capacity-text { font-size: 0.9rem; color: #431407; line-height: 1.5; }
         
         /* --- RESUMEN FINAL --- */
         .final-summary {
             background: linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%);
             border: 1px solid #86EFAC;
             border-radius: 10px;
-            padding: 25px;
-            margin-top: 30px;
+            padding: 20px;
+            margin-top: 25px;
             text-align: center;
         }
 
         .final-summary-title {
             font-family: 'Outfit', sans-serif;
             color: #166534;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 700;
             margin-bottom: 15px;
             text-transform: uppercase;
@@ -253,7 +255,7 @@
         }
 
         .summary-label {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: #15803d;
             text-transform: uppercase;
@@ -261,16 +263,16 @@
 
         .summary-value {
             font-family: 'Outfit', sans-serif;
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 700;
             color: #14532d;
         }
 
         .footer-note {
             text-align: center;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #94A3B8;
-            margin-top: 40px;
+            margin-top: 30px;
             padding-top: 10px;
             border-top: 1px solid #e2e8f0;
         }
@@ -288,24 +290,24 @@
 
     <div class="metodologia-box avoid-break">
         <strong>📌 NOTA METODOLÓGICA:</strong><br>
-        Para el cálculo financiero y operativo de este informe consolidado, se ha establecido un <strong>tiempo promedio fijo de 6 minutos</strong> por gestión manual. Este valor corresponde a la media estandarizada, extraída de la operación real que fluctúa en un ratio de 4 a 8 minutos por registro, dependiendo de la complejidad y el canal de respuesta de cada campaña. El costo humano se calcula sobre una base de $2.863.086 COP (Costo Real Empresa / 220h mes).
+        Para el cálculo financiero y operativo de este informe consolidado, se ha establecido un <strong>tiempo promedio fijo de 6 minutos</strong> por gestión manual, con un costo calculado sobre una base de $2.863.086 COP (Costo Real Empresa / 220h mes).
     </div>
 
     <div class="kpi-grid-top avoid-break">
         <div class="kpi-card-top highlight-blue">
             <div class="kpi-label-top">Total de Gestiones (Envíos)</div>
-            <div class="kpi-value-top">21.307</div>
-            <div class="kpi-sub-top" style="color: #64748B;">Suma de 4 campañas</div>
+            <div class="kpi-value-top">50.104</div>
+            <div class="kpi-sub-top" style="color: #64748B;">Suma de 6 campañas</div>
         </div>
         <div class="kpi-card-top highlight-green">
             <div class="kpi-label-top">Ahorro Neto Generado (Dinero)</div>
-            <div class="kpi-value-top">$27,6 M</div>
-            <div class="kpi-sub-top">$27.610.986 COP exactos</div>
+            <div class="kpi-value-top">$65,0 M</div>
+            <div class="kpi-sub-top">$64.958.481 COP exactos</div>
         </div>
         <div class="kpi-card-top highlight-green">
             <div class="kpi-label-top">Tiempo Total Liberado</div>
-            <div class="kpi-value-top">2.065h</div>
-            <div class="kpi-sub-top">2.130h Humanas - 65h Bot</div>
+            <div class="kpi-value-top">4.939h</div>
+            <div class="kpi-sub-top">5.010h Humanas - 72h Bot</div>
         </div>
     </div>
 
@@ -331,17 +333,17 @@
                 </tr>
                 <tr>
                     <td><a href="https://informes-automatizaciones-caipa.vercel.app/reporte_confirmacion_empleo.html" target="_blank" style="color: var(--color-azul-logo); text-decoration: underline; font-weight: 600;">Confirmación Primer Empleo</a></td>
-                    <td>5.765</td>
-                    <td>$18.000</td>
-                    <td>$7.502.586</td>
-                    <td style="color: #16A34A; font-weight: bold;">$7.484.586</td>
+                    <td>6.303</td>
+                    <td>$21.000</td>
+                    <td>$8.202.741</td>
+                    <td style="color: #16A34A; font-weight: bold;">$8.181.741</td>
                 </tr>
                 <tr>
                     <td><a href="https://informes-automatizaciones-caipa.vercel.app/reporte_fiesta_gratitud.html" target="_blank" style="color: var(--color-azul-logo); text-decoration: underline; font-weight: 600;">Fiesta Gratitud</a></td>
-                    <td>7.028</td>
-                    <td>$40.000</td>
-                    <td>$9.146.258</td>
-                    <td style="color: #16A34A; font-weight: bold;">$9.106.258</td>
+                    <td>9.858</td>
+                    <td>$56.000</td>
+                    <td>$12.829.228</td>
+                    <td style="color: #16A34A; font-weight: bold;">$12.773.228</td>
                 </tr>
                 <tr>
                     <td><a href="https://informes-automatizaciones-caipa.vercel.app/reporte_tecnologia.html" target="_blank" style="color: var(--color-azul-logo); text-decoration: underline; font-weight: 600;">Verificación Líneas (Tecnología)</a></td>
@@ -350,12 +352,26 @@
                     <td>$1.881.828</td>
                     <td style="color: #16A34A; font-weight: bold;">$1.876.828</td>
                 </tr>
+                <tr>
+                    <td><a href="https://informes-automatizaciones-caipa.vercel.app/reporte_dia_mujer.html" target="_blank" style="color: var(--color-azul-logo); text-decoration: underline; font-weight: 600;">Día de la Mujer</a></td>
+                    <td>11.104</td>
+                    <td>$40.000</td>
+                    <td>$14.450.776</td>
+                    <td style="color: #16A34A; font-weight: bold;">$14.410.776</td>
+                </tr>
+                <tr>
+                    <td><a href="https://informes-automatizaciones-caipa.vercel.app/reporte_dotaciones.html" target="_blank" style="color: var(--color-azul-logo); text-decoration: underline; font-weight: 600;">Dotaciones (Proyección)</a></td>
+                    <td>14.325</td>
+                    <td>$70.000</td>
+                    <td>$18.642.594</td>
+                    <td style="color: #16A34A; font-weight: bold;">$18.572.594</td>
+                </tr>
                 <tr class="total-row">
                     <td>TOTAL CONSOLIDADO</td>
-                    <td>21.307</td>
-                    <td>$118.000</td>
-                    <td>$27.728.986</td>
-                    <td style="color: #16A34A;">$27.610.986</td>
+                    <td>50.104</td>
+                    <td>$247.000</td>
+                    <td>$65.205.481</td>
+                    <td style="color: #16A34A;">$64.958.481</td>
                 </tr>
             </tbody>
         </table>
@@ -366,38 +382,56 @@
         <div class="campaign-card">
             <div class="campaign-title">
                 Contratación
-                <span style="font-size: 0.8rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155;">7.068 un.</span>
+                <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">7.068 un.</span>
             </div>
             <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">24,4 Horas</span></div>
-            <div class="data-row"><span class="data-label">Tiempo Manual Estimado:</span> <span class="data-value">706,8 Horas</span></div>
-            <div class="data-row"><span class="data-label">Tiempo Liberado:</span> <span class="data-value green">682,4 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value">706,8 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green">682,4 Horas</span></div>
         </div>
         <div class="campaign-card">
             <div class="campaign-title">
-                Confirmación Primer Empleo
-                <span style="font-size: 0.8rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155;">5.765 un.</span>
+                Conf. Empleo
+                <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">6.303 un.</span>
             </div>
-            <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">19,7 Horas</span></div>
-            <div class="data-row"><span class="data-label">Tiempo Manual Estimado:</span> <span class="data-value">576,5 Horas</span></div>
-            <div class="data-row"><span class="data-label">Tiempo Liberado:</span> <span class="data-value green">556,8 Horas</span></div>
+            <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">20,5 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value">630,3 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green">609,8 Horas</span></div>
         </div>
         <div class="campaign-card">
             <div class="campaign-title">
                 Fiesta Gratitud
-                <span style="font-size: 0.8rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155;">7.028 un.</span>
+                <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">9.858 un.</span>
             </div>
-            <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">18,6 Horas</span></div>
-            <div class="data-row"><span class="data-label">Tiempo Manual Estimado:</span> <span class="data-value">702,8 Horas</span></div>
-            <div class="data-row"><span class="data-label">Tiempo Liberado:</span> <span class="data-value green">684,2 Horas</span></div>
+            <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">22,9 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value">985,8 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green">962,9 Horas</span></div>
         </div>
         <div class="campaign-card">
             <div class="campaign-title">
-                Verificación Líneas
-                <span style="font-size: 0.8rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155;">1.446 un.</span>
+                Verif. Líneas
+                <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">1.446 un.</span>
             </div>
             <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">2,4 Horas</span></div>
-            <div class="data-row"><span class="data-label">Tiempo Manual Estimado:</span> <span class="data-value">144,6 Horas</span></div>
-            <div class="data-row"><span class="data-label">Tiempo Liberado:</span> <span class="data-value green">142,2 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value">144,6 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green">142,2 Horas</span></div>
+        </div>
+        <div class="campaign-card">
+            <div class="campaign-title">
+                Día de la Mujer
+                <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">11.104 un.</span>
+            </div>
+            <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">0,5 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value">1.110,4 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green">1.109,9 Horas</span></div>
+        </div>
+        <div class="campaign-card">
+            <div class="campaign-title">
+                Dotaciones
+                <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">14.325 un.</span>
+            </div>
+            <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">1,0 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value">1.432,5 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green">1.431,5 Horas</span></div>
         </div>
     </div>
 
@@ -405,17 +439,17 @@
         <div class="capacity-header">
             <span>⚠️ Interpretación de Capacidad Operativa (Escenarios Inviables)</span>
         </div>
-        <p style="color: #9A3412; margin-bottom: 15px; font-size: 0.9rem;">
-            Para lograr manualmente el volumen total procesado (21.307 transacciones), invirtiendo el promedio de 6 minutos por gestión, la empresa habría requerido <strong>2.130 horas hombre</strong>.
+        <p style="color: #9A3412; margin-bottom: 15px; font-size: 0.85rem;">
+            Para lograr manualmente el volumen total procesado (50.104 transacciones), invirtiendo el promedio de 6 minutos por gestión, la empresa habría requerido <strong>5.010 horas hombre</strong>.
         </p>
         <div class="capacity-item">
             <div class="capacity-text">
-                👤 <strong>Escenario Individual:</strong> Asignar a una (1) sola persona a realizar estas llamadas y mensajes le habría tomado <strong>9,7 meses</strong> de trabajo continuo (base de 220 horas laborales por mes), sin realizar ninguna otra labor.
+                👤 <strong>Escenario Individual:</strong> Asignar a una (1) sola persona a realizar estas llamadas y mensajes le habría tomado <strong>22,8 meses</strong> de trabajo continuo (base de 220 horas laborales por mes), sin realizar ninguna otra labor. ¡Casi dos años de trabajo!
             </div>
         </div>
         <div class="capacity-item">
             <div class="capacity-text">
-                👥 <strong>Escenario de Equipo (Empate de Tiempo):</strong> Para poder igualar la velocidad total en la que el sistema procesó las 4 bases de datos (apenas 65,1 horas en total), la empresa habría tenido que contratar un equipo temporal masivo de <strong>33 personas</strong> trabajando simultáneamente.
+                👥 <strong>Escenario de Equipo (Empate de Tiempo):</strong> Para poder igualar la velocidad total en la que el sistema procesó las 6 bases de datos (apenas ~71,7 horas en total), la empresa habría tenido que contratar un equipo temporal masivo de <strong>70 personas</strong> trabajando simultáneamente.
             </div>
         </div>
     </div>
@@ -425,12 +459,12 @@
         <div class="summary-grid">
             <div class="summary-block">
                 <span class="summary-label">Dinero Total Ahorrado</span>
-                <span class="summary-value">$27.610.986 COP</span>
+                <span class="summary-value">$64.958.481 COP</span>
             </div>
             <div style="width: 2px; background-color: #86EFAC; height: 50px;"></div>
             <div class="summary-block">
                 <span class="summary-label">Tiempo Total Ahorrado</span>
-                <span class="summary-value">2.065 Horas</span>
+                <span class="summary-value">4.939 Horas</span>
             </div>
         </div>
     </div>
@@ -442,4 +476,8 @@
 </div>
 
 </body>
+</html>
+
+</body>
+
 </html>

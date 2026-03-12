@@ -77,17 +77,6 @@
             gap: 10px;
         }
 
-        .badge-estimate {
-            background-color: #FEF3C7;
-            color: #D97706;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            border: 1px solid #FDE68A;
-        }
-
         /* --- LAYOUT --- */
         .dashboard-container {
             max-width: 1200px;
@@ -180,8 +169,6 @@
         .capacity-item { display: flex; align-items: flex-start; gap: 15px; padding: 15px; background-color: #FFF7ED; border-left: 4px solid #F97316; border-radius: 8px; margin-bottom: 10px; }
         .capacity-icon { font-size: 1.5rem; }
         .badge-warn { background: #FFEDD5; color: #C2410C; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; margin-left: 10px;}
-        .alert-box { background-color: #FFFBEB; border-left: 4px solid #F59E0B; padding: 15px; border-radius: 6px; font-size: 0.9rem; color: #92400E; margin-top: 15px; }
-        .info-box { background-color: #EFF6FF; border-left: 4px solid #3B82F6; padding: 15px; border-radius: 6px; font-size: 0.9rem; color: #1E3A8A; margin-bottom: 20px; }
         
         .btn-drive { display: block; width: 100%; padding: 15px; background-color: var(--color-azul-logo); color: white; text-align: center; text-decoration: none; border-radius: 8px; font-weight: 700; text-transform: uppercase; font-size: 0.95rem; margin-top: 20px; transition: background-color 0.2s; }
         .btn-drive:hover { background-color: #006090; }
@@ -209,17 +196,12 @@
             </a>
             <div class="page-title">
                 Envíos Masivos Dotaciones 
-                <span class="badge-estimate">PROYECCIÓN</span>
             </div>
         </div>
         <img src="https://empresas.casalimpia.com/wp-content/uploads/2024/08/logo-casa-limpia.png" alt="Logo" style="height: 35px;">
     </header>
 
     <div class="dashboard-container">
-
-        <div class="info-box">
-            <strong>ℹ️ Nota Informativa:</strong> Este informe es una <strong>proyección estimada</strong> basada en la base de datos entregada de 14.325 registros. Se ha calculado un margen de error del 10% (sin WhatsApp). Los tiempos, costos y efectividad reales se actualizarán en este mismo tablero una vez finalizada la ejecución de la campaña.
-        </div>
 
         <div class="control-panel">
             <div class="slider-label">Simulador de Tiempo de Gestión Humana</div>
@@ -232,93 +214,93 @@
         </div>
 
         <section>
-            <h2 class="section-title">Resumen de Ejecución (Estimado)</h2>
+            <h2 class="section-title">Resumen de Ejecución</h2>
             <div class="kpi-grid">
                 <div class="kpi-card green">
                     <div class="kpi-label">Ahorro Tiempo vs Humano</div>
                     <div class="kpi-value"><span id="kpi-time-percent">99</span>%</div>
-                    <div class="kpi-sub"><span id="kpi-manual-hours">1433h</span> vs 1h</div>
+                    <div class="kpi-sub"><span id="kpi-manual-hours">1433h</span> vs 1.6h</div>
                     <div class="kpi-explanation">
                         <strong>Manual:</strong> 14.325 x <span class="dynamic-min">6</span> min = <span id="kpi-manual-hours-calc">1433h</span><br>
-                        <strong>Auto:</strong> Ejecución Proyectada = 1 Hora
+                        <strong>Auto:</strong> Ejecución Total = 1h 38m
                     </div>
                 </div>
                 <div class="kpi-card blue">
                     <div class="kpi-label">Ahorro Costo vs Humano</div>
                     <div class="kpi-value"><span id="kpi-cost-percent">99</span>%</div>
-                    <div class="kpi-sub"><span id="kpi-unit-cost-mini">$1.301</span> vs $4,9</div>
+                    <div class="kpi-sub"><span id="kpi-unit-cost-mini">$1.301</span> vs $3,1</div>
                     <div class="kpi-explanation">
                         <strong>Manual:</strong> Costo Unitario <span id="kpi-unit-cost-mini-2">$1.301</span><br>
-                        <strong>Auto:</strong> $70k Estimados / 14.325
+                        <strong>Auto:</strong> $45k Totales / 14.325
                     </div>
                 </div>
                 <div class="kpi-card green">
                     <div class="kpi-label">Costo Total: Humano vs Auto</div>
-                    <div class="kpi-value-small"><span id="kpi-total-cost-manual-top">$18.6M</span> vs $70k</div>
+                    <div class="kpi-value-small"><span id="kpi-total-cost-manual-top">$18.6M</span> vs $45k</div>
                     <div class="kpi-sub">Ahorro Neto: <span id="kpi-net-savings-top">~$18.5 Millones</span></div>
                     <div class="kpi-explanation">
                         <strong>Manual:</strong> 14.325 x <span class="dynamic-unit-cost">$1.301</span><br>
-                        <strong>Auto:</strong> Factura Proyectada $70.000
+                        <strong>Auto:</strong> Factura Real $45.000
                     </div>
                 </div>
             </div>
         </section>
 
         <section>
-            <h2 class="section-title">Proyección de Impacto de la Campaña</h2>
+            <h2 class="section-title">Resumen de Impacto de la Campaña</h2>
             <div class="kpi-grid">
                 <div class="kpi-card blue" style="border-top-color: var(--color-azul-logo);">
-                    <div class="kpi-label">Público Objetivo (Fijo)</div>
+                    <div class="kpi-label">Público Objetivo (Total)</div>
                     <div class="kpi-value">14.325</div>
                     <div class="kpi-sub">Total Base de Datos</div>
                 </div>
                 <div class="kpi-card green">
-                    <div class="kpi-label">Mensajes Exitosos (Est.)</div>
-                    <div class="kpi-value" style="color: var(--color-wa);">~12.892</div>
-                    <div class="kpi-sub">90% Efectividad proyectada</div>
+                    <div class="kpi-label">Mensajes Exitosos</div>
+                    <div class="kpi-value" style="color: var(--color-wa);">~13.325</div>
+                    <div class="kpi-sub">93% Efectividad</div>
                 </div>
                 <div class="kpi-card red">
-                    <div class="kpi-label">Fallidos (Est.)</div>
-                    <div class="kpi-value" style="color: var(--color-error);">~1.433</div>
-                    <div class="kpi-sub">10% Margen de error (Sin WA)</div>
+                    <div class="kpi-label">Fallidos (Sin WhatsApp)</div>
+                    <div class="kpi-value" style="color: var(--color-error);">~1.000</div>
+                    <div class="kpi-sub">7% No contactados</div>
                 </div>
             </div>
         </section>
 
         <section>
-            <h2 class="section-title">Cronología Operativa (Planificada)</h2>
+            <h2 class="section-title">Cronología Operativa</h2>
             <div class="timeline-container" style="margin-bottom: 20px;">
                 <div class="time-item">
                     <div class="time-label">Inicio de Ejecución</div>
-                    <div class="time-value">Por definir</div>
-                    <span class="time-date-small">Pendiente de inicio</span>
+                    <div class="time-value">9:32 AM</div>
+                    <span class="time-date-small">11 Mar 2026</span>
                 </div>
                 <div class="time-item">
                     <div class="time-label">Fin de Ejecución</div>
-                    <div class="time-value">Por definir</div>
-                    <span class="time-date-small">Sujeto a velocidad API</span>
+                    <div class="time-value">11:10 AM</div>
+                    <span class="time-date-small">11 Mar 2026</span>
                 </div>
                 <div class="time-item">
-                    <div class="time-label">Tiempo Total Estimado</div>
-                    <div class="time-value" style="color: var(--color-verde-logo);">1 Hora</div>
-                    <span class="time-date-small">Basado en volumen histórico</span>
+                    <div class="time-label">Tiempo Total de Bot</div>
+                    <div class="time-value" style="color: var(--color-verde-logo);">1h 38m</div>
+                    <span class="time-date-small">1.6 horas</span>
                 </div>
             </div>
         </section>
 
         <section>
-            <h2 class="section-title">Desglose Visual por Canal (Proyección)</h2>
+            <h2 class="section-title">Desglose Visual por Canal</h2>
             <div class="channel-section">
                 <div class="channel-row">
                     <div class="channel-header">
-                        <span style="display: flex; align-items: center; gap: 5px;">Rendimiento Canal WhatsApp (Estimado)</span>
-                        <span>14.325 A Procesar</span>
+                        <span style="display: flex; align-items: center; gap: 5px;">Rendimiento Canal WhatsApp</span>
+                        <span>14.325 Procesados</span>
                     </div>
                     <div class="progress-bar-wrapper" style="height: 30px;">
-                        <div class="bar-segment bg-wa" style="width: 90%;">~12.892 OK (90%)</div>
-                        <div class="bar-segment bg-err" style="width: 10%;">~1.433 ERROR (10%)</div>
+                        <div class="bar-segment bg-wa" style="width: 93%;">~13.325 OK (93%)</div>
+                        <div class="bar-segment bg-err" style="width: 7%;">~1.000 ERROR (7%)</div>
                     </div>
-                    <p style="font-size: 0.8rem; color: #64748B; margin-top: 5px;">* Se estima que aproximadamente un 10% de los números telefónicos no tendrán WhatsApp activo. Este gráfico se ajustará a la realidad post-envío.</p>
+                    <p style="font-size: 0.8rem; color: #64748B; margin-top: 5px;">* De la base provista, aproximadamente 1.000 números telefónicos no contaban con WhatsApp activo al momento del envío.</p>
                 </div>
             </div>
         </section>
@@ -354,25 +336,25 @@
                     Interpretación de Capacidad Operativa <span class="badge-warn">ESCENARIOS INVIABLES</span>
                 </div>
                 <p style="color: #64748B; margin-bottom: 15px; font-size: 0.9rem;">
-                    Para procesar manualmente 14.325 transacciones (<span class="dynamic-min">6</span> min c/u) se requerirán <strong id="scenario-hours-txt">1.433 horas hombre</strong>.
+                    Para procesar manualmente 14.325 transacciones (<span class="dynamic-min">6</span> min c/u) se requirieron <strong id="scenario-hours-txt">1.433 horas hombre</strong>.
                 </p>
                 <div class="capacity-item">
                     <div class="capacity-icon">👤</div>
                     <div style="font-size: 0.9rem; color: #431407;">
-                        Una sola persona tardaría <strong id="scenario-months">6,5 meses</strong> dedicados exclusivamente a esta labor.
+                        Una sola persona habría tardado <strong id="scenario-months">6,5 meses</strong> dedicados exclusivamente a esta labor.
                     </div>
                 </div>
                 <div class="capacity-item">
                     <div class="capacity-icon">👥</div>
                     <div style="font-size: 0.9rem; color: #431407;">
-                        Para igualar la velocidad de envío planificada del bot (1 hora), se requeriría contratar temporalmente a <strong id="scenario-people">1.433 personas</strong> trabajando al mismo tiempo.
-                        <span class="calc-detail-people">(<span id="scenario-hours-calc">1.433h</span> Manuales / 1h Bot)</span>
+                        Para igualar la velocidad de envío récord del bot (1.6h), se habría requerido contratar a <strong id="scenario-people">877 personas</strong> trabajando al mismo tiempo.
+                        <span class="calc-detail-people">(<span id="scenario-hours-calc">1.433h</span> Manuales / 1.63h Bot)</span>
                     </div>
                 </div>
             </div>
 
             <div class="cost-container" style="border: 1px solid #e2e8f0;">
-                <div class="section-title" style="border: none; margin-bottom: 10px; padding: 0;">Eficiencia Operativa Proyectada</div>
+                <div class="section-title" style="border: none; margin-bottom: 10px; padding: 0;">Eficiencia Operativa Final</div>
                 
                 <div class="comparativa-container">
                     <div class="big-cost red-warn-bg">
@@ -385,24 +367,24 @@
                     </div>
                     <div style="font-weight: bold; color: #CBD5E1; font-size: 1.2rem;">VS</div>
                     <div class="big-cost green-bg">
-                        <span style="font-size: 0.8rem; color: #166534; font-weight: bold; text-transform: uppercase;">Costo Unitario Auto (Est.)</span>
-                        <span class="amount" style="color: #15803d;">$4,9</span>
+                        <span style="font-size: 0.8rem; color: #166534; font-weight: bold; text-transform: uppercase;">Costo Unitario Auto</span>
+                        <span class="amount" style="color: #15803d;">$3,1</span>
                         <span style="font-size: 0.75rem; color: #166534;">por transacción</span>
                     </div>
                 </div>
 
                 <div style="margin-top: 25px; padding: 20px; background: #F8FAFC; border-radius: 8px;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem;">
-                        <span style="color: #64748B;">Costo Total Campaña (Estimado):</span>
-                        <span style="font-weight: bold; color: #16A34A;">$70.000 COP</span>
+                        <span style="color: #64748B;">Costo Total Campaña (Factura Real):</span>
+                        <span style="font-weight: bold; color: #16A34A;">$45.000 COP</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; border-bottom: 1px dashed #cbd5e1; padding-bottom: 10px;">
-                        <span style="color: #64748B;">Costo Total Proyectado (Humano):</span>
+                        <span style="color: #64748B;">Costo Total Estimado (Humano):</span>
                         <span style="font-weight: bold; color: #C2410C;" id="final-total-cost-manual">~$18.639.112 COP</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                        <span style="font-weight: 700; color: #334155;">AHORRO NETO ESTIMADO:</span>
-                        <span style="font-size: 1.5rem; font-weight: 700; color: #16A34A;" id="final-net-savings-bottom">$18.569.112 COP</span>
+                        <span style="font-weight: 700; color: #334155;">AHORRO NETO GENERADO:</span>
+                        <span style="font-size: 1.5rem; font-weight: 700; color: #16A34A;" id="final-net-savings-bottom">$18.594.112 COP</span>
                     </div>
 
                     <a href="https://docs.google.com/spreadsheets/d/1qiOKM82d6gZwDDZUQyleF6TRrIKRGo4B4IKuKd0alxk/edit?gid=0#gid=0" target="_blank" class="btn-drive">
@@ -416,12 +398,12 @@
     </div>
 
     <script>
-        // Constantes del sistema para DOTACIONES (PROYECCIÓN)
+        // Constantes del sistema para DOTACIONES (Datos Reales)
         const TOTAL_REGISTROS = 14325; 
         const COSTO_REAL_EMPRESA = 2863086;
         const HORAS_LABORALES = 220;
-        const HORAS_BOT = 1; // Estimado de 1 hora
-        const COSTO_TOTAL_BOT = 70000; // Costo estimado
+        const HORAS_BOT = 1.633; // 1h 38m = 98m = 1.633h
+        const COSTO_TOTAL_BOT = 45000; // Factura real
         const COSTO_UNITARIO_BOT = COSTO_TOTAL_BOT / TOTAL_REGISTROS;
 
         // Costo por minuto humano (Fijo)

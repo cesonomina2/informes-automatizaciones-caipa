@@ -123,6 +123,7 @@
         .kpi-card.red { border-top-color: var(--color-error); }
         .kpi-card.warning { border-top-color: var(--color-alerta); }
         .kpi-card.purple { border-top-color: var(--color-morado); }
+        .kpi-card.neutral { border-top-color: #64748B; }
 
         .kpi-label { font-size: 0.75rem; text-transform: uppercase; color: var(--color-gris-claro); font-weight: 700; margin-bottom: 5px; line-height: 1.2;}
         .kpi-value { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--color-gris-texto); margin: 5px 0; }
@@ -218,10 +219,10 @@
                 <div class="kpi-card green">
                     <div class="kpi-label">Ahorro Tiempo vs Humano</div>
                     <div class="kpi-value"><span id="kpi-time-percent">98</span>%</div>
-                    <div class="kpi-sub"><span id="kpi-manual-hours">986h</span> vs 22.9h</div>
+                    <div class="kpi-sub"><span id="kpi-manual-hours">986h</span> vs 20.9h</div>
                     <div class="kpi-explanation">
                         <strong>Manual:</strong> 9.858 x <span class="dynamic-min">6</span> min = <span id="kpi-manual-hours-calc">986h</span><br>
-                        <strong>Auto:</strong> Ejecución Total = 22.9h
+                        <strong>Auto:</strong> Ejecución Total = 20.9h
                     </div>
                 </div>
                 <div class="kpi-card blue">
@@ -268,16 +269,16 @@
                     <div class="kpi-value" style="color: var(--color-morado);">1.319</div>
                     <div class="kpi-sub">Post-evento</div>
                 </div>
-                <div class="kpi-card neutral" style="border-top-color: #94A3B8;">
+                <div class="kpi-card neutral">
                     <div class="kpi-label">B5: Asistentes</div>
-                    <div class="kpi-value" style="color: #64748B;">1.317</div>
-                    <div class="kpi-sub" style="background: #FEF3C7; color: #D97706;">Por definir (Est.)</div>
+                    <div class="kpi-value" style="color: var(--color-gris-texto);">1.317</div>
+                    <div class="kpi-sub" style="background: #e2e8f0; color: #475569;">Fotos asistencia</div>
                 </div>
             </div>
 
             <div class="strategy-box">
                 <strong>💡 Estrategia del Ciclo Completo del Evento:</strong> 
-                Se ejecutó el ciclo total de comunicación. Iniciando con las invitaciones segmentadas por región, envío de direcciones a confirmados, y finalmente el cierre con la encuesta de satisfacción y el mensaje de agradecimiento a los asistentes (fase en proceso).
+                Se ejecutó el ciclo total de comunicación. Iniciando con las invitaciones segmentadas por región, envío de direcciones a confirmados, y finalmente el cierre con la encuesta de satisfacción y el mensaje de agradecimiento a los asistentes.
             </div>
         </section>
 
@@ -316,8 +317,8 @@
                 </div>
                 <div class="time-item">
                     <div class="time-label">Asistentes</div>
-                    <div class="time-value" style="color: #94A3B8;">~2.1h (Est.)</div>
-                    <span class="time-date-small">Por Definir</span>
+                    <div class="time-value" style="color: #64748B;">8m</div>
+                    <span class="time-date-small">11 Mar (8:42am - 8:50am)</span>
                 </div>
             </div>
         </section>
@@ -327,13 +328,14 @@
             <div class="channel-section">
                 <div class="channel-row">
                     <div class="channel-header">
-                        <span style="display: flex; align-items: center; gap: 5px;">Volumen Total Procesado y Proyectado</span>
+                        <span style="display: flex; align-items: center; gap: 5px;">Volumen Total Procesado</span>
                         <span>9.858 Procesados</span>
                     </div>
                     <div class="progress-bar-wrapper" style="height: 30px;">
-                        <div class="bar-segment bg-wa" style="width: 100%;">9.858 ENVÍOS GESTIONADOS POR WHATSAPP</div>
+                        <div class="bar-segment bg-wa" style="width: 95.6%;">9.428 OK (95.6%)</div>
+                        <div class="bar-segment bg-err" style="width: 4.4%;">430 ERROR (4.4%)</div>
                     </div>
-                    <p style="font-size: 0.8rem; color: #64748B; margin-top: 5px;">* Nota: Se identificaron ~430 errores consolidados por líneas inactivas durante las primeras fases de invitación. El progreso refleja el volumen total de transacciones pagadas a la API.</p>
+                    <p style="font-size: 0.8rem; color: #64748B; margin-top: 5px;">* Nota: Se identificaron ~430 errores consolidados por líneas inactivas durante las primeras fases de invitación.</p>
                 </div>
             </div>
         </section>
@@ -380,8 +382,8 @@
                 <div class="capacity-item">
                     <div class="capacity-icon">👥</div>
                     <div style="font-size: 0.9rem; color: #431407;">
-                        Para igualar el tiempo total de operación del bot (~22.9h), se habrían requerido <strong id="scenario-people">43 personas</strong> trabajando simultáneamente.
-                        <span class="calc-detail-people">(<span id="scenario-hours-calc">986h</span> Manuales / 22.9h Bot)</span>
+                        Para igualar el tiempo total de operación del bot (~20.9h), se habrían requerido <strong id="scenario-people">47 personas</strong> trabajando simultáneamente.
+                        <span class="calc-detail-people">(<span id="scenario-hours-calc">986h</span> Manuales / 20.9h Bot)</span>
                     </div>
                 </div>
             </div>
@@ -436,8 +438,8 @@
         const COSTO_REAL_EMPRESA = 2863086;
         const HORAS_LABORALES = 220;
         
-        // 18.7h (Bases 1-3) + 2.1h (Base 4) + 2.1h (Base 5 estimada) = 22.9h
-        const HORAS_BOT = 22.9; 
+        // 18.7h (Bases 1-3) + 2.1h (Base 4) + 8 mins (0.13h Base 5) = 20.93h
+        const HORAS_BOT = 20.93; 
         
         // $40k (Bases 1-3) + $8k (Base 4) + $8k (Base 5) = $56k
         const COSTO_TOTAL_BOT = 56000; 
@@ -540,3 +542,4 @@
     </script>
 </body>
 </html>
+

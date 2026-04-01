@@ -13,6 +13,7 @@
             --color-verde-logo: #8DC63F;
             --color-gris-texto: #334155;
             --bg-body: #94A3B8; 
+            --sombra-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -32,31 +33,17 @@
         .page-wrapper {
             background-color: #ffffff;
             width: 100%;
-            max-width: 8.5in; /* Ancho Carta */
-            padding: 1in; /* Márgenes internos simulados */
+            max-width: 8.5in; 
+            padding: 1in; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             border-radius: 4px;
         }
 
         /* --- CONFIGURACIÓN PDF REAL --- */
-        @page {
-            size: letter;
-            margin: 1in; /* Márgenes de impresión */
-        }
-
+        @page { size: letter; margin: 1in; }
         @media print {
-            body { 
-                background-color: #ffffff; 
-                padding: 0; 
-                display: block; 
-            }
-            .page-wrapper { 
-                max-width: 100%; 
-                width: 100%; 
-                padding: 0; 
-                box-shadow: none; 
-                border-radius: 0;
-            }
+            body { background-color: #ffffff; padding: 0; display: block; }
+            .page-wrapper { max-width: 100%; width: 100%; padding: 0; box-shadow: none; border-radius: 0; }
         }
 
         .page-break { page-break-before: always; }
@@ -80,6 +67,25 @@
             text-transform: uppercase;
         }
 
+        /* --- CONTROL SLIDER --- */
+        .control-panel {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--sombra-card);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .slider-container { width: 100%; max-width: 500px; margin-top: 10px; }
+        .slider-label { font-family: 'Outfit', sans-serif; font-size: 1.1rem; color: var(--color-azul-logo); font-weight: 700; margin-bottom: 5px; }
+        .slider-value { font-size: 1.5rem; color: var(--color-verde-logo); font-weight: bold; }
+        input[type=range] { width: 100%; cursor: pointer; margin: 10px 0; }
+
         /* --- NOTA METODOLÓGICA --- */
         .metodologia-box {
             background-color: #EFF6FF;
@@ -92,7 +98,7 @@
             color: #1E3A8A;
         }
 
-        /* --- KPI PRINCIPALES (TOTALES) --- */
+        /* --- KPI PRINCIPALES --- */
         .kpi-grid-top {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -125,7 +131,7 @@
             margin-top: 30px;
         }
 
-        /* --- TABLA RESUMEN POR CAMPAÑA --- */
+        /* --- TABLA --- */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -158,7 +164,7 @@
         tr:last-child td { border-bottom: none; }
         tr.total-row td { background-color: #f1f5f9; font-weight: bold; font-family: 'Outfit', sans-serif; color: var(--color-azul-logo); }
 
-        /* --- TARJETAS INDIVIDUALES (3 COLUMNAS PARA AHORRAR ESPACIO) --- */
+        /* --- TARJETAS CAMPAÑAS --- */
         .campaign-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -189,7 +195,7 @@
         .data-value { font-weight: 700; color: #334155; }
         .data-value.green { color: #16A34A; }
 
-        /* --- ESCENARIOS INVIABLES --- */
+        /* --- ESCENARIOS --- */
         .capacity-container {
             background: #FFF7ED;
             border: 1px solid #FFEDD5;
@@ -288,9 +294,19 @@
         <img src="https://empresas.casalimpia.com/wp-content/uploads/2024/08/logo-casa-limpia.png" alt="Logo Casalimpia" style="height: 35px;">
     </header>
 
+    <div class="control-panel avoid-break">
+        <div class="slider-label">Simulador Global de Tiempos Manuales</div>
+        <p style="font-size: 0.9rem; color: #64748B;">¿Cuánto tarda una persona en gestionar 1 registro manualmente?</p>
+        
+        <div class="slider-container">
+            <input type="range" id="timeSlider" min="1" max="10" value="6" step="0.5" oninput="updateDashboard(this.value)">
+            <div class="slider-value"><span id="minutesDisplay">6</span> minutos</div>
+        </div>
+    </div>
+
     <div class="metodologia-box avoid-break">
         <strong>📌 NOTA METODOLÓGICA:</strong><br>
-        Para el cálculo financiero y operativo de este informe consolidado, se ha establecido un <strong>tiempo promedio fijo de 6 minutos</strong> por gestión manual, con un costo calculado sobre una base de $2.863.086 COP (Costo Real Empresa / 220h mes).
+        Para el cálculo financiero y operativo de este informe consolidado, se ha establecido un <strong>tiempo promedio simulado de <span class="dynamic-min">6</span> minutos</strong> por gestión manual, con un costo calculado sobre una base de $2.863.086 COP (Costo Real Empresa / 220h mes).
     </div>
 
     <div class="kpi-grid-top avoid-break">
@@ -301,13 +317,13 @@
         </div>
         <div class="kpi-card-top highlight-green">
             <div class="kpi-label-top">Ahorro Neto Generado (Dinero)</div>
-            <div class="kpi-value-top">$71,3 M</div>
-            <div class="kpi-sub-top">$71.301.682 COP exactos</div>
+            <div class="kpi-value-top" id="kpi-total-cost">$71,3 M</div>
+            <div class="kpi-sub-top" id="kpi-total-cost-exact">$71.301.682 COP exactos</div>
         </div>
         <div class="kpi-card-top highlight-green">
             <div class="kpi-label-top">Tiempo Total Liberado</div>
-            <div class="kpi-value-top">5.426h</div>
-            <div class="kpi-sub-top">5.497h Humanas - 71h Bot</div>
+            <div class="kpi-value-top" id="kpi-time-saved">5.426h</div>
+            <div class="kpi-sub-top" id="kpi-time-saved-sub">5.497h Humanas - 71h Bot</div>
         </div>
     </div>
 
@@ -318,8 +334,8 @@
                 <tr>
                     <th>Campaña Ejecutada</th>
                     <th style="width: 12%;">Volumen</th>
-                    <th style="width: 18%;">Costo Factura (Bot)</th>
-                    <th style="width: 22%;">Costo Est. Humano (6m)</th>
+                    <th style="width: 18%;">Costo Factura</th>
+                    <th style="width: 22%;">Costo Est. Humano</th>
                     <th style="width: 20%;">Ahorro Generado</th>
                 </tr>
             </thead>
@@ -328,50 +344,50 @@
                     <td><a href="https://informes-automatizaciones-caipa.vercel.app/reporte_contratacion.html" target="_blank" style="color: var(--color-azul-logo); text-decoration: underline; font-weight: 600;">Contratación</a></td>
                     <td>7.068</td>
                     <td>$55.000</td>
-                    <td>$9.198.314</td>
-                    <td style="color: #16A34A; font-weight: bold;">$9.143.314</td>
+                    <td id="tbl-cost-1">$9.198.314</td>
+                    <td id="tbl-save-1" style="color: #16A34A; font-weight: bold;">$9.143.314</td>
                 </tr>
                 <tr>
                     <td><a href="https://informes-automatizaciones-caipa.vercel.app/reporte_confirmacion_empleo.html" target="_blank" style="color: var(--color-azul-logo); text-decoration: underline; font-weight: 600;">Confirmación Primer Empleo</a></td>
                     <td>6.303</td>
                     <td>$21.000</td>
-                    <td>$8.202.741</td>
-                    <td style="color: #16A34A; font-weight: bold;">$8.181.741</td>
+                    <td id="tbl-cost-2">$8.202.741</td>
+                    <td id="tbl-save-2" style="color: #16A34A; font-weight: bold;">$8.181.741</td>
                 </tr>
                 <tr>
                     <td><a href="https://informes-automatizaciones-caipa.vercel.app/reporte_fiesta_gratitud.html" target="_blank" style="color: var(--color-azul-logo); text-decoration: underline; font-weight: 600;">Fiesta Gratitud</a></td>
                     <td>9.858</td>
                     <td>$56.000</td>
-                    <td>$12.829.228</td>
-                    <td style="color: #16A34A; font-weight: bold;">$12.773.228</td>
+                    <td id="tbl-cost-3">$12.829.228</td>
+                    <td id="tbl-save-3" style="color: #16A34A; font-weight: bold;">$12.773.228</td>
                 </tr>
                 <tr>
                     <td><a href="https://informes-automatizaciones-caipa.vercel.app/reporte_tecnologia.html" target="_blank" style="color: var(--color-azul-logo); text-decoration: underline; font-weight: 600;">Verificación Líneas (Tecnología)</a></td>
                     <td>1.446</td>
                     <td>$5.000</td>
-                    <td>$1.881.828</td>
-                    <td style="color: #16A34A; font-weight: bold;">$1.876.828</td>
+                    <td id="tbl-cost-4">$1.881.828</td>
+                    <td id="tbl-save-4" style="color: #16A34A; font-weight: bold;">$1.876.828</td>
                 </tr>
                 <tr>
                     <td><a href="https://informes-automatizaciones-caipa.vercel.app/reporte_dia_mujer.html" target="_blank" style="color: var(--color-azul-logo); text-decoration: underline; font-weight: 600;">Día de la Mujer</a></td>
                     <td>11.104</td>
                     <td>$40.000</td>
-                    <td>$14.450.776</td>
-                    <td style="color: #16A34A; font-weight: bold;">$14.410.776</td>
+                    <td id="tbl-cost-5">$14.450.776</td>
+                    <td id="tbl-save-5" style="color: #16A34A; font-weight: bold;">$14.410.776</td>
                 </tr>
                 <tr>
                     <td><a href="https://informes-automatizaciones-caipa.vercel.app/reporte_dotaciones.html" target="_blank" style="color: var(--color-azul-logo); text-decoration: underline; font-weight: 600;">Dotaciones</a></td>
                     <td>19.195</td>
                     <td>$65.000</td>
-                    <td>$24.980.795</td>
-                    <td style="color: #16A34A; font-weight: bold;">$24.915.795</td>
+                    <td id="tbl-cost-6">$24.980.795</td>
+                    <td id="tbl-save-6" style="color: #16A34A; font-weight: bold;">$24.915.795</td>
                 </tr>
                 <tr class="total-row">
                     <td>TOTAL CONSOLIDADO</td>
                     <td>54.974</td>
                     <td>$242.000</td>
-                    <td>$71.543.682</td>
-                    <td style="color: #16A34A;">$71.301.682</td>
+                    <td id="tbl-cost-total">$71.543.682</td>
+                    <td id="tbl-save-total" style="color: #16A34A;">$71.301.682</td>
                 </tr>
             </tbody>
         </table>
@@ -385,8 +401,8 @@
                 <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">7.068 un.</span>
             </div>
             <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">24,4 Horas</span></div>
-            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value">706,8 Horas</span></div>
-            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green">682,4 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value" id="grd-man-1">706,8 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green" id="grd-save-1">682,4 Horas</span></div>
         </div>
         <div class="campaign-card">
             <div class="campaign-title">
@@ -394,8 +410,8 @@
                 <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">6.303 un.</span>
             </div>
             <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">20,5 Horas</span></div>
-            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value">630,3 Horas</span></div>
-            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green">609,8 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value" id="grd-man-2">630,3 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green" id="grd-save-2">609,8 Horas</span></div>
         </div>
         <div class="campaign-card">
             <div class="campaign-title">
@@ -403,8 +419,8 @@
                 <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">9.858 un.</span>
             </div>
             <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">20,9 Horas</span></div>
-            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value">985,8 Horas</span></div>
-            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green">964,9 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value" id="grd-man-3">985,8 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green" id="grd-save-3">964,9 Horas</span></div>
         </div>
         <div class="campaign-card">
             <div class="campaign-title">
@@ -412,8 +428,8 @@
                 <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">1.446 un.</span>
             </div>
             <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">2,4 Horas</span></div>
-            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value">144,6 Horas</span></div>
-            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green">142,2 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value" id="grd-man-4">144,6 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green" id="grd-save-4">142,2 Horas</span></div>
         </div>
         <div class="campaign-card">
             <div class="campaign-title">
@@ -421,8 +437,8 @@
                 <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">11.104 un.</span>
             </div>
             <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">0,5 Horas</span></div>
-            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value">1.110,4 Horas</span></div>
-            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green">1.109,9 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value" id="grd-man-5">1.110,4 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green" id="grd-save-5">1.109,9 Horas</span></div>
         </div>
         <div class="campaign-card">
             <div class="campaign-title">
@@ -430,8 +446,8 @@
                 <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">19.195 un.</span>
             </div>
             <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">2,4 Horas</span></div>
-            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value">1.919,5 Horas</span></div>
-            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green">1.917,1 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value" id="grd-man-6">1.919,5 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green" id="grd-save-6">1.917,1 Horas</span></div>
         </div>
     </div>
 
@@ -440,16 +456,16 @@
             <span>⚠️ Interpretación de Capacidad Operativa (Escenarios Inviables)</span>
         </div>
         <p style="color: #9A3412; margin-bottom: 15px; font-size: 0.85rem;">
-            Para lograr manualmente el volumen total procesado (54.974 transacciones), invirtiendo el promedio de 6 minutos por gestión, la empresa habría requerido <strong>5.497 horas hombre</strong>.
+            Para lograr manualmente el volumen total procesado (54.974 transacciones), invirtiendo el promedio de <span class="dynamic-min">6</span> minutos por gestión, la empresa habría requerido <strong id="cap-hours">5.497</strong><strong> horas hombre</strong>.
         </p>
         <div class="capacity-item">
             <div class="capacity-text">
-                👤 <strong>Escenario Individual:</strong> Asignar a una (1) sola persona a realizar estas llamadas y mensajes le habría tomado <strong>25,0 meses</strong> de trabajo continuo (base de 220 horas laborales por mes), sin realizar ninguna otra labor. ¡Más de dos años de trabajo!
+                👤 <strong>Escenario Individual:</strong> Asignar a una (1) sola persona a realizar estas llamadas y mensajes le habría tomado <strong id="cap-months">25,0</strong><strong> meses</strong> de trabajo continuo (base de 220 horas laborales por mes), sin realizar ninguna otra labor.
             </div>
         </div>
         <div class="capacity-item">
             <div class="capacity-text">
-                👥 <strong>Escenario de Equipo (Empate de Tiempo):</strong> Para poder igualar la velocidad total en la que el sistema procesó las 6 bases de datos (apenas ~71,1 horas en total), la empresa habría tenido que contratar un equipo temporal masivo de <strong>77 personas</strong> trabajando simultáneamente.
+                👥 <strong>Escenario de Equipo (Empate de Tiempo):</strong> Para poder igualar la velocidad total en la que el sistema procesó las 6 bases de datos (apenas ~71,1 horas en total), la empresa habría tenido que contratar un equipo temporal masivo de <strong id="cap-people">77</strong><strong> personas</strong> trabajando simultáneamente.
             </div>
         </div>
     </div>
@@ -459,12 +475,12 @@
         <div class="summary-grid">
             <div class="summary-block">
                 <span class="summary-label">Dinero Total Ahorrado</span>
-                <span class="summary-value">$71.301.682 COP</span>
+                <span class="summary-value" id="sum-net-savings">$71.301.682 COP</span>
             </div>
             <div style="width: 2px; background-color: #86EFAC; height: 50px;"></div>
             <div class="summary-block">
                 <span class="summary-label">Tiempo Total Ahorrado</span>
-                <span class="summary-value">5.426 Horas</span>
+                <span class="summary-value" id="sum-time-saved">5.426 Horas</span>
             </div>
         </div>
     </div>
@@ -474,6 +490,104 @@
     </div>
 
 </div>
+
+<script>
+    // Datos maestros de las 6 Campañas
+    const campaigns = [
+        { id: 1, name: "Contratación", vol: 7068, botTime: 24.4, botCost: 55000 },
+        { id: 2, name: "Conf. Empleo", vol: 6303, botTime: 20.5, botCost: 21000 },
+        { id: 3, name: "Fiesta Gratitud", vol: 9858, botTime: 20.9, botCost: 56000 },
+        { id: 4, name: "Verif. Líneas", vol: 1446, botTime: 2.4, botCost: 5000 },
+        { id: 5, name: "Día de la Mujer", vol: 11104, botTime: 0.533, botCost: 40000 },
+        { id: 6, name: "Dotaciones", vol: 19195, botTime: 2.416, botCost: 65000 }
+    ];
+
+    const COSTO_REAL_EMPRESA = 2863086;
+    const HORAS_MES = 220;
+    const COSTO_MINUTO = (COSTO_REAL_EMPRESA / HORAS_MES) / 60;
+    
+    const TOTAL_BOT_COST = 242000;
+    const TOTAL_BOT_TIME = 71.149; // Suma de todos los tiempos del bot
+
+    // Formateadores
+    const formatter = new Intl.NumberFormat('es-CO', {
+        style: 'currency', currency: 'COP', minimumFractionDigits: 0, maximumFractionDigits: 0
+    });
+    
+    const numFmt = new Intl.NumberFormat('es-CO', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    const intFmt = new Intl.NumberFormat('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+    const millionsFormatter = (value) => {
+        return "$" + (value / 1000000).toFixed(1).replace('.', ',') + " M";
+    };
+
+    function updateDashboard(mins) {
+        // Actualizar UI del slider y textos estáticos
+        document.getElementById('minutesDisplay').innerText = mins;
+        document.querySelectorAll('.dynamic-min').forEach(el => el.innerText = mins);
+
+        let totalCostoHumano = 0;
+        let totalHorasHumanas = 0;
+
+        // Recalcular por campaña
+        campaigns.forEach((camp) => {
+            const i = camp.id;
+            const costoHumano = (camp.vol * mins) * COSTO_MINUTO;
+            const ahorroDinero = costoHumano - camp.botCost;
+            
+            const horasHumanas = (camp.vol * mins) / 60;
+            const ahorroTiempo = horasHumanas - camp.botTime;
+
+            // Actualizar Tabla
+            document.getElementById(`tbl-cost-${i}`).innerText = formatter.format(costoHumano);
+            
+            const tdSave = document.getElementById(`tbl-save-${i}`);
+            tdSave.innerText = formatter.format(ahorroDinero);
+            tdSave.style.color = ahorroDinero < 0 ? "#ef4444" : "#16A34A";
+
+            // Actualizar Grid de Tiempos
+            document.getElementById(`grd-man-${i}`).innerText = numFmt.format(horasHumanas) + " Horas";
+            document.getElementById(`grd-save-${i}`).innerText = numFmt.format(ahorroTiempo) + " Horas";
+
+            // Sumar a los totales
+            totalCostoHumano += costoHumano;
+            totalHorasHumanas += horasHumanas;
+        });
+
+        // Calcular Grandes Totales
+        const totalAhorroDinero = totalCostoHumano - TOTAL_BOT_COST;
+        const totalAhorroTiempo = totalHorasHumanas - TOTAL_BOT_TIME;
+
+        // 1. Actualizar Tarjetas Superiores
+        document.getElementById('kpi-total-cost').innerText = millionsFormatter(totalAhorroDinero);
+        document.getElementById('kpi-total-cost-exact').innerText = formatter.format(totalAhorroDinero) + " COP exactos";
+        
+        document.getElementById('kpi-time-saved').innerText = intFmt.format(Math.round(totalAhorroTiempo)) + "h";
+        document.getElementById('kpi-time-saved-sub').innerText = `${intFmt.format(Math.round(totalHorasHumanas))}h Humanas - 71h Bot`;
+
+        // 2. Actualizar Total Tabla
+        document.getElementById('tbl-cost-total').innerText = formatter.format(totalCostoHumano);
+        document.getElementById('tbl-save-total').innerText = formatter.format(totalAhorroDinero);
+
+        // 3. Actualizar Escenarios Inviables
+        document.getElementById('cap-hours').innerText = intFmt.format(Math.round(totalHorasHumanas));
+        
+        const months = (totalHorasHumanas / HORAS_MES).toFixed(1);
+        document.getElementById('cap-months').innerText = months.replace('.', ',');
+        
+        const people = Math.round(totalHorasHumanas / TOTAL_BOT_TIME);
+        document.getElementById('cap-people').innerText = people;
+
+        // 4. Actualizar Resumen Final
+        document.getElementById('sum-net-savings').innerText = formatter.format(totalAhorroDinero) + " COP";
+        document.getElementById('sum-time-saved').innerText = intFmt.format(Math.round(totalAhorroTiempo)) + " Horas";
+    }
+
+    // Inicializar al cargar
+    window.onload = function() {
+        updateDashboard(document.getElementById('timeSlider').value);
+    };
+</script>
 
 </body>
 </html>

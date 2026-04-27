@@ -44,6 +44,7 @@
         @media print {
             body { background-color: #ffffff; padding: 0; display: block; }
             .page-wrapper { max-width: 100%; width: 100%; padding: 0; box-shadow: none; border-radius: 0; }
+            .control-panel { display: none !important; } /* Ocultar slider al imprimir */
         }
 
         .page-break { page-break-before: always; }
@@ -312,18 +313,18 @@
     <div class="kpi-grid-top avoid-break">
         <div class="kpi-card-top highlight-blue">
             <div class="kpi-label-top">Total de Gestiones (Envíos)</div>
-            <div class="kpi-value-top">54.974</div>
-            <div class="kpi-sub-top" style="color: #64748B;">Suma de 6 campañas</div>
+            <div class="kpi-value-top">94.295</div>
+            <div class="kpi-sub-top" style="color: #64748B;">Suma de 10 campañas</div>
         </div>
         <div class="kpi-card-top highlight-green">
             <div class="kpi-label-top">Ahorro Neto Generado (Dinero)</div>
-            <div class="kpi-value-top" id="kpi-total-cost">$71,3 M</div>
-            <div class="kpi-sub-top" id="kpi-total-cost-exact">$71.301.682 COP exactos</div>
+            <div class="kpi-value-top" id="kpi-total-cost">~$122,3 M</div>
+            <div class="kpi-sub-top" id="kpi-total-cost-exact">$122.313.770 COP exactos</div>
         </div>
         <div class="kpi-card-top highlight-green">
             <div class="kpi-label-top">Tiempo Total Liberado</div>
-            <div class="kpi-value-top" id="kpi-time-saved">5.426h</div>
-            <div class="kpi-sub-top" id="kpi-time-saved-sub">5.497h Humanas - 71h Bot</div>
+            <div class="kpi-value-top" id="kpi-time-saved">9.354h</div>
+            <div class="kpi-sub-top" id="kpi-time-saved-sub">9.430h Humanas - 76h Bot</div>
         </div>
     </div>
 
@@ -382,16 +383,46 @@
                     <td id="tbl-cost-6">$24.980.795</td>
                     <td id="tbl-save-6" style="color: #16A34A; font-weight: bold;">$24.915.795</td>
                 </tr>
+                <tr>
+                    <td><a href="https://informes-automatizaciones-caipa.vercel.app/reporte_semilleros.html" target="_blank" style="color: var(--color-azul-logo); text-decoration: underline; font-weight: 600;">Semilleros</a></td>
+                    <td>5.030</td>
+                    <td>$25.000</td>
+                    <td id="tbl-cost-7">$6.546.089</td>
+                    <td id="tbl-save-7" style="color: #16A34A; font-weight: bold;">$6.521.089</td>
+                </tr>
+                <tr>
+                    <td><a href="https://informes-automatizaciones-caipa.vercel.app/reporte_dianino.html" target="_blank" style="color: var(--color-azul-logo); text-decoration: underline; font-weight: 600;">Día del Niño</a></td>
+                    <td>9.156</td>
+                    <td>$35.000</td>
+                    <td id="tbl-cost-8">$11.915.653</td>
+                    <td id="tbl-save-8" style="color: #16A34A; font-weight: bold;">$11.880.653</td>
+                </tr>
+                <tr>
+                    <td><a href="https://informes-automatizaciones-caipa.vercel.app/reporte_retiros.html" target="_blank" style="color: var(--color-azul-logo); text-decoration: underline; font-weight: 600;">Retiros</a></td>
+                    <td>11.747</td>
+                    <td>$45.000</td>
+                    <td id="tbl-cost-9">$15.286.033</td>
+                    <td id="tbl-save-9" style="color: #16A34A; font-weight: bold;">$15.241.033</td>
+                </tr>
+                <tr>
+                    <td><a href="https://informes-automatizaciones-caipa.vercel.app/reporte_mas_bienestar.html" target="_blank" style="color: var(--color-azul-logo); text-decoration: underline; font-weight: 600;">Más Bienestar</a></td>
+                    <td>13.388</td>
+                    <td>$55.000</td>
+                    <td id="tbl-cost-10">$17.421.464</td>
+                    <td id="tbl-save-10" style="color: #16A34A; font-weight: bold;">$17.366.464</td>
+                </tr>
                 <tr class="total-row">
                     <td>TOTAL CONSOLIDADO</td>
-                    <td>54.974</td>
-                    <td>$242.000</td>
-                    <td id="tbl-cost-total">$71.543.682</td>
-                    <td id="tbl-save-total" style="color: #16A34A;">$71.301.682</td>
+                    <td>94.295</td>
+                    <td>$402.000</td>
+                    <td id="tbl-cost-total">$122.715.770</td>
+                    <td id="tbl-save-total" style="color: #16A34A;">$122.313.770</td>
                 </tr>
             </tbody>
         </table>
     </div>
+
+    <div class="page-break"></div>
 
     <h2 class="section-title">Desglose de Tiempos Operativos</h2>
     <div class="campaign-grid avoid-break">
@@ -449,6 +480,42 @@
             <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value" id="grd-man-6">1.919,5 Horas</span></div>
             <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green" id="grd-save-6">1.917,1 Horas</span></div>
         </div>
+        <div class="campaign-card">
+            <div class="campaign-title">
+                Semilleros
+                <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">5.030 un.</span>
+            </div>
+            <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">0,5 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value" id="grd-man-7">503,0 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green" id="grd-save-7">502,5 Horas</span></div>
+        </div>
+        <div class="campaign-card">
+            <div class="campaign-title">
+                Día del Niño
+                <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">9.156 un.</span>
+            </div>
+            <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">1,0 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value" id="grd-man-8">915,6 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green" id="grd-save-8">914,6 Horas</span></div>
+        </div>
+        <div class="campaign-card">
+            <div class="campaign-title">
+                Retiros
+                <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">11.747 un.</span>
+            </div>
+            <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">1,4 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value" id="grd-man-9">1.174,7 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green" id="grd-save-9">1.173,3 Horas</span></div>
+        </div>
+        <div class="campaign-card">
+            <div class="campaign-title">
+                Más Bienestar
+                <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color:#334155; width: fit-content;">13.388 un.</span>
+            </div>
+            <div class="data-row"><span class="data-label">Tiempo Bot:</span> <span class="data-value">1,5 Horas</span></div>
+            <div class="data-row"><span class="data-label">Manual Est.:</span> <span class="data-value" id="grd-man-10">1.338,8 Horas</span></div>
+            <div class="data-row"><span class="data-label">Ahorro:</span> <span class="data-value green" id="grd-save-10">1.337,3 Horas</span></div>
+        </div>
     </div>
 
     <div class="capacity-container avoid-break">
@@ -456,16 +523,16 @@
             <span>⚠️ Interpretación de Capacidad Operativa (Escenarios Inviables)</span>
         </div>
         <p style="color: #9A3412; margin-bottom: 15px; font-size: 0.85rem;">
-            Para lograr manualmente el volumen total procesado (54.974 transacciones), invirtiendo el promedio de <span class="dynamic-min">6</span> minutos por gestión, la empresa habría requerido <strong id="cap-hours">5.497</strong><strong> horas hombre</strong>.
+            Para lograr manualmente el volumen total procesado (94.295 transacciones), invirtiendo el promedio de <span class="dynamic-min">6</span> minutos por gestión, la empresa habría requerido <strong id="cap-hours">9.430</strong><strong> horas hombre</strong>.
         </p>
         <div class="capacity-item">
             <div class="capacity-text">
-                👤 <strong>Escenario Individual:</strong> Asignar a una (1) sola persona a realizar estas llamadas y mensajes le habría tomado <strong id="cap-months">25,0</strong><strong> meses</strong> de trabajo continuo (base de 220 horas laborales por mes), sin realizar ninguna otra labor.
+                👤 <strong>Escenario Individual:</strong> Asignar a una (1) sola persona a realizar estas llamadas y mensajes le habría tomado <strong id="cap-months">42,9</strong><strong> meses</strong> de trabajo continuo (base de 220 horas laborales por mes), sin realizar ninguna otra labor. ¡Más de 3 años de trabajo!
             </div>
         </div>
         <div class="capacity-item">
             <div class="capacity-text">
-                👥 <strong>Escenario de Equipo (Empate de Tiempo):</strong> Para poder igualar la velocidad total en la que el sistema procesó las 6 bases de datos (apenas ~71,1 horas en total), la empresa habría tenido que contratar un equipo temporal masivo de <strong id="cap-people">77</strong><strong> personas</strong> trabajando simultáneamente.
+                👥 <strong>Escenario de Equipo (Empate de Tiempo):</strong> Para poder igualar la velocidad total en la que el sistema procesó las 10 bases de datos (apenas ~75,6 horas en total), la empresa habría tenido que contratar un equipo temporal masivo de <strong id="cap-people">125</strong><strong> personas</strong> trabajando simultáneamente.
             </div>
         </div>
     </div>
@@ -475,12 +542,12 @@
         <div class="summary-grid">
             <div class="summary-block">
                 <span class="summary-label">Dinero Total Ahorrado</span>
-                <span class="summary-value" id="sum-net-savings">$71.301.682 COP</span>
+                <span class="summary-value" id="sum-net-savings">$122.313.770 COP</span>
             </div>
             <div style="width: 2px; background-color: #86EFAC; height: 50px;"></div>
             <div class="summary-block">
                 <span class="summary-label">Tiempo Total Ahorrado</span>
-                <span class="summary-value" id="sum-time-saved">5.426 Horas</span>
+                <span class="summary-value" id="sum-time-saved">9.354 Horas</span>
             </div>
         </div>
     </div>
@@ -492,22 +559,26 @@
 </div>
 
 <script>
-    // Datos maestros de las 6 Campañas
+    // Datos maestros de las 10 Campañas
     const campaigns = [
         { id: 1, name: "Contratación", vol: 7068, botTime: 24.4, botCost: 55000 },
         { id: 2, name: "Conf. Empleo", vol: 6303, botTime: 20.5, botCost: 21000 },
-        { id: 3, name: "Fiesta Gratitud", vol: 9858, botTime: 20.9, botCost: 56000 },
+        { id: 3, name: "Fiesta Gratitud", vol: 9858, botTime: 20.93, botCost: 56000 },
         { id: 4, name: "Verif. Líneas", vol: 1446, botTime: 2.4, botCost: 5000 },
         { id: 5, name: "Día de la Mujer", vol: 11104, botTime: 0.533, botCost: 40000 },
-        { id: 6, name: "Dotaciones", vol: 19195, botTime: 2.416, botCost: 65000 }
+        { id: 6, name: "Dotaciones", vol: 19195, botTime: 2.416, botCost: 65000 },
+        { id: 7, name: "Semilleros", vol: 5030, botTime: 0.5, botCost: 25000 },
+        { id: 8, name: "Día del Niño", vol: 9156, botTime: 1.033, botCost: 35000 },
+        { id: 9, name: "Retiros", vol: 11747, botTime: 1.383, botCost: 45000 },
+        { id: 10, name: "Más Bienestar", vol: 13388, botTime: 1.533, botCost: 55000 }
     ];
 
     const COSTO_REAL_EMPRESA = 2863086;
     const HORAS_MES = 220;
     const COSTO_MINUTO = (COSTO_REAL_EMPRESA / HORAS_MES) / 60;
     
-    const TOTAL_BOT_COST = 242000;
-    const TOTAL_BOT_TIME = 71.149; // Suma de todos los tiempos del bot
+    const TOTAL_BOT_COST = 402000;
+    const TOTAL_BOT_TIME = 75.628; // Suma de todos los tiempos del bot
 
     // Formateadores
     const formatter = new Intl.NumberFormat('es-CO', {
@@ -563,7 +634,7 @@
         document.getElementById('kpi-total-cost-exact').innerText = formatter.format(totalAhorroDinero) + " COP exactos";
         
         document.getElementById('kpi-time-saved').innerText = intFmt.format(Math.round(totalAhorroTiempo)) + "h";
-        document.getElementById('kpi-time-saved-sub').innerText = `${intFmt.format(Math.round(totalHorasHumanas))}h Humanas - 71h Bot`;
+        document.getElementById('kpi-time-saved-sub').innerText = `${intFmt.format(Math.round(totalHorasHumanas))}h Humanas - 76h Bot`;
 
         // 2. Actualizar Total Tabla
         document.getElementById('tbl-cost-total').innerText = formatter.format(totalCostoHumano);

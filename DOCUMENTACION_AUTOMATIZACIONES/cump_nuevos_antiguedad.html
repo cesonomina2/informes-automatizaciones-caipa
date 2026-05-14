@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documentación Técnica | Envíos Masivos Casalimpia</title>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;800&family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@500&display=swap');
 
@@ -15,6 +19,7 @@
             --color-gris-suave: #666666;
             --bg-body: #525659;
             --bg-doc: #ffffff;
+            --sombra-suave: 0 4px 20px rgba(0, 133, 202, 0.1);
         }
 
         * { box-sizing: border-box; }
@@ -35,14 +40,14 @@
         .firma { color: white; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 5px;}
 
         /* --- HOJA CARTA --- */
-        .document-sheet { background-color: var(--bg-doc); width: 100%; max-width: 21.59cm; min-height: 27.94cm; margin: 0 auto; padding: 2.54cm; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 2px; }
+        .document-sheet { background-color: var(--bg-doc); width: 100%; max-width: 21.59cm; margin: 0 auto; padding: 2.54cm; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 2px; }
 
         /* --- ENCABEZADO --- */
         .header-container { display: flex; align-items: center; justify-content: space-between; gap: 30px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 3px solid #eee; }
         .brand-logo { height: 75px; width: auto; flex-shrink: 0; display: block; }
         .title-block { flex-grow: 1; text-align: center; }
         h1 { color: var(--color-principal); font-size: 1.5rem; text-transform: uppercase; margin: 0; line-height: 1.2; font-weight: 700; }
-        .subtitle { font-size: 1rem; color: var(--color-gris-suave); margin-top: 5px; font-weight: 400; }
+        .subtitle { font-size: 1rem; color: var(--color-gris-suave); margin-top: 5px; font-weight: 400; text-transform: capitalize; }
 
         /* --- ESTILOS GENERALES DOCUMENTO --- */
         h2 { font-size: 1.2rem; color: #2c3e50; border-left: 5px solid var(--color-principal); padding-left: 10px; margin-top: 35px; margin-bottom: 15px; }
@@ -59,10 +64,15 @@
         .tech-diagram { width: 100%; max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .img-caption { font-size: 8pt; color: #666; margin-top: 5px; font-style: italic; }
         
+        /* CAJAS DE ÉNFASIS */
         .use-case-box { background-color: #f9fafb; border: 1px solid #e5e7eb; border-left: 3px solid #9ca3af; padding: 12px; margin: 10px 0; font-size: 9pt; font-family: 'Source Code Pro', monospace; page-break-inside: avoid; }
-        .dialogue-bot { color: #555; display: block; margin-bottom: 4px; }
+        .dialogue-user { color: #0085CA; font-weight: 600; display: block; margin-bottom: 4px; }
+        .dialogue-bot { color: #555; font-style: italic; margin-left: 15px; display: block; margin-bottom: 8px; }
+        
+        .alert-box { background: #fff8e1; padding: 10px; border: 1px solid #ffe082; border-radius: 4px; color: #856404; font-size: 9pt; margin-top: 10px; margin-bottom: 20px;}
+        code { font-family: 'Source Code Pro', monospace; background-color: #f7f7f9; padding: 1px 4px; border-radius: 3px; font-size: 0.9em; color: #c0392b; border: 1px solid #e1e1e8; }
 
-        .link-informe { color: var(--color-principal); font-weight: 500; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+        .link-informe { color: var(--color-principal); font-weight: 700; text-decoration: none; border-bottom: 2px solid transparent; transition: border-color 0.2s; font-size: 11pt;}
         .link-informe:hover { border-bottom-color: var(--color-principal); }
 
         /* Botón PDF */
@@ -70,12 +80,65 @@
         .btn-pdf { background-color: #2d3436; color: white; border: none; padding: 10px 20px; font-size: 0.9rem; cursor: pointer; border-radius: 4px; font-family: 'Roboto', sans-serif; display: inline-flex; align-items: center; gap: 8px; transition: background 0.3s; }
         .btn-pdf:hover { background-color: #1a1e1f; }
 
+        /* =========================================
+           ESTILOS DEL DASHBOARD INTEGRADO
+           ========================================= */
+        .dashboard-wrapper { background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 20px; page-break-inside: avoid; }
+        
+        /* FILTROS */
+        .filtros-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; background: var(--color-blanco); padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e2e8f0;}
+        .form-group { display: flex; flex-direction: column; gap: 4px; }
+        .form-group label { font-size: 0.75rem; font-weight: 600; color: #64748B; text-transform: uppercase;}
+        .form-control { padding: 8px; border: 1px solid #CBD5E1; border-radius: 6px; font-family: 'Roboto', sans-serif; font-size: 0.85rem; outline: none; }
+
+        /* KPIS GRID */
+        .kpis-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px;}
+        .kpi-card { padding: 15px; border-radius: 8px; display: flex; flex-direction: column; gap: 5px; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        
+        .card-total { background-color: #A855F7; }    
+        .card-ingresos { background-color: #C25973; } 
+        .card-cumple { background-color: #EAB308; }   
+        .card-5a { background-color: #0085CA; }       
+        .card-10a { background-color: #8DC63F; }      
+        
+        .kpi-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; opacity: 0.95; line-height: 1.1;}
+        .kpi-value { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 700; line-height: 1;}
+
+        /* PANELES DASHBOARD */
+        .dashboard-main { display: grid; grid-template-columns: 250px 1fr; gap: 15px; }
+        .panel { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; overflow: hidden; }
+        .panel-header-acciones { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+        .panel h3 { font-family: 'Outfit', sans-serif; color: var(--color-principal); margin: 0; font-size: 1rem; }
+        
+        .btn-export { padding: 6px 12px; border-radius: 4px; border: none; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 0.75rem; cursor: pointer; color: white; background-color: #10B981; display: flex; align-items: center; gap: 5px; transition: opacity 0.2s;}
+        .btn-export:hover { opacity: 0.8; }
+        .chart-wrapper { position: relative; height: 200px; width: 100%; margin-top: 10px;}
+
+        /* TABLA DASHBOARD */
+        .table-responsive { overflow-x: auto; }
+        table.dash-table { width: 100%; border-collapse: collapse; min-width: 600px; font-size: 8pt; }
+        table.dash-table th, table.dash-table td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #E2E8F0; white-space: nowrap; }
+        table.dash-table th { font-weight: 600; color: #64748B; text-transform: uppercase; background: #F8FAFC; }
+        table.dash-table td { color: var(--color-texto); }
+        table.dash-table tbody tr:hover { background-color: #F1F5F9; }
+
+        /* BADGES DASHBOARD */
+        .badge { padding: 4px 8px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; color: white; display: inline-block; }
+        .badge-nuevo { background-color: #C25973; }   
+        .badge-cumple { background-color: #EAB308; }  
+        .badge-5a { background-color: #0085CA; }      
+        .badge-10a { background-color: #8DC63F; }     
+        .badge-default { background-color: #94A3B8; }
+
         /* --- MÓVILES --- */
         @media (max-width: 768px) {
             body { padding: 0; background-color: #f0f0f0; }
             .nav-bar { padding: 10px; max-width: 100%; }
             .document-sheet { width: 100%; max-width: 100%; margin: 0; padding: 20px; box-shadow: none; min-height: 100vh; }
             .header-container { flex-direction: column; text-align: center; gap: 15px; }
+            .kpis-grid { grid-template-columns: repeat(2, 1fr); }
+            .card-total { grid-column: span 2; }
+            .dashboard-main { grid-template-columns: 1fr; }
         }
 
         /* --- IMPRESIÓN --- */
@@ -83,8 +146,9 @@
             @page { size: letter; margin: 2cm; }
             body { background-color: white; padding: 0; margin: 0; -webkit-print-color-adjust: exact; }
             .document-sheet { box-shadow: none; margin: 0; width: 100%; max-width: 100%; border: none; padding: 0; }
-            .nav-bar, .pdf-section { display: none !important; }
-            h2, h3, .diagram-container { page-break-inside: avoid; }
+            .nav-bar, .pdf-section, .filtros-grid, .btn-export { display: none !important; }
+            .table-responsive { overflow: visible; }
+            h2, h3, .diagram-container, .dashboard-wrapper { page-break-inside: avoid; }
         }
     </style>
 </head>
@@ -114,7 +178,7 @@
         <table class="tech-info-table">
             <tr><td class="td-label">Cliente Interno:</td><td>Casalimpia</td></tr>
             <tr><td class="td-label">Plataforma:</td><td>n8n (Workflow Automation)</td></tr>
-            <tr><td class="td-label">Carpeta N8N:</td><td>ENVIOS MASIVOS, ANTIGÜEDAD, CUMPLEAÑOS Y NUEVO INGRESO</td></tr>
+            <tr><td class="td-label">Carpeta N8N:</td><td>ENVÍOS MASIVOS, ANTIGÜEDAD, CUMPLEAÑOS Y NUEVO INGRESO</td></tr>
             <tr><td class="td-label">Canal:</td><td>WhatsApp Business API (Meta)</td></tr>
             <tr><td class="td-label">Bases de Datos:</td><td>Supabase (PostgreSQL) y Novasoft Web API</td></tr>
             <tr><td class="td-label">Estado:</td><td>Producción</td></tr>
@@ -191,33 +255,37 @@
 
         <div class="use-case-box">
             <strong>Caso 1: Cumpleaños Activo</strong><br><br>
-            <span class="dialogue-bot">Lógica: Fecha nacimiento = 13/05/1990. Hoy = 13/05/2026. Log 'cumpleanos' no existe.</span>
-            <span class="dialogue-bot">Acción: Enviar plantilla de felicitación. Guardar registro en Logs.</span>
+            <span class="dialogue-user">Lógica evaluada en n8n:</span>
+            <span class="dialogue-bot">Fecha de nacimiento = 13/05/1990. Hoy = 13/05/2026. Log 'cumpleanos' no existe.</span>
+            <span class="dialogue-user">Acción del Sistema:</span>
+            <span class="dialogue-bot">Enviar plantilla de felicitación vía WhatsApp. Guardar registro histórico.</span>
         </div>
 
         <div class="use-case-box">
             <strong>Caso 2: Aniversario 5 Años</strong><br><br>
-            <span class="dialogue-bot">Lógica: Fecha ingreso = 13/05/2021. Hoy = 13/05/2026. Resta de años = 5. Log '5_anios' no existe.</span>
-            <span class="dialogue-bot">Acción: Enviar plantilla de "5 años en la Familia Casalimpia". Guardar registro en Logs.</span>
+            <span class="dialogue-user">Lógica evaluada en n8n:</span>
+            <span class="dialogue-bot">Fecha ingreso = 13/05/2021. Hoy = 13/05/2026. Antigüedad = 5. Log '5_anios' no existe.</span>
+            <span class="dialogue-user">Acción del Sistema:</span>
+            <span class="dialogue-bot">Enviar plantilla de "5 años en la Familia Casalimpia". Guardar registro histórico.</span>
         </div>
 
         <div class="use-case-box">
             <strong>Caso 3: Aniversario 10 Años</strong><br><br>
-            <span class="dialogue-bot">Lógica: Fecha ingreso = 13/05/2016. Hoy = 13/05/2026. Resta de años = 10. Log '10_anios' no existe.</span>
-            <span class="dialogue-bot">Acción: Enviar plantilla de "10 años en la Familia Casalimpia". Guardar registro en Logs.</span>
+            <span class="dialogue-user">Lógica evaluada en n8n:</span>
+            <span class="dialogue-bot">Fecha ingreso = 13/05/2016. Hoy = 13/05/2026. Antigüedad = 10. Log '10_anios' no existe.</span>
+            <span class="dialogue-user">Acción del Sistema:</span>
+            <span class="dialogue-bot">Enviar plantilla de "10 años en la Familia Casalimpia". Guardar registro histórico.</span>
         </div>
 
         <div class="use-case-box">
             <strong>Caso 4: Nuevo Ingreso Detectado</strong><br><br>
-            <span class="dialogue-bot">Lógica: <code>bienvenida_enviada</code> = FALSE. Fecha ingreso <= Fecha de Hoy. Log 'nuevo_ingreso' no existe.</span>
-            <span class="dialogue-bot">Acción: Enviar plantilla de bienvenida. Guardar Log. Actualizar DB maestra a <code>bienvenida_enviada = TRUE</code>.</span>
+            <span class="dialogue-user">Lógica evaluada en n8n:</span>
+            <span class="dialogue-bot"><code>bienvenida_enviada</code> = FALSE. Fecha ingreso <= Fecha de Hoy. Log 'nuevo_ingreso' no existe.</span>
+            <span class="dialogue-user">Acción del Sistema:</span>
+            <span class="dialogue-bot">Enviar plantilla de bienvenida. Actualizar DB maestra a <code>bienvenida_enviada = TRUE</code>. Guardar Log.</span>
         </div>
 
-        <h2>6. Acceso al Informe Digital</h2>
-        <p>Para la visualización de métricas de impacto, distribución por categorías y seguimiento detallado de envíos en tiempo real, consulte el siguiente enlace:</p>
-        <p>🌐 <a href="https://portal-autogestion-casalimpia.vercel.app/informe_bienestar.html" target="_blank" class="link-informe">Dashboard de Bienestar y Comunicación Masiva</a></p>
-
-        <h2>7. Anexos y Recursos</h2>
+        <h2>6. Anexos y Recursos</h2>
         
         <div class="diagram-container">
             <div class="diagram-title">Flujo: ACTUALIZACIÓN DE PLANTA</div>
@@ -231,6 +299,99 @@
             <div class="img-caption">Arquitectura de filtrado con JavaScript y manejo de límites de WhatsApp (Lotes de 20) apoyado en Nodos Rescatistas.</div>
         </div>
 
+        <h2>7. Dashboard de Uso: Notificaciones Enviadas</h2>
+        <p>Monitoreo en tiempo real de la tabla <code>3-log_notificaciones</code>. Los datos mostrados corresponden a los envíos efectivos realizados por la automatización.</p>
+
+        <div class="dashboard-wrapper">
+            
+            <div class="filtros-grid">
+                <div class="form-group">
+                    <label>Buscar Empleado</label>
+                    <input type="text" id="filtro-busqueda" class="form-control" placeholder="Nombre o código..." oninput="aplicarFiltros()">
+                </div>
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <select id="filtro-tipo" class="form-control" onchange="aplicarFiltros()">
+                        <option value="todos">Todas las categorías</option>
+                        <option value="cumpleanos">Cumpleaños</option>
+                        <option value="nuevo_ingreso">Nuevos Ingresos</option>
+                        <option value="5_anios">Aniv. 5 Años</option>
+                        <option value="10_anios">Aniv. 10 Años</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Desde</label>
+                    <input type="date" id="filtro-fecha-inicio" class="form-control" onchange="aplicarFiltros()">
+                </div>
+                <div class="form-group">
+                    <label>Hasta</label>
+                    <input type="date" id="filtro-fecha-fin" class="form-control" onchange="aplicarFiltros()">
+                </div>
+            </div>
+
+            <div class="kpis-grid">
+                <div class="kpi-card card-total">
+                    <div class="kpi-title">Total General</div>
+                    <div class="kpi-value" id="kpi-total">0</div>
+                </div>
+                <div class="kpi-card card-ingresos">
+                    <div class="kpi-title">Nuevos Ingresos</div>
+                    <div class="kpi-value" id="kpi-ingresos">0</div>
+                </div>
+                <div class="kpi-card card-cumple">
+                    <div class="kpi-title">Cumpleaños</div>
+                    <div class="kpi-value" id="kpi-cumple">0</div>
+                </div>
+                <div class="kpi-card card-5a">
+                    <div class="kpi-title">Aniv. 5 Años</div>
+                    <div class="kpi-value" id="kpi-5a">0</div>
+                </div>
+                <div class="kpi-card card-10a">
+                    <div class="kpi-title">Aniv. 10 Años</div>
+                    <div class="kpi-value" id="kpi-10a">0</div>
+                </div>
+            </div>
+
+            <div class="dashboard-main">
+                <div class="panel">
+                    <h3>Distribución</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="graficoDistribucion"></canvas>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header-acciones">
+                        <h3>Últimos 5 Registros</h3>
+                        <button class="btn-export" onclick="exportarExcelXLSX()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Exportar .xlsx
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="dash-table" id="tabla-logs">
+                            <thead>
+                                <tr>
+                                    <th>Fecha Envío</th>
+                                    <th>Cód. Emp</th>
+                                    <th>Nombre</th>
+                                    <th>Nacimiento</th>
+                                    <th>Ingreso</th>
+                                    <th>Tipo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-logs">
+                                <tr><td colspan="6" style="text-align:center;">Cargando datos...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div> <h2>8. Acceso al Informe Digital</h2>
+        <p>Para la visualización de métricas de impacto en pantalla completa, distribución por categorías y seguimiento detallado de envíos en tiempo real con su firma, consulte el siguiente enlace corporativo:</p>
+        <p>🌐 <a href="https://portal-autogestion-casalimpia.vercel.app/informe_bienestar.html" target="_blank" class="link-informe">Dashboard Interactivo: Bienestar y Comunicación Masiva</a></p>
+
         <div class="pdf-section">
             <button onclick="window.print()" class="btn-pdf">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
@@ -239,6 +400,150 @@
         </div>
 
     </div> 
+
+    <script>
+        // ==========================================
+        // LÓGICA DEL DASHBOARD (SUPABASE + CHART.JS)
+        // ==========================================
+        const SUPABASE_URL = 'https://tyhdwpdefiatmxihycae.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_LH1iVez6V1qmj8Lk_YVZFA_Y2nYwdKw';
+        const supabaseDashClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let datosGlobales = []; 
+        let datosFiltradosActuales = []; 
+        let chartInstancia = null; 
+
+        async function inicializarDashboard() {
+            const hoy = new Date();
+            document.getElementById('filtro-fecha-inicio').value = new Date(hoy.getFullYear(), hoy.getMonth(), 1).toISOString().split('T')[0];
+            document.getElementById('filtro-fecha-fin').value = hoy.toISOString().split('T')[0];
+            await cargarDatosBase();
+            inicializarRealTime();
+        }
+
+        async function cargarDatosBase() {
+            const { data, error } = await supabaseDashClient.from('3-log_notificaciones').select('*').order('fecha_envio', { ascending: false }).limit(1000);
+            if (data) { 
+                datosGlobales = data; 
+                aplicarFiltros(); 
+            } else {
+                document.getElementById('tbody-logs').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Error conectando a BD.</td></tr>';
+            }
+        }
+
+        function inicializarRealTime() {
+            supabaseDashClient.channel('realtime-logs').on('postgres_changes', { event: 'INSERT', schema: 'public', table: '3-log_notificaciones' }, payload => {
+                datosGlobales.unshift(payload.new); 
+                aplicarFiltros();
+            }).subscribe();
+        }
+
+        function aplicarFiltros() {
+            const busqueda = document.getElementById('filtro-busqueda').value.toLowerCase();
+            const tipo = document.getElementById('filtro-tipo').value;
+            const fechaIni = document.getElementById('filtro-fecha-inicio').value;
+            const fechaFin = document.getElementById('filtro-fecha-fin').value;
+
+            datosFiltradosActuales = datosGlobales.filter(row => {
+                const matchTexto = (row.nomEmp || "").toLowerCase().includes(busqueda) || (row.codEmp || "").toLowerCase().includes(busqueda);
+                const matchTipo = (tipo === 'todos') || (row.tipo_notificacion === tipo);
+                let matchFecha = true;
+                if(row.fecha_envio) {
+                    const f = row.fecha_envio.split('T')[0]; 
+                    if(fechaIni && f < fechaIni) matchFecha = false;
+                    if(fechaFin && f > fechaFin) matchFecha = false;
+                }
+                return matchTexto && matchTipo && matchFecha;
+            });
+            actualizarVista(datosFiltradosActuales);
+        }
+
+        function actualizarVista(datos) {
+            // 1. Contadores (Se evalúan TODOS los datos filtrados)
+            let counts = { total: datos.length, ingresos: 0, cumple: 0, a5: 0, a10: 0 };
+            datos.forEach(row => {
+                if(row.tipo_notificacion === 'nuevo_ingreso') counts.ingresos++;
+                else if(row.tipo_notificacion === 'cumpleanos') counts.cumple++;
+                else if(row.tipo_notificacion === '5_anios') counts.a5++;
+                else if(row.tipo_notificacion === '10_anios') counts.a10++;
+            });
+
+            // 2. Renderizado de la tabla (Solo mostramos los primeros 5)
+            const tbody = document.getElementById('tbody-logs');
+            tbody.innerHTML = '';
+
+            if (datos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No hay resultados para los filtros aplicados.</td></tr>';
+            } else {
+                const ultimos5 = datos.slice(0, 5); // Tomamos máximo 5 registros
+                
+                ultimos5.forEach(row => {
+                    const d = new Date(row.fecha_envio);
+                    const fStr = d.toLocaleString('es-CO', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'});
+                    const fNac = row.fecNac ? row.fecNac.split('T')[0] : 'N/A';
+                    const fIng = row.fecIng ? row.fecIng.split('T')[0] : 'N/A';
+
+                    let bCls = 'badge-default', label = row.tipo_notificacion;
+                    if(row.tipo_notificacion === 'cumpleanos') { bCls = 'badge-cumple'; label = 'Cumpleaños'; }
+                    if(row.tipo_notificacion === 'nuevo_ingreso') { bCls = 'badge-nuevo'; label = 'Ingreso'; }
+                    if(row.tipo_notificacion === '5_anios') { bCls = 'badge-5a'; label = '5 Años'; }
+                    if(row.tipo_notificacion === '10_anios') { bCls = 'badge-10a'; label = '10 Años'; }
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${fStr}</td><td><strong>${row.codEmp}</strong></td><td>${row.nomEmp}</td><td>${fNac}</td><td>${fIng}</td><td><span class="badge ${bCls}">${label}</span></td>`;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            // Actualizar KPIs
+            document.getElementById('kpi-total').innerText = counts.total;
+            document.getElementById('kpi-ingresos').innerText = counts.ingresos;
+            document.getElementById('kpi-cumple').innerText = counts.cumple;
+            document.getElementById('kpi-5a').innerText = counts.a5;
+            document.getElementById('kpi-10a').innerText = counts.a10;
+
+            // Actualizar Gráfico
+            const ctx = document.getElementById('graficoDistribucion').getContext('2d');
+            if (chartInstancia) chartInstancia.destroy();
+            chartInstancia = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Ingresos', 'Cumpleaños', '5 Años', '10 Años'],
+                    datasets: [{
+                        data: [counts.ingresos, counts.cumple, counts.a5, counts.a10],
+                        backgroundColor: ['#C25973', '#EAB308', '#0085CA', '#8DC63F'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } }, cutout: '65%' }
+            });
+        }
+
+        // --- EXPORTAR A .XLSX (Usando SheetJS) ---
+        // Exportará TODOS los datos filtrados, no solo los 5 en pantalla
+        function exportarExcelXLSX() {
+            if (datosFiltradosActuales.length === 0) return alert("No hay datos para exportar con estos filtros.");
+            
+            const rows = datosFiltradosActuales.map(d => ({
+                "Fecha Envío": new Date(d.fecha_envio).toLocaleString('es-CO'),
+                "Código Empleado": d.codEmp,
+                "Nombre Completo": d.nomEmp,
+                "Fecha Nacimiento": d.fecNac ? d.fecNac.split('T')[0] : '',
+                "Fecha Ingreso": d.fecIng ? d.fecIng.split('T')[0] : '',
+                "Tipo Notificación": d.tipo_notificacion
+            }));
+
+            const worksheet = XLSX.utils.json_to_sheet(rows);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Notificaciones_Enviadas");
+            XLSX.writeFile(workbook, "Reporte_Masivos_Casalimpia.xlsx");
+        }
+
+        // Iniciar al cargar
+        document.addEventListener("DOMContentLoaded", function() {
+            inicializarDashboard();
+        });
+    </script>
 
 </body>
 </html>

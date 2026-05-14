@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación Técnica | Envíos Masivos Casalimpia</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;800&family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@500&display=swap');
+
+        :root {
+            --color-principal: #0085CA; 
+            --color-verde-logo: #8DC63F;
+            --color-texto: #333333;
+            --color-gris-suave: #666666;
+            --bg-body: #525659;
+            --bg-doc: #ffffff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--color-texto);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        /* --- NAVEGACIÓN (NO SE IMPRIME) --- */
+        .nav-bar { max-width: 21.6cm; margin: 0 auto 15px auto; display: flex; justify-content: space-between; align-items: center; }
+        .btn-volver { text-decoration: none; color: white; font-weight: 500; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 4px; transition: background 0.2s; }
+        .btn-volver:hover { background: rgba(255,255,255,0.2); }
+        .firma { color: white; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 5px;}
+
+        /* --- HOJA CARTA --- */
+        .document-sheet { background-color: var(--bg-doc); width: 100%; max-width: 21.59cm; min-height: 27.94cm; margin: 0 auto; padding: 2.54cm; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 2px; }
+
+        /* --- ENCABEZADO --- */
+        .header-container { display: flex; align-items: center; justify-content: space-between; gap: 30px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 3px solid #eee; }
+        .brand-logo { height: 75px; width: auto; flex-shrink: 0; display: block; }
+        .title-block { flex-grow: 1; text-align: center; }
+        h1 { color: var(--color-principal); font-size: 1.5rem; text-transform: uppercase; margin: 0; line-height: 1.2; font-weight: 700; }
+        .subtitle { font-size: 1rem; color: var(--color-gris-suave); margin-top: 5px; font-weight: 400; }
+
+        /* --- ESTILOS GENERALES DOCUMENTO --- */
+        h2 { font-size: 1.2rem; color: #2c3e50; border-left: 5px solid var(--color-principal); padding-left: 10px; margin-top: 35px; margin-bottom: 15px; }
+        h3 { font-size: 1rem; color: #444; margin-top: 20px; margin-bottom: 10px; font-weight: 700; }
+        p, li { font-size: 10pt; color: #333; text-align: justify; margin-bottom: 10px; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        
+        .tech-info-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 9pt; border: 1px solid #ddd; }
+        .tech-info-table td { padding: 6px 10px; border: 1px solid #ddd; vertical-align: top; }
+        .td-label { background-color: #f4f4f4; font-weight: 700; width: 25%; color: #444; }
+
+        .diagram-container { margin-top: 30px; margin-bottom: 30px; text-align: center; page-break-inside: avoid; }
+        .diagram-title { font-size: 0.95rem; color: #444; font-weight: 700; margin-bottom: 10px; text-align: left; border-left: 3px solid var(--color-principal); padding-left: 10px; text-transform: uppercase; }
+        .tech-diagram { width: 100%; max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .img-caption { font-size: 8pt; color: #666; margin-top: 5px; font-style: italic; }
+        
+        .use-case-box { background-color: #f9fafb; border: 1px solid #e5e7eb; border-left: 3px solid #9ca3af; padding: 12px; margin: 10px 0; font-size: 9pt; font-family: 'Source Code Pro', monospace; page-break-inside: avoid; }
+        .dialogue-bot { color: #555; display: block; margin-bottom: 4px; }
+
+        .link-informe { color: var(--color-principal); font-weight: 500; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+        .link-informe:hover { border-bottom-color: var(--color-principal); }
+
+        /* Botón PDF */
+        .pdf-section { text-align: center; margin-top: 50px; padding-top: 20px; border-top: 2px solid #eee; }
+        .btn-pdf { background-color: #2d3436; color: white; border: none; padding: 10px 20px; font-size: 0.9rem; cursor: pointer; border-radius: 4px; font-family: 'Roboto', sans-serif; display: inline-flex; align-items: center; gap: 8px; transition: background 0.3s; }
+        .btn-pdf:hover { background-color: #1a1e1f; }
+
+        /* --- MÓVILES --- */
+        @media (max-width: 768px) {
+            body { padding: 0; background-color: #f0f0f0; }
+            .nav-bar { padding: 10px; max-width: 100%; }
+            .document-sheet { width: 100%; max-width: 100%; margin: 0; padding: 20px; box-shadow: none; min-height: 100vh; }
+            .header-container { flex-direction: column; text-align: center; gap: 15px; }
+        }
+
+        /* --- IMPRESIÓN --- */
+        @media print {
+            @page { size: letter; margin: 2cm; }
+            body { background-color: white; padding: 0; margin: 0; -webkit-print-color-adjust: exact; }
+            .document-sheet { box-shadow: none; margin: 0; width: 100%; max-width: 100%; border: none; padding: 0; }
+            .nav-bar, .pdf-section { display: none !important; }
+            h2, h3, .diagram-container { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <a href="#" class="btn-volver">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+            Volver al Portal
+        </a>
+        <div class="firma">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            JCEP
+        </div>
+    </div>
+
+    <div class="document-sheet">
+        
+        <div class="header-container">
+            <img src="https://empresas.casalimpia.com/wp-content/uploads/2024/08/logo-casa-limpia.png" alt="Casalimpia S.A." class="brand-logo">
+            <div class="title-block">
+                <h1>Informe Técnico de Automatización</h1>
+                <div class="subtitle">Envíos Masivos: Cumpleaños, Antigüedad y Nuevos Ingresos</div>
+            </div>
+        </div>
+
+        <table class="tech-info-table">
+            <tr><td class="td-label">Cliente Interno:</td><td>Casalimpia</td></tr>
+            <tr><td class="td-label">Plataforma:</td><td>n8n (Workflow Automation)</td></tr>
+            <tr><td class="td-label">Carpeta N8N:</td><td>ENVIOS MASIVOS, ANTIGÜEDAD, CUMPLEAÑOS Y NUEVO INGRESO</td></tr>
+            <tr><td class="td-label">Canal:</td><td>WhatsApp Business API (Meta)</td></tr>
+            <tr><td class="td-label">Bases de Datos:</td><td>Supabase (PostgreSQL) y Novasoft Web API</td></tr>
+            <tr><td class="td-label">Estado:</td><td>Producción</td></tr>
+        </table>
+
+        <h2>1. Resumen Ejecutivo</h2>
+        <p>La automatización de "Envíos Masivos" es una arquitectura corporativa diseñada para fortalecer el salario emocional y la comunicación interna en Casalimpia. Diariamente, el sistema sincroniza la base de datos completa de colaboradores desde el ERP (Novasoft), la procesa y segmenta mediante expresiones y lógicas de zona horaria, para disparar automáticamente mensajes personalizados por WhatsApp. Estos envíos felicitan a los empleados en su <strong>cumpleaños</strong>, celebran su <strong>antigüedad (5 y 10 años)</strong> y dan la <strong>bienvenida oficial</strong> a los nuevos ingresos, garantizando cero duplicidades mediante un estricto registro de logs transaccionales.</p>
+
+        <h2>2. Arquitectura de la Solución</h2>
+        <h3>2.1. Componentes Tecnológicos</h3>
+        <ul>
+            <li><strong>Orquestador:</strong> n8n (Gestión de lógica, cronogramas diarios, control de lotes y ruteo).</li>
+            <li><strong>Canal de Salida:</strong> WhatsApp Business API (Uso de plantillas pre-aprobadas con variables dinámicas).</li>
+            <li><strong>Origen de Datos:</strong> Novasoft Web API (Autenticación nativa para extracción de la matriz de empleados).</li>
+            <li><strong>Base de Datos Operativa:</strong> Supabase (PostgreSQL) utilizada como puente de alto rendimiento para evitar la saturación de las APIs origen.</li>
+        </ul>
+
+        <h3>2.2. Estructura de Base de Datos (Supabase)</h3>
+        <p>El sistema emplea dos tablas fundamentales para sostener la lógica masiva sin pérdida de rendimiento:</p>
+        <ul>
+            <li><strong>Tabla: empleados_datos</strong>
+                <ul>
+                    <li>Tabla espejo alimentada diariamente desde Novasoft. Contiene los datos vitales para las notificaciones.</li>
+                    <li><strong>Columnas Clave:</strong> <code>codEmp</code>, <code>nomEmp</code>, <code>fecNac</code> (Cumpleaños), <code>fecIng</code> (Antigüedad), <code>telCel</code> y <code>bienvenida_enviada</code> (Control booleano de nuevos ingresos).</li>
+                </ul>
+            </li>
+            <li><strong>Tabla: 3-log_notificaciones (Auditoría e Historial)</strong>
+                <ul>
+                    <li>El "diccionario" de envíos. Registra el histórico de mensajes para prevenir que un empleado sea felicitado dos veces por el mismo motivo en el mismo año, y nutre el dashboard analítico.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>3. Descripción Detallada de los Flujos (Workflows)</h2>
+        <p>El sistema se divide en dos flujos interdependientes: Sincronización y Ejecución.</p>
+
+        <h3>3.1. Flujo 1: Actualización de Planta (Sincronización Diaria)</h3>
+        <p>Se ejecuta de forma programada a la medianoche (Schedule Trigger) para preparar los datos frescos del día.</p>
+        <ol>
+            <li><strong>Limpieza y Autenticación:</strong> El flujo inicializa borrando variables residuales (bonos) y ejecuta un Login en la API de Novasoft para obtener el Bearer Token.</li>
+            <li><strong>Extracción y Empaquetado:</strong> Se consulta la matriz completa de empleados. Un nodo <em>Code</em> agrupa estos registros en <strong>Lotes de 500</strong>. Esto es una práctica esencial de arquitectura para ser "amigables" con los límites de Supabase y evitar tiempos de espera (Timeout) o colapsos de memoria en el servidor.</li>
+            <li><strong>Inserción Segura (Upsert):</strong> Un ciclo (Loop) toma cada lote y utiliza la API nativa REST de Supabase con el parámetro <code>resolution=merge-duplicates</code>, insertando nuevos empleados o actualizando los existentes de forma limpia.</li>
+        </ol>
+
+        <h3>3.2. Flujo 2: Recopilación, Sectorización y Envíos Masivos</h3>
+        <p>Este es el motor de comunicación. Se ejecuta cada mañana de forma programada.</p>
+        <ol>
+            <li><strong>Obtención de Datos Limpios:</strong> Consulta simultáneamente a todos los empleados activos y la lista de mensajes (logs) que ya fueron enviados el día de hoy.</li>
+            <li><strong>Evaluación Lógica Central (El "Cerebro" JS):</strong> 
+                <ul>
+                    <li>Fuerza la zona horaria a <code>America/Bogota</code> para evitar desfases de servidor que envíen mensajes en el día equivocado.</li>
+                    <li>Itera sobre cada empleado y extrae el día y mes exacto de nacimiento e ingreso, comparándolos con el "hoy".</li>
+                    <li>Cruza la información con el Set (diccionario) de logs para descartar a quienes ya se les envió un mensaje.</li>
+                </ul>
+            </li>
+            <li><strong>Enrutamiento (Switch) y Micro-Lotes (Loops):</strong> Los registros válidos se dividen en 4 caminos. Cada camino entra a un nodo <em>Split in Batches</em> configurado en <strong>lotes de 20 mensajes</strong>. Esto respeta las políticas de rate-limiting de Meta (WhatsApp).</li>
+            <li><strong>Envío y Registro (Nodos Rescatistas):</strong> 
+                <ul>
+                    <li>Por cada 20 empleados, se envía la plantilla de WhatsApp correspondiente.</li>
+                    <li>Un nodo de espera (Wait) asegura la entrega.</li>
+                    <li>Un nodo <em>Code</em> (Rescatista) recupera la data original del empleado para evitar el efecto de pérdida de memoria del loop de n8n.</li>
+                    <li>Se inserta el registro final en <code>3-log_notificaciones</code> y el ciclo vuelve a empezar. En el caso de nuevos ingresos, además se marca el campo <code>bienvenida_enviada = TRUE</code> en la tabla maestra.</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h2>4. Reglas de Negocio y Seguridad</h2>
+        <ul>
+            <li><strong>Control Absoluto de Duplicados:</strong> La variable <code>enviosDeHoy = new Set()</code> garantiza que si el flujo se interrumpe y se reinicia manualmente, el bot ignorará a quienes ya recibieron su felicitación horas antes.</li>
+            <li><strong>Protección de Memoria (Execute Once):</strong> En la lectura de logs de la base de datos, el nodo está forzado a ejecutarse una sola vez (Execute Once), previniendo que n8n intente multiplicar la consulta por la cantidad de empleados entrantes (evitando bucles infinitos).</li>
+        </ul>
+
+        <h2>5. Casos de Uso y Escenarios del Usuario</h2>
+
+        <div class="use-case-box">
+            <strong>Caso 1: Cumpleaños Activo</strong><br><br>
+            <span class="dialogue-bot">Lógica: Fecha nacimiento = 13/05/1990. Hoy = 13/05/2026. Log 'cumpleanos' no existe.</span>
+            <span class="dialogue-bot">Acción: Enviar plantilla de felicitación. Guardar registro en Logs.</span>
+        </div>
+
+        <div class="use-case-box">
+            <strong>Caso 2: Aniversario 5 Años</strong><br><br>
+            <span class="dialogue-bot">Lógica: Fecha ingreso = 13/05/2021. Hoy = 13/05/2026. Resta de años = 5. Log '5_anios' no existe.</span>
+            <span class="dialogue-bot">Acción: Enviar plantilla de "5 años en la Familia Casalimpia". Guardar registro en Logs.</span>
+        </div>
+
+        <div class="use-case-box">
+            <strong>Caso 3: Aniversario 10 Años</strong><br><br>
+            <span class="dialogue-bot">Lógica: Fecha ingreso = 13/05/2016. Hoy = 13/05/2026. Resta de años = 10. Log '10_anios' no existe.</span>
+            <span class="dialogue-bot">Acción: Enviar plantilla de "10 años en la Familia Casalimpia". Guardar registro en Logs.</span>
+        </div>
+
+        <div class="use-case-box">
+            <strong>Caso 4: Nuevo Ingreso Detectado</strong><br><br>
+            <span class="dialogue-bot">Lógica: <code>bienvenida_enviada</code> = FALSE. Fecha ingreso <= Fecha de Hoy. Log 'nuevo_ingreso' no existe.</span>
+            <span class="dialogue-bot">Acción: Enviar plantilla de bienvenida. Guardar Log. Actualizar DB maestra a <code>bienvenida_enviada = TRUE</code>.</span>
+        </div>
+
+        <h2>6. Acceso al Informe Digital</h2>
+        <p>Para la visualización de métricas de impacto, distribución por categorías y seguimiento detallado de envíos en tiempo real, consulte el siguiente enlace:</p>
+        <p>🌐 <a href="https://portal-autogestion-casalimpia.vercel.app/informe_bienestar.html" target="_blank" class="link-informe">Dashboard de Bienestar y Comunicación Masiva</a></p>
+
+        <h2>7. Anexos y Recursos</h2>
+        
+        <div class="diagram-container">
+            <div class="diagram-title">Flujo: ACTUALIZACIÓN DE PLANTA</div>
+            <img src="1.png" alt="Flujo Actualización de Planta en n8n" class="tech-diagram">
+            <div class="img-caption">Procesamiento masivo en lotes (500) para sincronizar datos de Novasoft a Supabase sin sobrecargar la memoria.</div>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Flujo: RECOPILACIÓN, SECTORIZACIÓN Y ENVÍOS MASIVOS</div>
+            <img src="2.png" alt="Flujo Envíos Masivos en n8n" class="tech-diagram">
+            <div class="img-caption">Arquitectura de filtrado con JavaScript y manejo de límites de WhatsApp (Lotes de 20) apoyado en Nodos Rescatistas.</div>
+        </div>
+
+        <div class="pdf-section">
+            <button onclick="window.print()" class="btn-pdf">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+                Imprimir Documento / Guardar PDF
+            </button>
+        </div>
+
+    </div> 
+
+</body>
+</html>

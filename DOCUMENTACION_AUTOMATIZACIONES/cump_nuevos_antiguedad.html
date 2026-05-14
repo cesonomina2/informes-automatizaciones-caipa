@@ -64,11 +64,13 @@
         .tech-diagram { width: 100%; max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .img-caption { font-size: 8pt; color: #666; margin-top: 5px; font-style: italic; }
         
-        /* CAJAS DE ÉNFASIS */
+        /* CAJAS DE ÉNFASIS Y VISTAS PREVIAS */
         .use-case-box { background-color: #f9fafb; border: 1px solid #e5e7eb; border-left: 3px solid #9ca3af; padding: 12px; margin: 10px 0; font-size: 9pt; font-family: 'Source Code Pro', monospace; page-break-inside: avoid; }
         .dialogue-user { color: #0085CA; font-weight: 600; display: block; margin-bottom: 4px; }
         .dialogue-bot { color: #555; font-style: italic; margin-left: 15px; display: block; margin-bottom: 8px; }
         
+        .whatsapp-preview { display: block; max-width: 280px; width: 100%; margin: 15px auto 5px auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #e2e8f0; }
+
         .alert-box { background: #fff8e1; padding: 10px; border: 1px solid #ffe082; border-radius: 4px; color: #856404; font-size: 9pt; margin-top: 10px; margin-bottom: 20px;}
         code { font-family: 'Source Code Pro', monospace; background-color: #f7f7f9; padding: 1px 4px; border-radius: 3px; font-size: 0.9em; color: #c0392b; border: 1px solid #e1e1e8; }
 
@@ -155,7 +157,7 @@
 <body>
 
     <div class="nav-bar">
-        <a href="../index.html" class="btn-volver">
+        <a href="#" class="btn-volver">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
             Volver al Portal
         </a>
@@ -259,6 +261,7 @@
             <span class="dialogue-bot">Fecha de nacimiento = 13/05/1990. Hoy = 13/05/2026. Log 'cumpleanos' no existe.</span>
             <span class="dialogue-user">Acción del Sistema:</span>
             <span class="dialogue-bot">Enviar plantilla de felicitación vía WhatsApp. Guardar registro histórico.</span>
+            <img src="CUMPLEAÑOS.png" alt="Vista previa Cumpleaños" class="whatsapp-preview">
         </div>
 
         <div class="use-case-box">
@@ -267,6 +270,7 @@
             <span class="dialogue-bot">Fecha ingreso = 13/05/2021. Hoy = 13/05/2026. Antigüedad = 5. Log '5_anios' no existe.</span>
             <span class="dialogue-user">Acción del Sistema:</span>
             <span class="dialogue-bot">Enviar plantilla de "5 años en la Familia Casalimpia". Guardar registro histórico.</span>
+            <img src="5 AÑOS.png" alt="Vista previa 5 Años" class="whatsapp-preview">
         </div>
 
         <div class="use-case-box">
@@ -275,6 +279,7 @@
             <span class="dialogue-bot">Fecha ingreso = 13/05/2016. Hoy = 13/05/2026. Antigüedad = 10. Log '10_anios' no existe.</span>
             <span class="dialogue-user">Acción del Sistema:</span>
             <span class="dialogue-bot">Enviar plantilla de "10 años en la Familia Casalimpia". Guardar registro histórico.</span>
+            <img src="10 AÑOS.png" alt="Vista previa 10 Años" class="whatsapp-preview">
         </div>
 
         <div class="use-case-box">
@@ -283,6 +288,7 @@
             <span class="dialogue-bot"><code>bienvenida_enviada</code> = FALSE. Fecha ingreso <= Fecha de Hoy. Log 'nuevo_ingreso' no existe.</span>
             <span class="dialogue-user">Acción del Sistema:</span>
             <span class="dialogue-bot">Enviar plantilla de bienvenida. Actualizar DB maestra a <code>bienvenida_enviada = TRUE</code>. Guardar Log.</span>
+            <img src="BIENVENIDA.png" alt="Vista previa Bienvenida" class="whatsapp-preview">
         </div>
 
         <h2>6. Anexos y Recursos</h2>
@@ -520,7 +526,6 @@
         }
 
         // --- EXPORTAR A .XLSX (Usando SheetJS) ---
-        // Exportará TODOS los datos filtrados, no solo los 5 en pantalla
         function exportarExcelXLSX() {
             if (datosFiltradosActuales.length === 0) return alert("No hay datos para exportar con estos filtros.");
             

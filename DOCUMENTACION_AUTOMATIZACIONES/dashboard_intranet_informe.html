@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación Técnica | Analítica Intranet Casalimpia</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;800&family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@500&display=swap');
+
+        :root {
+            --color-principal: #0085CA; 
+            --color-verde-logo: #8DC63F;
+            --color-texto: #333333;
+            --color-gris-suave: #666666;
+            --bg-body: #525659;
+            --bg-doc: #ffffff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--color-texto);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        /* --- NAVEGACIÓN (NO SE IMPRIME) --- */
+        .nav-bar { max-width: 21.6cm; margin: 0 auto 15px auto; display: flex; justify-content: space-between; align-items: center; }
+        .btn-volver { text-decoration: none; color: white; font-weight: 500; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 4px; transition: background 0.2s; }
+        .btn-volver:hover { background: rgba(255,255,255,0.2); }
+        .firma { color: white; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 5px;}
+
+        /* --- HOJA CARTA --- */
+        .document-sheet { background-color: var(--bg-doc); width: 100%; max-width: 21.59cm; margin: 0 auto; padding: 2.54cm; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 2px; }
+
+        /* --- ENCABEZADO --- */
+        .header-container { display: flex; align-items: center; justify-content: space-between; gap: 30px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 3px solid #eee; }
+        .brand-logo { height: 75px; width: auto; flex-shrink: 0; display: block; }
+        .title-block { flex-grow: 1; text-align: center; }
+        h1 { color: var(--color-principal); font-size: 1.5rem; text-transform: uppercase; margin: 0; line-height: 1.2; font-weight: 700; }
+        .subtitle { font-size: 1rem; color: var(--color-gris-suave); margin-top: 5px; font-weight: 400; text-transform: capitalize; }
+
+        /* --- ESTILOS GENERALES DOCUMENTO --- */
+        h2 { font-size: 1.2rem; color: #2c3e50; border-left: 5px solid var(--color-principal); padding-left: 10px; margin-top: 35px; margin-bottom: 15px; }
+        h3 { font-size: 1rem; color: #444; margin-top: 20px; margin-bottom: 10px; font-weight: 700; }
+        p, li { font-size: 10pt; color: #333; text-align: justify; margin-bottom: 10px; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        
+        .tech-info-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 9pt; border: 1px solid #ddd; }
+        .tech-info-table td { padding: 6px 10px; border: 1px solid #ddd; vertical-align: top; }
+        .td-label { background-color: #f4f4f4; font-weight: 700; width: 25%; color: #444; }
+
+        .diagram-container { margin-top: 30px; margin-bottom: 30px; text-align: center; page-break-inside: avoid; }
+        .diagram-title { font-size: 0.95rem; color: #444; font-weight: 700; margin-bottom: 10px; text-align: left; border-left: 3px solid var(--color-principal); padding-left: 10px; text-transform: uppercase; }
+        .tech-diagram { width: 100%; max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .img-caption { font-size: 8pt; color: #666; margin-top: 5px; font-style: italic; }
+        
+        /* CAJAS DE ÉNFASIS Y VISTAS PREVIAS */
+        .use-case-box { background-color: #f9fafb; border: 1px solid #e5e7eb; border-left: 3px solid #9ca3af; padding: 12px; margin: 10px 0; font-size: 9pt; font-family: 'Source Code Pro', monospace; page-break-inside: avoid; }
+        .dialogue-user { color: #0085CA; font-weight: 600; display: block; margin-bottom: 4px; }
+        .dialogue-bot { color: #555; font-style: italic; margin-left: 15px; display: block; margin-bottom: 8px; }
+
+        code { font-family: 'Source Code Pro', monospace; background-color: #f7f7f9; padding: 1px 4px; border-radius: 3px; font-size: 0.9em; color: #c0392b; border: 1px solid #e1e1e8; }
+        .link-informe { color: var(--color-principal); font-weight: 700; text-decoration: none; border-bottom: 2px solid transparent; transition: border-color 0.2s; font-size: 11pt;}
+        .link-informe:hover { border-bottom-color: var(--color-principal); }
+
+        /* Botón PDF */
+        .pdf-section { text-align: center; margin-top: 50px; padding-top: 20px; border-top: 2px solid #eee; }
+        .btn-pdf { background-color: #2d3436; color: white; border: none; padding: 10px 20px; font-size: 0.9rem; cursor: pointer; border-radius: 4px; font-family: 'Roboto', sans-serif; display: inline-flex; align-items: center; gap: 8px; transition: background 0.3s; }
+        .btn-pdf:hover { background-color: #1a1e1f; }
+
+        /* --- MÓVILES --- */
+        @media (max-width: 768px) {
+            body { padding: 0; background-color: #f0f0f0; }
+            .nav-bar { padding: 10px; max-width: 100%; }
+            .document-sheet { width: 100%; max-width: 100%; margin: 0; padding: 20px; box-shadow: none; min-height: 100vh; }
+            .header-container { flex-direction: column; text-align: center; gap: 15px; }
+        }
+
+        /* --- IMPRESIÓN --- */
+        @media print {
+            @page { size: letter; margin: 2cm; }
+            body { background-color: white; padding: 0; margin: 0; -webkit-print-color-adjust: exact; }
+            .document-sheet { box-shadow: none; margin: 0; width: 100%; max-width: 100%; border: none; padding: 0; }
+            .nav-bar, .pdf-section { display: none !important; }
+            h2, h3, .diagram-container, .use-case-box { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <a href="#" class="btn-volver">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+            Volver al Portal
+        </a>
+        <div class="firma">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            JECP
+        </div>
+    </div>
+
+    <div class="document-sheet">
+        
+        <div class="header-container">
+            <img src="https://empresas.casalimpia.com/wp-content/uploads/2024/08/logo-casa-limpia.png" alt="Casalimpia S.A." class="brand-logo">
+            <div class="title-block">
+                <h1>Informe Técnico de Automatización</h1>
+                <div class="subtitle">Extracción de Métricas GA4 - Intranet Casalimpia</div>
+            </div>
+        </div>
+
+        <table class="tech-info-table">
+            <tr><td class="td-label">Cliente Interno:</td><td>Gerencia General / Comunicaciones Casalimpia</td></tr>
+            <tr><td class="td-label">Plataforma:</td><td>n8n (Workflow Automation)</td></tr>
+            <tr><td class="td-label">Carpeta N8N:</td><td>INTRANET CASALIMPIA</td></tr>
+            <tr><td class="td-label">Nombre del Flujo:</td><td>TRAE DATOS INTRANET</td></tr>
+            <tr><td class="td-label">Integraciones:</td><td>Google Analytics 4 (API) & Supabase (PostgreSQL API)</td></tr>
+            <tr><td class="td-label">Estado:</td><td>Producción</td></tr>
+        </table>
+
+        <h2>1. Resumen Ejecutivo</h2>
+        <p>La automatización "TRAE DATOS INTRANET" es una tubería de datos (Data Pipeline) diseñada para medir la adopción y eficacia de la Intranet Corporativa de Casalimpia. Diariamente, el sistema se conecta a la API de Google Analytics 4 (GA4) para extraer métricas clave de comportamiento (usuarios, interacciones, lecturas completas y búsquedas). Estos datos son parseados, limpiados y enviados a Supabase, creando un repositorio histórico en tiempo real que alimenta el Dashboard Ejecutivo, eliminando por completo la dependencia de reportes manuales o archivos de Excel.</p>
+
+        <h2>2. Arquitectura de la Solución</h2>
+        <h3>2.1. Componentes Tecnológicos</h3>
+        <ul>
+            <li><strong>Orquestador:</strong> n8n (Ejecución programada, transformación JSON y peticiones HTTP).</li>
+            <li><strong>Fuente de Datos (Source):</strong> Google Analytics 4 (Autenticación vía OAuth2, Property ID: <code>522026488</code>).</li>
+            <li><strong>Data Warehouse (Destino):</strong> Supabase (PostgreSQL vía API REST).</li>
+        </ul>
+
+        <h3>2.2. Estructura de Base de Datos (Supabase)</h3>
+        <p>La información extraída se distribuye y normaliza en 3 tablas especializadas:</p>
+        <ul>
+            <li><strong>1. 4-intranet_salud_general:</strong> Almacena el volumen de tráfico y retención diaria (Métricas globales).</li>
+            <li><strong>2. 4-intranet_contenidos:</strong> Almacena el consumo de las páginas y su profundidad de lectura.</li>
+            <li><strong>3. 4-intranet_eventos:</strong> Diccionario de interacciones del usuario (clics en enlaces de salida, búsquedas en la lupa y scroll depth).</li>
+        </ul>
+
+        <h2>3. Descripción Detallada del Flujo en n8n</h2>
+        <p>El flujo se ejecuta de forma lineal y automatizada mediante tres ramas paralelas que procesan diferentes dimensiones de la analítica.</p>
+
+        <h3>3.1. Disparador (Trigger) y Extracción Paralela</h3>
+        <ol>
+            <li><strong>Schedule Trigger:</strong> Orquesta la ejecución a la medianoche, solicitando los datos del día inmediatamente anterior (Yesterday).</li>
+            <li><strong>Nodo 1: Salud General y Retención (GA4):</strong> Extrae `activeUsers`, `engagementRate`, `averageSessionDuration` y `screenPageViewsPerUser` sin dimensiones divididas.</li>
+            <li><strong>Nodo 2: Contenidos (GA4):</strong> Extrae `screenPageViews` divididas por la dimensión `pageTitle` y `pagePath`.</li>
+            <li><strong>Nodo 3: Eventos e Interacciones (GA4):</strong> Extrae `eventCount` dividido por `eventName`, `searchTerm`, `linkUrl` y `pageTitle`.</li>
+        </ol>
+
+        <h3>3.2. Formateo y Limpieza de Datos (Nodos Code)</h3>
+        <p>Los datos crudos de GA4 se inyectan a lógicas de JavaScript para parsear tipos de datos y evitar errores en la base de datos:</p>
+        <ul>
+            <li><strong>Formatear Salud:</strong> Convierte cadenas de texto en números reales (<code>parseInt</code> y <code>parseFloat</code>) para las tasas de interacción y promedios de tiempo.</li>
+            <li><strong>Formatear Contenidos:</strong> Asigna valores <code>null</code> como fallback cuando GA4 no retorna la URL del path (<code>data.pagePath || null</code>).</li>
+            <li><strong>Filtrar Eventos:</strong> Aplica una limpieza estricta (If-Statement) dejando pasar a la base de datos <strong>únicamente</strong> tres tipos de eventos vitales: <code>view_search_results</code>, <code>click</code> y <code>scroll</code>. Además hereda dinámicamente la URL del enlace saliente o, en su defecto, el título de la página navegada.</li>
+        </ul>
+
+        <h3>3.3. Inserción Segura (Upsert a Supabase)</h3>
+        <p>Los tres nodos HTTP Request realizan peticiones <code>POST</code> directas a la API REST de Supabase. Para garantizar la pureza de los datos y prevenir registros duplicados en caso de re-ejecuciones manuales, cada nodo utiliza el parámetro <code>resolution=merge-duplicates</code> con claves únicas (Constraints) específicas:</p>
+        <ul>
+            <li><strong>Salud:</strong> <code>?on_conflict=fecha</code></li>
+            <li><strong>Contenidos:</strong> <code>?on_conflict=fecha,titulo_pagina,ruta_pagina</code></li>
+            <li><strong>Eventos:</strong> <code>?on_conflict=fecha,nombre_evento,termino_busqueda,url_enlace</code></li>
+        </ul>
+
+        <h2>4. Escenarios de Transformación de Datos</h2>
+
+        <div class="use-case-box">
+            <strong>Escenario 1: Parseo de Tasa de Interacción (Salud)</strong><br><br>
+            <span class="dialogue-user">Entrada cruda de GA4:</span>
+            <span class="dialogue-bot"><code>"engagementRate": "0.795"</code> (String)</span>
+            <span class="dialogue-user">Transformación en Nodo Code:</span>
+            <span class="dialogue-bot"><code>parseFloat(data.engagementRate) || 0</code></span>
+            <span class="dialogue-user">Salida a Supabase:</span>
+            <span class="dialogue-bot">0.795 (Float / Numeric real listo para ser calculado en el Dashboard como 79.5%)</span>
+        </div>
+
+        <div class="use-case-box">
+            <strong>Escenario 2: Limpieza de Eventos "Basura"</strong><br><br>
+            <span class="dialogue-user">Eventos obtenidos de GA4:</span>
+            <span class="dialogue-bot">session_start, page_view, scroll, click, first_visit</span>
+            <span class="dialogue-user">Transformación en Nodo "Filtrar Eventos":</span>
+            <span class="dialogue-bot"><code>if (nombreEvento === 'view_search_results' || nombreEvento === 'click' || nombreEvento === 'scroll') { ... }</code></span>
+            <span class="dialogue-user">Salida a Supabase:</span>
+            <span class="dialogue-bot">Solo persisten los eventos de interés (Scroll, Click, Búsquedas). Se reduce el tamaño de la base de datos un 80%.</span>
+        </div>
+
+        <h2>5. Anexos: Flujo Visual</h2>
+        
+        <div class="diagram-container">
+            <div class="diagram-title">Flujo: TRAE DATOS INTRANET</div>
+            <img src="TRAE DATOS INTRANET.png" alt="Flujo de n8n - Extracción de GA4 a Supabase" class="tech-diagram">
+            <div class="img-caption">Vista arquitectónica de n8n: Disparador cronológico, nodos de extracción a GA4, nodos de limpieza JS y envíos Upsert mediante HTTP Requests.</div>
+        </div>
+
+        <h2>6. Visualización Final (Dashboard)</h2>
+        <p>Los datos procesados por este flujo de n8n nutren de forma directa y automática el Dashboard Directivo de la intranet. Las métricas calculadas gracias a esta automatización permiten observar los 9 puntos críticos solicitados por gerencia (Usuarios únicos, fidelidad, tiempo medio, ranking de páginas, eventos de scroll al 90%, clics de salida y búsquedas activas).</p>
+        
+        <p>🌐 <a href="dashboard_intranet.html" class="link-informe">Ir al archivo: dashboard_intranet.html</a></p>
+
+        <div class="pdf-section">
+            <button onclick="window.print()" class="btn-pdf">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+                Imprimir Documento / Guardar PDF
+            </button>
+        </div>
+
+    </div> 
+
+</body>
+</html>

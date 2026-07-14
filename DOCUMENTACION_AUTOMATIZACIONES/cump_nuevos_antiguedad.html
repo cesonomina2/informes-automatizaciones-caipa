@@ -2,553 +2,764 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentación Técnica | Envíos Masivos Casalimpia</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Informe Gestión Área Contabilidad</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;800&family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@500&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;800&family=Roboto:wght@400;500;700&display=swap');
+        
         :root {
-            --color-principal: #0085CA; 
-            --color-verde-logo: #8DC63F;
-            --color-texto: #333333;
-            --color-gris-suave: #666666;
-            --bg-body: #525659;
-            --bg-doc: #ffffff;
-            --sombra-suave: 0 4px 20px rgba(0, 133, 202, 0.1);
+            --color-azul-logo: #0085CA; 
+            --color-verde-logo: #8DC63F; 
+            --color-rojo-alerta: #EF4444; 
+            --color-blanco: #ffffff; 
+            --color-gris-bg: #F1F5F9;
+            --color-texto: #334155; 
+            --sombra: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --borde: 1px solid #E2E8F0;
         }
 
-        * { box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--color-gris-bg); color: var(--color-texto); }
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--color-texto);
-            margin: 0;
-            padding: 20px;
-            line-height: 1.5;
-        }
+        /* HEADER */
+        header { background-color: var(--color-blanco); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--sombra); border-bottom: 4px solid var(--color-azul-logo); flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 100; }
+        .logo-container { display: flex; align-items: center; gap: 15px; }
+        .logo-img { height: 40px; width: auto; }
+        .logo-text { font-family: 'Outfit', sans-serif; font-weight: 700; display: flex; align-items: center; }
+        .text-verde { color: var(--color-verde-logo); font-size: 1.6rem; }
+        .text-azul { color: var(--color-azul-logo); font-size: 1.6rem; margin-left: 2px; }
+        .header-title { font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 600; color: #475569; background: #E2E8F0; padding: 6px 18px; border-radius: 50px; }
 
-        /* --- NAVEGACIÓN (NO SE IMPRIME) --- */
-        .nav-bar { max-width: 21.6cm; margin: 0 auto 15px auto; display: flex; justify-content: space-between; align-items: center; }
-        .btn-volver { text-decoration: none; color: white; font-weight: 500; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 4px; transition: background 0.2s; }
-        .btn-volver:hover { background: rgba(255,255,255,0.2); }
-        .firma { color: white; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 5px;}
+        /* TABS */
+        .tabs-container { background: white; border-bottom: 1px solid #CBD5E1; display: flex; justify-content: center; gap: 20px; padding-top: 15px; flex-wrap: wrap;}
+        .tab-btn { background: none; border: none; font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 700; color: #64748B; padding: 10px 15px; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.3s; }
+        .tab-btn:hover { color: var(--color-azul-logo); }
+        .tab-btn.active { color: var(--color-azul-logo); border-bottom: 3px solid var(--color-azul-logo); }
+        .tab-content { display: none; padding: 20px 0; }
+        .tab-content.active { display: flex; flex-direction: column; gap: 20px; }
+        .container { max-width: 1600px; margin: 0 auto; padding: 0 15px; display: flex; flex-direction: column; gap: 20px; }
 
-        /* --- HOJA CARTA --- */
-        .document-sheet { background-color: var(--bg-doc); width: 100%; max-width: 21.59cm; margin: 0 auto; padding: 2.54cm; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 2px; }
+        /* CARGA MANUAL */
+        #zona-carga-manual { background-color: #FEF3C7; border: 1px dashed #D97706; color: #92400E; padding: 15px; border-radius: 8px; text-align: center; display: none; flex-direction: column; align-items: center; gap: 10px; margin-top: 20px;}
+        #zona-carga-manual input[type="file"] { background: white; padding: 10px; border-radius: 5px; border: 1px solid #D97706; cursor: pointer; }
 
-        /* --- ENCABEZADO --- */
-        .header-container { display: flex; align-items: center; justify-content: space-between; gap: 30px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 3px solid #eee; }
-        .brand-logo { height: 75px; width: auto; flex-shrink: 0; display: block; }
-        .title-block { flex-grow: 1; text-align: center; }
-        h1 { color: var(--color-principal); font-size: 1.5rem; text-transform: uppercase; margin: 0; line-height: 1.2; font-weight: 700; }
-        .subtitle { font-size: 1rem; color: var(--color-gris-suave); margin-top: 5px; font-weight: 400; text-transform: capitalize; }
-
-        /* --- ESTILOS GENERALES DOCUMENTO --- */
-        h2 { font-size: 1.2rem; color: #2c3e50; border-left: 5px solid var(--color-principal); padding-left: 10px; margin-top: 35px; margin-bottom: 15px; }
-        h3 { font-size: 1rem; color: #444; margin-top: 20px; margin-bottom: 10px; font-weight: 700; }
-        p, li { font-size: 10pt; color: #333; text-align: justify; margin-bottom: 10px; }
-        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        /* FILTROS GLOBALES */
+        .filtros-banner { background-color: var(--color-azul-logo); border-radius: 8px; padding: 15px 25px; display: flex; align-items: flex-end; flex-wrap: wrap; gap: 15px; color: white; box-shadow: var(--sombra); margin-top: 15px; }
+        .filtros-banner h2 { font-family: 'Outfit', sans-serif; margin-right: 15px; font-size: 1.8rem; margin-bottom: 2px;}
+        .input-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 180px; }
+        .input-group label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #ffffff; letter-spacing: 0.5px;}
+        .input-text-search { padding: 8px 12px; border-radius: 5px; border: none; outline: none; font-family: 'Roboto', sans-serif; width: 100%; height: 40px; color: #334155;}
         
-        .tech-info-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 9pt; border: 1px solid #ddd; }
-        .tech-info-table td { padding: 6px 10px; border: 1px solid #ddd; vertical-align: top; }
-        .td-label { background-color: #f4f4f4; font-weight: 700; width: 25%; color: #444; }
+        /* CHOICES.JS ESTILOS */
+        .choices { margin-bottom: 0; width: 100%; }
+        .choices__inner { min-height: 40px; max-height: 85px; overflow-y: auto; padding: 2px 8px; border-radius: 5px; background-color: white; border: none; font-family: 'Roboto', sans-serif; font-size: 0.9rem; }
+        .choices__input { color: #334155 !important; background-color: transparent !important; margin-bottom: 0; }
+        .choices__list--dropdown .choices__item { color: #334155; font-size: 0.9rem; }
+        .choices__list--multiple .choices__item { background-color: var(--color-azul-logo); border: 1px solid #005f9e; border-radius: 20px; color: white; padding: 3px 10px; margin: 2px 4px 2px 0; font-size: 0.75rem; display: inline-block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
+        .choices__list--multiple .choices__item[data-deletable] { padding-right: 25px; }
+        .btn-limpiar { background-color: transparent; border: 1px solid white; color: white; padding: 9px 20px; border-radius: 50px; cursor: pointer; font-weight: 700; transition: 0.3s; align-self: flex-end; margin-bottom: 2px;}
+        .btn-limpiar:hover { background-color: white; color: var(--color-azul-logo); }
 
-        .diagram-container { margin-top: 30px; margin-bottom: 30px; text-align: center; page-break-inside: avoid; }
-        .diagram-title { font-size: 0.95rem; color: #444; font-weight: 700; margin-bottom: 10px; text-align: left; border-left: 3px solid var(--color-principal); padding-left: 10px; text-transform: uppercase; }
-        .tech-diagram { width: 100%; max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .img-caption { font-size: 8pt; color: #666; margin-top: 5px; font-style: italic; }
+        /* KPIs CARDS */
+        .kpis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+        .kpi-card { padding: 25px 20px; border-radius: 8px; box-shadow: var(--sombra); text-align: center; border: none; }
         
-        /* CAJAS DE ÉNFASIS Y VISTAS PREVIAS */
-        .use-case-box { background-color: #f9fafb; border: 1px solid #e5e7eb; border-left: 3px solid #9ca3af; padding: 12px; margin: 10px 0; font-size: 9pt; font-family: 'Source Code Pro', monospace; page-break-inside: avoid; }
-        .dialogue-user { color: #0085CA; font-weight: 600; display: block; margin-bottom: 4px; }
-        .dialogue-bot { color: #555; font-style: italic; margin-left: 15px; display: block; margin-bottom: 8px; }
+        .kpi-card.total { background-color: #0085CA; }      
+        .kpi-card.cumple { background-color: var(--color-verde-logo); }     
+        .kpi-card.nocumple { background-color: var(--color-rojo-alerta); }  
+        .kpi-card.porcentaje { background-color: #F59E0B; } 
         
-        .whatsapp-preview { display: block; max-width: 280px; width: 100%; margin: 15px auto 5px auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #e2e8f0; }
+        .kpi-card .kpi-title { font-size: 0.85rem; color: rgba(255, 255, 255, 0.95); text-transform: uppercase; font-weight: 800; margin-bottom: 12px; letter-spacing: 0.5px;}
+        .kpi-card .kpi-value { font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 800; color: #ffffff; }
 
-        .alert-box { background: #fff8e1; padding: 10px; border: 1px solid #ffe082; border-radius: 4px; color: #856404; font-size: 9pt; margin-top: 10px; margin-bottom: 20px;}
-        code { font-family: 'Source Code Pro', monospace; background-color: #f7f7f9; padding: 1px 4px; border-radius: 3px; font-size: 0.9em; color: #c0392b; border: 1px solid #e1e1e8; }
+        .kpi-card.errores-total { background-color: #C25973; }
+        .kpi-card.errores-motivos { background-color: #64748B; }
 
-        .link-informe { color: var(--color-principal); font-weight: 700; text-decoration: none; border-bottom: 2px solid transparent; transition: border-color 0.2s; font-size: 11pt;}
-        .link-informe:hover { border-bottom-color: var(--color-principal); }
+        /* BATERÍAS DE CUMPLIMIENTO */
+        .baterias-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 10px; }
+        .bateria-card { background: white; padding: 15px; border-radius: 8px; box-shadow: var(--sombra); border: var(--borde); text-align: center; }
+        .bateria-nombre { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--color-azul-logo); margin-bottom: 12px; font-size: 1.1rem; }
+        .bateria-outer { width: 100%; height: 35px; background: #E2E8F0; border-radius: 6px; position: relative; overflow: hidden; border: 2px solid #CBD5E1; }
+        .bateria-inner { height: 100%; border-radius: 4px 0 0 4px; transition: width 0.8s ease-in-out; }
+        .bateria-inner.alta { background: var(--color-verde-logo); } 
+        .bateria-inner.media { background: #F59E0B; }
+        .bateria-inner.baja { background: var(--color-rojo-alerta); }
+        .bateria-texto { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #1E293B; font-size: 0.95rem; z-index: 2; text-shadow: 0px 0px 5px rgba(255,255,255,0.9); }
+        .bateria-stats { display: flex; justify-content: space-between; margin-top: 12px; font-size: 0.85rem; color: #64748B; background: #F8FAFC; padding: 8px; border-radius: 4px; border: 1px solid #E2E8F0; }
+        .bateria-stats span { flex: 1; }
+        .bateria-stats strong { color: var(--color-texto); font-size: 0.95rem; display: block; margin-top: 2px;}
 
-        /* Botón PDF */
-        .pdf-section { text-align: center; margin-top: 50px; padding-top: 20px; border-top: 2px solid #eee; }
-        .btn-pdf { background-color: #2d3436; color: white; border: none; padding: 10px 20px; font-size: 0.9rem; cursor: pointer; border-radius: 4px; font-family: 'Roboto', sans-serif; display: inline-flex; align-items: center; gap: 8px; transition: background 0.3s; }
-        .btn-pdf:hover { background-color: #1a1e1f; }
-
-        /* =========================================
-           ESTILOS DEL DASHBOARD INTEGRADO
-           ========================================= */
-        .dashboard-wrapper { background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 20px; page-break-inside: avoid; }
+        /* TABLAS Y PANELES */
+        .seccion-titulo { font-family: 'Outfit', sans-serif; color: var(--color-azul-logo); font-size: 1.4rem;}
+        .panel { background: white; padding: 20px; border-radius: 8px; box-shadow: var(--sombra); border: var(--borde); }
         
-        /* FILTROS */
-        .filtros-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; background: var(--color-blanco); padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e2e8f0;}
-        .form-group { display: flex; flex-direction: column; gap: 4px; }
-        .form-group label { font-size: 0.75rem; font-weight: 600; color: #64748B; text-transform: uppercase;}
-        .form-control { padding: 8px; border: 1px solid #CBD5E1; border-radius: 6px; font-family: 'Roboto', sans-serif; font-size: 0.85rem; outline: none; }
-
-        /* KPIS GRID */
-        .kpis-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px;}
-        .kpi-card { padding: 15px; border-radius: 8px; display: flex; flex-direction: column; gap: 5px; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .table-responsive { overflow: auto; max-height: 450px; border: 1px solid #E2E8F0; border-radius: 8px; }
         
-        .card-total { background-color: #A855F7; }    
-        .card-ingresos { background-color: #C25973; } 
-        .card-cumple { background-color: #EAB308; }   
-        .card-5a { background-color: #0085CA; }       
-        .card-10a { background-color: #8DC63F; }      
-        
-        .kpi-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; opacity: 0.95; line-height: 1.1;}
-        .kpi-value { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 700; line-height: 1;}
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        table.tabla-corta { min-width: 100%; } /* Evita scroll horizontal innecesario */
 
-        /* PANELES DASHBOARD */
-        .dashboard-main { display: grid; grid-template-columns: 250px 1fr; gap: 15px; }
-        .panel { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; overflow: hidden; }
-        .panel-header-acciones { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
-        .panel h3 { font-family: 'Outfit', sans-serif; color: var(--color-principal); margin: 0; font-size: 1rem; }
-        
-        .btn-export { padding: 6px 12px; border-radius: 4px; border: none; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 0.75rem; cursor: pointer; color: white; background-color: #10B981; display: flex; align-items: center; gap: 5px; transition: opacity 0.2s;}
-        .btn-export:hover { opacity: 0.8; }
-        .chart-wrapper { position: relative; height: 200px; width: 100%; margin-top: 10px;}
+        thead { position: sticky; top: 0; background: #F1F5F9; z-index: 10; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #E2E8F0; white-space: nowrap; font-size: 0.85rem;}
+        th { font-weight: 800; color: #475569; text-transform: uppercase; font-family: 'Outfit', sans-serif; font-size: 0.8rem;}
+        tbody tr:hover { background-color: #F8FAFC; }
 
-        /* TABLA DASHBOARD */
-        .table-responsive { overflow-x: auto; }
-        table.dash-table { width: 100%; border-collapse: collapse; min-width: 600px; font-size: 8pt; }
-        table.dash-table th, table.dash-table td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #E2E8F0; white-space: nowrap; }
-        table.dash-table th { font-weight: 600; color: #64748B; text-transform: uppercase; background: #F8FAFC; }
-        table.dash-table td { color: var(--color-texto); }
-        table.dash-table tbody tr:hover { background-color: #F1F5F9; }
+        .herramientas-tabla { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;}
+        .btn-accion { color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 5px; transition: 0.2s; font-family: 'Outfit', sans-serif;}
+        .btn-excel { background: var(--color-verde-logo); } .btn-excel:hover { background: #76A633; }
 
-        /* BADGES DASHBOARD */
-        .badge { padding: 4px 8px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; color: white; display: inline-block; }
-        .badge-nuevo { background-color: #C25973; }   
-        .badge-cumple { background-color: #EAB308; }  
-        .badge-5a { background-color: #0085CA; }      
-        .badge-10a { background-color: #8DC63F; }     
-        .badge-default { background-color: #94A3B8; }
+        .badge-error { background-color: #FEE2E2; color: #991B1B; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+        .badge-subsanable { color: #166534; background-color: #DCFCE7; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; border: 1px solid #86EFAC;}
 
-        /* --- MÓVILES --- */
         @media (max-width: 768px) {
-            body { padding: 0; background-color: #f0f0f0; }
-            .nav-bar { padding: 10px; max-width: 100%; }
-            .document-sheet { width: 100%; max-width: 100%; margin: 0; padding: 20px; box-shadow: none; min-height: 100vh; }
-            .header-container { flex-direction: column; text-align: center; gap: 15px; }
-            .kpis-grid { grid-template-columns: repeat(2, 1fr); }
-            .card-total { grid-column: span 2; }
-            .dashboard-main { grid-template-columns: 1fr; }
-        }
-
-        /* --- IMPRESIÓN --- */
-        @media print {
-            @page { size: letter; margin: 2cm; }
-            body { background-color: white; padding: 0; margin: 0; -webkit-print-color-adjust: exact; }
-            .document-sheet { box-shadow: none; margin: 0; width: 100%; max-width: 100%; border: none; padding: 0; }
-            .nav-bar, .pdf-section, .filtros-grid, .btn-export { display: none !important; }
-            .table-responsive { overflow: visible; }
-            h2, h3, .diagram-container, .dashboard-wrapper { page-break-inside: avoid; }
+            .filtros-banner { flex-direction: column; align-items: stretch; }
+            .btn-limpiar { align-self: stretch; }
         }
     </style>
 </head>
 <body>
 
-    <div class="nav-bar">
-        <a href="../index.html" class="btn-volver">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-            Volver al Portal
-        </a>
-        <div class="firma">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            JCEP
+    <header>
+        <div class="logo-container">
+            <img src="https://empresas.casalimpia.com/wp-content/uploads/2024/08/logo-casa-limpia.png" alt="Logo Casalimpia" class="logo-img">
+            <div class="logo-text"><span class="text-verde">SaberBot</span><span class="text-azul">Casalimpia</span></div>
         </div>
+        <div class="header-title">Informe Gestión Área Contabilidad</div>
+    </header>
+
+    <div class="tabs-container">
+        <button class="tab-btn active" onclick="cambiarPestana('resumen', this)">Resumen General</button>
+        <button class="tab-btn" onclick="cambiarPestana('detalles', this)">Data Detallada</button>
+        <button class="tab-btn" onclick="cambiarPestana('errores', this)">Errores y Ajustes</button>
     </div>
 
-    <div class="document-sheet">
+    <div class="container">
         
-        <div class="header-container">
-            <img src="https://empresas.casalimpia.com/wp-content/uploads/2024/08/logo-casa-limpia.png" alt="Casalimpia S.A." class="brand-logo">
-            <div class="title-block">
-                <h1>Informe Técnico de Automatización</h1>
-                <div class="subtitle">Envíos Masivos: Cumpleaños, Antigüedad y Nuevos Ingresos</div>
+        <div id="zona-carga-manual">
+            <h3>⚠️ No se pudo conectar a Google Sheets de forma automática</h3>
+            <p>Asegúrate de que los enlaces de Google Drive estén publicados en la web en formato CSV.</p>
+        </div>
+
+        <!-- FILTROS GLOBALES -->
+        <div class="filtros-banner">
+            <h2>Filtros</h2>
+            <div class="input-group">
+                <label>Búsqueda Global</label>
+                <input type="text" id="filtro-texto" class="input-text-search" placeholder="Buscar cualquier caracter...">
             </div>
-        </div>
-
-        <table class="tech-info-table">
-            <tr><td class="td-label">Cliente Interno:</td><td>Casalimpia</td></tr>
-            <tr><td class="td-label">Plataforma:</td><td>n8n (Workflow Automation)</td></tr>
-            <tr><td class="td-label">Carpeta N8N:</td><td>ENVÍOS MASIVOS, ANTIGÜEDAD, CUMPLEAÑOS Y NUEVO INGRESO</td></tr>
-            <tr><td class="td-label">Canal:</td><td>WhatsApp Business API (Meta)</td></tr>
-            <tr><td class="td-label">Bases de Datos:</td><td>Supabase (PostgreSQL) y Novasoft Web API</td></tr>
-            <tr><td class="td-label">Estado:</td><td>Producción</td></tr>
-        </table>
-
-        <h2>1. Resumen Ejecutivo</h2>
-        <p>La automatización de "Envíos Masivos" es una arquitectura corporativa diseñada para fortalecer el salario emocional y la comunicación interna en Casalimpia. Diariamente, el sistema sincroniza la base de datos completa de colaboradores desde el ERP (Novasoft), la procesa y segmenta mediante expresiones y lógicas de zona horaria, para disparar automáticamente mensajes personalizados por WhatsApp. Estos envíos felicitan a los empleados en su <strong>cumpleaños</strong>, celebran su <strong>antigüedad (5 y 10 años)</strong> y dan la <strong>bienvenida oficial</strong> a los nuevos ingresos, garantizando cero duplicidades mediante un estricto registro de logs transaccionales.</p>
-
-        <h2>2. Arquitectura de la Solución</h2>
-        <h3>2.1. Componentes Tecnológicos</h3>
-        <ul>
-            <li><strong>Orquestador:</strong> n8n (Gestión de lógica, cronogramas diarios, control de lotes y ruteo).</li>
-            <li><strong>Canal de Salida:</strong> WhatsApp Business API (Uso de plantillas pre-aprobadas con variables dinámicas).</li>
-            <li><strong>Origen de Datos:</strong> Novasoft Web API (Autenticación nativa para extracción de la matriz de empleados).</li>
-            <li><strong>Base de Datos Operativa:</strong> Supabase (PostgreSQL) utilizada como puente de alto rendimiento para evitar la saturación de las APIs origen.</li>
-        </ul>
-
-        <h3>2.2. Estructura de Base de Datos (Supabase)</h3>
-        <p>El sistema emplea dos tablas fundamentales para sostener la lógica masiva sin pérdida de rendimiento:</p>
-        <ul>
-            <li><strong>Tabla: empleados_datos</strong>
-                <ul>
-                    <li>Tabla espejo alimentada diariamente desde Novasoft. Contiene los datos vitales para las notificaciones.</li>
-                    <li><strong>Columnas Clave:</strong> <code>codEmp</code>, <code>nomEmp</code>, <code>fecNac</code> (Cumpleaños), <code>fecIng</code> (Antigüedad), <code>telCel</code> y <code>bienvenida_enviada</code> (Control booleano de nuevos ingresos).</li>
-                </ul>
-            </li>
-            <li><strong>Tabla: 3-log_notificaciones (Auditoría e Historial)</strong>
-                <ul>
-                    <li>El "diccionario" de envíos. Registra el histórico de mensajes para prevenir que un empleado sea felicitado dos veces por el mismo motivo en el mismo año, y nutre el dashboard analítico.</li>
-                </ul>
-            </li>
-        </ul>
-
-        <h2>3. Descripción Detallada de los Flujos (Workflows)</h2>
-        <p>El sistema se divide en dos flujos interdependientes: Sincronización y Ejecución.</p>
-
-        <h3>3.1. Flujo 1: Actualización de Planta (Sincronización Diaria)</h3>
-        <p>Se ejecuta de forma programada a la medianoche (Schedule Trigger) para preparar los datos frescos del día.</p>
-        <ol>
-            <li><strong>Limpieza y Autenticación:</strong> El flujo inicializa borrando variables residuales (bonos) y ejecuta un Login en la API de Novasoft para obtener el Bearer Token.</li>
-            <li><strong>Extracción y Empaquetado:</strong> Se consulta la matriz completa de empleados. Un nodo <em>Code</em> agrupa estos registros en <strong>Lotes de 500</strong>. Esto es una práctica esencial de arquitectura para ser "amigables" con los límites de Supabase y evitar tiempos de espera (Timeout) o colapsos de memoria en el servidor.</li>
-            <li><strong>Inserción Segura (Upsert):</strong> Un ciclo (Loop) toma cada lote y utiliza la API nativa REST de Supabase con el parámetro <code>resolution=merge-duplicates</code>, insertando nuevos empleados o actualizando los existentes de forma limpia.</li>
-        </ol>
-
-        <h3>3.2. Flujo 2: Recopilación, Sectorización y Envíos Masivos</h3>
-        <p>Este es el motor de comunicación. Se ejecuta cada mañana de forma programada.</p>
-        <ol>
-            <li><strong>Obtención de Datos Limpios:</strong> Consulta simultáneamente a todos los empleados activos y la lista de mensajes (logs) que ya fueron enviados el día de hoy.</li>
-            <li><strong>Evaluación Lógica Central (El "Cerebro" JS):</strong> 
-                <ul>
-                    <li>Fuerza la zona horaria a <code>America/Bogota</code> para evitar desfases de servidor que envíen mensajes en el día equivocado.</li>
-                    <li>Itera sobre cada empleado y extrae el día y mes exacto de nacimiento e ingreso, comparándolos con el "hoy".</li>
-                    <li>Cruza la información con el Set (diccionario) de logs para descartar a quienes ya se les envió un mensaje.</li>
-                </ul>
-            </li>
-            <li><strong>Enrutamiento (Switch) y Micro-Lotes (Loops):</strong> Los registros válidos se dividen en 4 caminos. Cada camino entra a un nodo <em>Split in Batches</em> configurado en <strong>lotes de 20 mensajes</strong>. Esto respeta las políticas de rate-limiting de Meta (WhatsApp).</li>
-            <li><strong>Envío y Registro (Nodos Rescatistas):</strong> 
-                <ul>
-                    <li>Por cada 20 empleados, se envía la plantilla de WhatsApp correspondiente.</li>
-                    <li>Un nodo de espera (Wait) asegura la entrega.</li>
-                    <li>Un nodo <em>Code</em> (Rescatista) recupera la data original del empleado para evitar el efecto de pérdida de memoria del loop de n8n.</li>
-                    <li>Se inserta el registro final en <code>3-log_notificaciones</code> y el ciclo vuelve a empezar. En el caso de nuevos ingresos, además se marca el campo <code>bienvenida_enviada = TRUE</code> en la tabla maestra.</li>
-                </ul>
-            </li>
-        </ol>
-
-        <h2>4. Reglas de Negocio y Seguridad</h2>
-        <ul>
-            <li><strong>Control Absoluto de Duplicados:</strong> La variable <code>enviosDeHoy = new Set()</code> garantiza que si el flujo se interrumpe y se reinicia manualmente, el bot ignorará a quienes ya recibieron su felicitación horas antes.</li>
-            <li><strong>Protección de Memoria (Execute Once):</strong> En la lectura de logs de la base de datos, el nodo está forzado a ejecutarse una sola vez (Execute Once), previniendo que n8n intente multiplicar la consulta por la cantidad de empleados entrantes (evitando bucles infinitos).</li>
-        </ul>
-
-        <h2>5. Casos de Uso y Escenarios del Usuario</h2>
-
-        <div class="use-case-box">
-            <strong>Caso 1: Cumpleaños Activo</strong><br><br>
-            <span class="dialogue-user">Lógica evaluada en n8n:</span>
-            <span class="dialogue-bot">Fecha de nacimiento = 13/05/1990. Hoy = 13/05/2026. Log 'cumpleanos' no existe.</span>
-            <span class="dialogue-user">Acción del Sistema:</span>
-            <span class="dialogue-bot">Enviar plantilla de felicitación vía WhatsApp. Guardar registro histórico.</span>
-            <img src="CUMPLEAÑOS.png" alt="Vista previa Cumpleaños" class="whatsapp-preview">
-        </div>
-
-        <div class="use-case-box">
-            <strong>Caso 2: Aniversario 5 Años</strong><br><br>
-            <span class="dialogue-user">Lógica evaluada en n8n:</span>
-            <span class="dialogue-bot">Fecha ingreso = 13/05/2021. Hoy = 13/05/2026. Antigüedad = 5. Log '5_anios' no existe.</span>
-            <span class="dialogue-user">Acción del Sistema:</span>
-            <span class="dialogue-bot">Enviar plantilla de "5 años en la Familia Casalimpia". Guardar registro histórico.</span>
-            <img src="5 AÑOS.png" alt="Vista previa 5 Años" class="whatsapp-preview">
-        </div>
-
-        <div class="use-case-box">
-            <strong>Caso 3: Aniversario 10 Años</strong><br><br>
-            <span class="dialogue-user">Lógica evaluada en n8n:</span>
-            <span class="dialogue-bot">Fecha ingreso = 13/05/2016. Hoy = 13/05/2026. Antigüedad = 10. Log '10_anios' no existe.</span>
-            <span class="dialogue-user">Acción del Sistema:</span>
-            <span class="dialogue-bot">Enviar plantilla de "10 años en la Familia Casalimpia". Guardar registro histórico.</span>
-            <img src="10 AÑOS.png" alt="Vista previa 10 Años" class="whatsapp-preview">
-        </div>
-
-        <div class="use-case-box">
-            <strong>Caso 4: Nuevo Ingreso Detectado</strong><br><br>
-            <span class="dialogue-user">Lógica evaluada en n8n:</span>
-            <span class="dialogue-bot"><code>bienvenida_enviada</code> = FALSE. Fecha ingreso <= Fecha de Hoy. Log 'nuevo_ingreso' no existe.</span>
-            <span class="dialogue-user">Acción del Sistema:</span>
-            <span class="dialogue-bot">Enviar plantilla de bienvenida. Actualizar DB maestra a <code>bienvenida_enviada = TRUE</code>. Guardar Log.</span>
-            <img src="BIENVENIDA.png" alt="Vista previa Bienvenida" class="whatsapp-preview">
-        </div>
-
-        <h2>6. Anexos y Recursos</h2>
-        
-        <div class="diagram-container">
-            <div class="diagram-title">Flujo: ACTUALIZACIÓN DE PLANTA</div>
-            <img src="1.png" alt="Flujo Actualización de Planta en n8n" class="tech-diagram">
-            <div class="img-caption">Procesamiento masivo en lotes (500) para sincronizar datos de Novasoft a Supabase sin sobrecargar la memoria.</div>
-        </div>
-
-        <div class="diagram-container">
-            <div class="diagram-title">Flujo: RECOPILACIÓN, SECTORIZACIÓN Y ENVÍOS MASIVOS</div>
-            <img src="2.png" alt="Flujo Envíos Masivos en n8n" class="tech-diagram">
-            <div class="img-caption">Arquitectura de filtrado con JavaScript y manejo de límites de WhatsApp (Lotes de 20) apoyado en Nodos Rescatistas.</div>
-        </div>
-
-        <h2>7. Dashboard de Uso: Notificaciones Enviadas</h2>
-        <p>Monitoreo en tiempo real de la tabla <code>3-log_notificaciones</code>. Los datos mostrados corresponden a los envíos efectivos realizados por la automatización.</p>
-
-        <div class="dashboard-wrapper">
-            
-            <div class="filtros-grid">
-                <div class="form-group">
-                    <label>Buscar Empleado</label>
-                    <input type="text" id="filtro-busqueda" class="form-control" placeholder="Nombre o código..." oninput="aplicarFiltros()">
-                </div>
-                <div class="form-group">
-                    <label>Categoría</label>
-                    <select id="filtro-tipo" class="form-control" onchange="aplicarFiltros()">
-                        <option value="todos">Todas las categorías</option>
-                        <option value="cumpleanos">Cumpleaños</option>
-                        <option value="nuevo_ingreso">Nuevos Ingresos</option>
-                        <option value="5_anios">Aniv. 5 Años</option>
-                        <option value="10_anios">Aniv. 10 Años</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Desde</label>
-                    <input type="date" id="filtro-fecha-inicio" class="form-control" onchange="aplicarFiltros()">
-                </div>
-                <div class="form-group">
-                    <label>Hasta</label>
-                    <input type="date" id="filtro-fecha-fin" class="form-control" onchange="aplicarFiltros()">
-                </div>
+            <div class="input-group">
+                <label>Mes</label>
+                <select id="filtro-mes" multiple></select>
             </div>
+            <div class="input-group">
+                <label>Corte (Solo Pestaña Principal)</label>
+                <select id="filtro-corte" multiple></select>
+            </div>
+            <div class="input-group">
+                <label>Responsable</label>
+                <select id="filtro-responsable" multiple></select>
+            </div>
+            <button class="btn-limpiar" onclick="resetFilters()">Limpiar</button>
+        </div>
 
+        <!-- TAB 1: RESUMEN GENERAL -->
+        <div id="tab-resumen" class="tab-content active">
             <div class="kpis-grid">
-                <div class="kpi-card card-total">
-                    <div class="kpi-title">Total General</div>
-                    <div class="kpi-value" id="kpi-total">0</div>
-                </div>
-                <div class="kpi-card card-ingresos">
-                    <div class="kpi-title">Nuevos Ingresos</div>
-                    <div class="kpi-value" id="kpi-ingresos">0</div>
-                </div>
-                <div class="kpi-card card-cumple">
-                    <div class="kpi-title">Cumpleaños</div>
-                    <div class="kpi-value" id="kpi-cumple">0</div>
-                </div>
-                <div class="kpi-card card-5a">
-                    <div class="kpi-title">Aniv. 5 Años</div>
-                    <div class="kpi-value" id="kpi-5a">0</div>
-                </div>
-                <div class="kpi-card card-10a">
-                    <div class="kpi-title">Aniv. 10 Años</div>
-                    <div class="kpi-value" id="kpi-10a">0</div>
-                </div>
+                <div class="kpi-card total"><div class="kpi-title">Total Registros</div><div class="kpi-value" id="kpi-total">0</div></div>
+                <div class="kpi-card cumple"><div class="kpi-title">Cumplieron Meta</div><div class="kpi-value" id="kpi-cumple">0</div></div>
+                <div class="kpi-card nocumple"><div class="kpi-title">No Cumplieron</div><div class="kpi-value" id="kpi-nocumple">0</div></div>
+                <div class="kpi-card porcentaje"><div class="kpi-title">% Eficiencia</div><div class="kpi-value" id="kpi-eficiencia">0%</div></div>
             </div>
 
-            <div class="dashboard-main">
-                <div class="panel">
-                    <h3>Distribución</h3>
-                    <div class="chart-wrapper">
-                        <canvas id="graficoDistribucion"></canvas>
-                    </div>
-                </div>
+            <div id="baterias-container" class="baterias-grid"></div>
 
-                <div class="panel">
-                    <div class="panel-header-acciones">
-                        <h3>Últimos 5 Registros</h3>
-                        <button class="btn-export" onclick="exportarExcelXLSX()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                            Exportar .xlsx
-                        </button>
-                    </div>
+            <div class="herramientas-tabla">
+                <h2 class="seccion-titulo" style="margin: 0; border: none;">Cumplimiento Operativo</h2>
+            </div>
+
+            <div>
+                <div class="panel" style="margin-bottom: 20px;">
+                    <h3 style="font-family: 'Outfit'; margin-bottom: 15px; color: var(--color-texto);">Resumen Consolidado de Cumplimiento (Cortes 1, 2 y 3)</h3>
                     <div class="table-responsive">
-                        <table class="dash-table" id="tabla-logs">
+                        <table id="tabla-cruzada">
                             <thead>
                                 <tr>
-                                    <th>Fecha Envío</th>
-                                    <th>Cód. Emp</th>
-                                    <th>Nombre</th>
-                                    <th>Nacimiento</th>
-                                    <th>Ingreso</th>
-                                    <th>Tipo</th>
+                                    <th>Responsable Causación</th>
+                                    <th style="text-align:center;">Corte 1</th>
+                                    <th style="text-align:center;">Corte 2</th>
+                                    <th style="text-align:center;">Corte 3</th>
                                 </tr>
                             </thead>
-                            <tbody id="tbody-logs">
-                                <tr><td colspan="6" style="text-align:center;">Cargando datos...</td></tr>
-                            </tbody>
+                            <tbody id="tbody-cruzada"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h3 style="font-family: 'Outfit'; margin-bottom: 15px; color: var(--color-texto);">Desglose por Mes, Corte y Persona</h3>
+                    <div class="table-responsive">
+                        <table id="tabla-resumen">
+                            <thead>
+                                <tr>
+                                    <th>Mes</th>
+                                    <th>Corte</th>
+                                    <th>Responsable Causación</th>
+                                    <th>Total Facturas</th>
+                                    <th>Registros Asignados</th>
+                                    <th>Cumplieron Meta</th>
+                                    <th>No Cumplieron</th>
+                                    <th>% Cumplimiento</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-resumen"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: DATA DETALLADA -->
+        <div id="tab-detalles" class="tab-content">
+            <div class="panel">
+                <div class="herramientas-tabla">
+                    <h2 class="seccion-titulo" style="margin: 0; border: none;">Base de Datos Filtrada (Causación)</h2>
+                    <button class="btn-accion btn-excel" onclick="exportarExcel()">Exportar a Excel</button>
+                </div>
+                <div class="table-responsive">
+                    <table id="tabla-maestra">
+                        <thead>
+                            <tr>
+                                <th>Mes</th>
+                                <th>Corte</th>
+                                <th>Área</th>
+                                <th>Responsable Causación</th>
+                                <th>Cant. Facturas</th>
+                                <th>Fecha Meta</th>
+                                <th>Fecha Causación</th>
+                                <th>Status Cumplimiento</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-maestra"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: ERRORES Y AJUSTES -->
+        <div id="tab-errores" class="tab-content">
+            <div class="kpis-grid">
+                <div class="kpi-card errores-total"><div class="kpi-title">Total de Errores Reportados</div><div class="kpi-value" id="kpi-err-total">0</div></div>
+                <div class="kpi-card errores-motivos"><div class="kpi-title">Tipos de Error Distintos</div><div class="kpi-value" id="kpi-err-tipos">0</div></div>
+                <div class="kpi-card porcentaje"><div class="kpi-title">Motivo Más Frecuente</div><div class="kpi-value" id="kpi-err-motivo" style="font-size: 1.4rem;">-</div></div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+                
+                <!-- Errores por Responsable (con Calidad) -->
+                <div class="panel">
+                    <h3 style="font-family: 'Outfit'; margin-bottom: 15px; color: var(--color-texto);">Errores por Responsable y Calidad del Mes</h3>
+                    <div class="table-responsive">
+                        <table id="tabla-err-resp" class="tabla-corta">
+                            <thead>
+                                <tr>
+                                    <th>Responsable Causación</th>
+                                    <th>Mes</th>
+                                    <th>Subsanables</th>
+                                    <th>No Subsanables</th>
+                                    <th>% Calidad</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-err-resp"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Errores por Motivo -->
+                <div class="panel">
+                    <h3 style="font-family: 'Outfit'; margin-bottom: 15px; color: var(--color-texto);">Consolidado por Motivo</h3>
+                    <div class="table-responsive">
+                        <table id="tabla-err-motivo" class="tabla-corta">
+                            <thead>
+                                <tr>
+                                    <th>Motivo del Error</th>
+                                    <th>Total Reportados</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-err-motivo"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-        </div> <h2>8. Acceso al Informe Digital</h2>
-        <p>Para la visualización de métricas de impacto en pantalla completa, distribución por categorías y seguimiento detallado de envíos en tiempo real con su firma, consulte el siguiente enlace corporativo:</p>
-        <p>🌐 <a href="https://portal-autogestion-casalimpia.vercel.app/informe_bienestar.html" target="_blank" class="link-informe">Dashboard Interactivo: Bienestar y Comunicación Masiva</a></p>
-
-        <div class="pdf-section">
-            <button onclick="window.print()" class="btn-pdf">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
-                Imprimir Documento / Guardar PDF
-            </button>
+            <!-- Tabla Maestra de Errores -->
+            <div class="panel">
+                <h3 style="font-family: 'Outfit'; margin-bottom: 15px; color: var(--color-texto);">Registro Detallado de Errores</h3>
+                <div class="table-responsive">
+                    <table id="tabla-err-maestra">
+                        <thead>
+                            <tr>
+                                <th>Fecha Error</th>
+                                <th>Mes</th>
+                                <th>Responsable Causación</th>
+                                <th>Motivo</th>
+                                <th>Tipología</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-err-maestra"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-    </div> 
+    </div>
 
     <script>
-        // ==========================================
-        // LÓGICA DEL DASHBOARD (SUPABASE + CHART.JS)
-        // ==========================================
-        const SUPABASE_URL = 'https://tyhdwpdefiatmxihycae.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_LH1iVez6V1qmj8Lk_YVZFA_Y2nYwdKw';
-        const supabaseDashClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        let datosGlobales = []; 
+        // ENLACE 1: DATOS PRINCIPALES DE CAUSACIÓN
+        const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQItcjit2Ssqk4nEJ7-Ye7cdXeKInCNHbcHFeFt0YnPUHGGJhCA2b5T0aDdq8sMC49E9vMZFfVkJc5Z/pub?gid=1759455245&single=true&output=csv"; 
+        
+        // ENLACE 2: DATOS DE ERRORES Y AJUSTES
+        const GOOGLE_SHEET_ERRORES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQItcjit2Ssqk4nEJ7-Ye7cdXeKInCNHbcHFeFt0YnPUHGGJhCA2b5T0aDdq8sMC49E9vMZFfVkJc5Z/pub?gid=297495094&single=true&output=csv"; 
+        
+        // Variables Base Datos
+        let datosGlobales = [];
         let datosFiltradosActuales = []; 
-        let chartInstancia = null; 
+        let datosErroresGlobales = [];
+        let datosErroresFiltrados = [];
 
-        async function inicializarDashboard() {
-            const hoy = new Date();
-            document.getElementById('filtro-fecha-inicio').value = new Date(hoy.getFullYear(), hoy.getMonth(), 1).toISOString().split('T')[0];
-            document.getElementById('filtro-fecha-fin').value = hoy.toISOString().split('T')[0];
-            await cargarDatosBase();
-            inicializarRealTime();
+        let mesChoices, corteChoices, respChoices;
+
+        function cambiarPestana(tabId, btnElement) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            btnElement.classList.add('active');
         }
 
-        async function cargarDatosBase() {
-            const { data, error } = await supabaseDashClient.from('3-log_notificaciones').select('*').order('fecha_envio', { ascending: false }).limit(1000);
-            if (data) { 
-                datosGlobales = data; 
-                aplicarFiltros(); 
-            } else {
-                document.getElementById('tbody-logs').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Error conectando a BD.</td></tr>';
+        function parseCustomDate(dateStr) {
+            if (!dateStr) return null;
+            let parts = String(dateStr).split('/');
+            if (parts.length === 3) {
+                return new Date(parts[2], parts[1] - 1, parts[0]);
             }
+            return new Date(dateStr);
         }
 
-        function inicializarRealTime() {
-            supabaseDashClient.channel('realtime-logs').on('postgres_changes', { event: 'INSERT', schema: 'public', table: '3-log_notificaciones' }, payload => {
-                datosGlobales.unshift(payload.new); 
-                aplicarFiltros();
-            }).subscribe();
+        function evaluarCumplimiento(fechaMetaStr, fechaCausaStr) {
+            let fMeta = parseCustomDate(fechaMetaStr);
+            let fCausa = parseCustomDate(fechaCausaStr);
+            if(!fCausa) return false;
+            if(!fMeta) return true; 
+            return fCausa.getTime() <= fMeta.getTime();
         }
 
-        function aplicarFiltros() {
-            const busqueda = document.getElementById('filtro-busqueda').value.toLowerCase();
-            const tipo = document.getElementById('filtro-tipo').value;
-            const fechaIni = document.getElementById('filtro-fecha-inicio').value;
-            const fechaFin = document.getElementById('filtro-fecha-fin').value;
-
-            datosFiltradosActuales = datosGlobales.filter(row => {
-                const matchTexto = (row.nomEmp || "").toLowerCase().includes(busqueda) || (row.codEmp || "").toLowerCase().includes(busqueda);
-                const matchTipo = (tipo === 'todos') || (row.tipo_notificacion === tipo);
-                let matchFecha = true;
-                if(row.fecha_envio) {
-                    const f = row.fecha_envio.split('T')[0]; 
-                    if(fechaIni && f < fechaIni) matchFecha = false;
-                    if(fechaFin && f > fechaFin) matchFecha = false;
+        function inicializarDashboard() {
+            inicializarChoicesJS();
+            
+            // Cargar Pestaña 1 (Causación)
+            Papa.parse(GOOGLE_SHEET_CSV_URL, {
+                download: true, header: true, dynamicTyping: true, skipEmptyLines: true,
+                complete: function(results) {
+                    if(results.data && results.data.length > 0) procesarDatos(results.data);
                 }
-                return matchTexto && matchTipo && matchFecha;
-            });
-            actualizarVista(datosFiltradosActuales);
-        }
-
-        function actualizarVista(datos) {
-            // 1. Contadores (Se evalúan TODOS los datos filtrados)
-            let counts = { total: datos.length, ingresos: 0, cumple: 0, a5: 0, a10: 0 };
-            datos.forEach(row => {
-                if(row.tipo_notificacion === 'nuevo_ingreso') counts.ingresos++;
-                else if(row.tipo_notificacion === 'cumpleanos') counts.cumple++;
-                else if(row.tipo_notificacion === '5_anios') counts.a5++;
-                else if(row.tipo_notificacion === '10_anios') counts.a10++;
             });
 
-            // 2. Renderizado de la tabla (Solo mostramos los primeros 5)
-            const tbody = document.getElementById('tbody-logs');
-            tbody.innerHTML = '';
-
-            if (datos.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No hay resultados para los filtros aplicados.</td></tr>';
-            } else {
-                const ultimos5 = datos.slice(0, 5); // Tomamos máximo 5 registros
-                
-                ultimos5.forEach(row => {
-                    const d = new Date(row.fecha_envio);
-                    const fStr = d.toLocaleString('es-CO', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'});
-                    const fNac = row.fecNac ? row.fecNac.split('T')[0] : 'N/A';
-                    const fIng = row.fecIng ? row.fecIng.split('T')[0] : 'N/A';
-
-                    let bCls = 'badge-default', label = row.tipo_notificacion;
-                    if(row.tipo_notificacion === 'cumpleanos') { bCls = 'badge-cumple'; label = 'Cumpleaños'; }
-                    if(row.tipo_notificacion === 'nuevo_ingreso') { bCls = 'badge-nuevo'; label = 'Ingreso'; }
-                    if(row.tipo_notificacion === '5_anios') { bCls = 'badge-5a'; label = '5 Años'; }
-                    if(row.tipo_notificacion === '10_anios') { bCls = 'badge-10a'; label = '10 Años'; }
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `<td>${fStr}</td><td><strong>${row.codEmp}</strong></td><td>${row.nomEmp}</td><td>${fNac}</td><td>${fIng}</td><td><span class="badge ${bCls}">${label}</span></td>`;
-                    tbody.appendChild(tr);
+            // Cargar Pestaña 2 (Errores)
+            if(GOOGLE_SHEET_ERRORES_CSV_URL && GOOGLE_SHEET_ERRORES_CSV_URL.startsWith("http")) {
+                Papa.parse(GOOGLE_SHEET_ERRORES_CSV_URL, {
+                    download: true, header: true, dynamicTyping: true, skipEmptyLines: true,
+                    complete: function(results) {
+                        if(results.data && results.data.length > 0) procesarDatosErrores(results.data);
+                    }
                 });
             }
 
-            // Actualizar KPIs
-            document.getElementById('kpi-total').innerText = counts.total;
-            document.getElementById('kpi-ingresos').innerText = counts.ingresos;
-            document.getElementById('kpi-cumple').innerText = counts.cumple;
-            document.getElementById('kpi-5a').innerText = counts.a5;
-            document.getElementById('kpi-10a').innerText = counts.a10;
-
-            // Actualizar Gráfico
-            const ctx = document.getElementById('graficoDistribucion').getContext('2d');
-            if (chartInstancia) chartInstancia.destroy();
-            chartInstancia = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Ingresos', 'Cumpleaños', '5 Años', '10 Años'],
-                    datasets: [{
-                        data: [counts.ingresos, counts.cumple, counts.a5, counts.a10],
-                        backgroundColor: ['#C25973', '#EAB308', '#0085CA', '#8DC63F'],
-                        borderWidth: 0
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } }, cutout: '65%' }
-            });
+            document.getElementById('filtro-texto').addEventListener('input', aplicarFiltros);
         }
 
-        // --- EXPORTAR A .XLSX (Usando SheetJS) ---
-        function exportarExcelXLSX() {
-            if (datosFiltradosActuales.length === 0) return alert("No hay datos para exportar con estos filtros.");
+        function inicializarChoicesJS() {
+            mesChoices = new Choices('#filtro-mes', { removeItemButton: true, placeholderValue: 'Todos', searchEnabled: true });
+            corteChoices = new Choices('#filtro-corte', { removeItemButton: true, placeholderValue: 'Todos', searchEnabled: true });
+            respChoices = new Choices('#filtro-responsable', { removeItemButton: true, placeholderValue: 'Todos', searchEnabled: true });
+
+            document.getElementById('filtro-mes').addEventListener('change', aplicarFiltros);
+            document.getElementById('filtro-corte').addEventListener('change', aplicarFiltros);
+            document.getElementById('filtro-responsable').addEventListener('change', aplicarFiltros);
+        }
+
+        function procesarDatos(data) {
+            datosGlobales = data.map(row => {
+                let objLimpiado = {};
+                for (let key in row) objLimpiado[key.trim()] = row[key];
+                
+                objLimpiado['CANTIDAD FACTURAS'] = parseInt(objLimpiado['CANTIDAD FACTURAS']) || 0;
+                objLimpiado['Cumplio'] = evaluarCumplimiento(objLimpiado['FECHA META'], objLimpiado['FECHA CAUSACION']);
+                return objLimpiado;
+            }).filter(d => d['RESPONSABLE CAUSACION']); 
+
+            actualizarFiltrosUI();
+            aplicarFiltros(); 
+        }
+
+        function procesarDatosErrores(data) {
+            datosErroresGlobales = data.map(row => {
+                let objLimpiado = {};
+                for (let key in row) objLimpiado[key.trim()] = row[key];
+                
+                objLimpiado['CANTIDAD ERROR'] = parseInt(objLimpiado['CANTIDAD ERROR']) || 0;
+                // Extraer tipología
+                objLimpiado['TIPOLOGIA'] = (objLimpiado['TIPOLOGIA'] || '').toUpperCase().trim();
+                return objLimpiado;
+            }).filter(d => d['RESPONSABLE CAUSACION']);
+
+            actualizarFiltrosUI();
+            aplicarFiltros();
+        }
+
+        function actualizarFiltrosUI() {
+            let todosMeses = [...datosGlobales.map(d=>d['MES']), ...datosErroresGlobales.map(d=>d['MES'])].filter(Boolean);
+            let todosResp = [...datosGlobales.map(d=>d['RESPONSABLE CAUSACION']), ...datosErroresGlobales.map(d=>d['RESPONSABLE CAUSACION'])].filter(Boolean);
+            let todosCortes = datosGlobales.map(d => d['CORTE']).filter(Boolean);
+
+            const meses = [...new Set(todosMeses)].sort();
+            const responsables = [...new Set(todosResp)].sort();
+            const cortes = [...new Set(todosCortes)].sort();
             
-            const rows = datosFiltradosActuales.map(d => ({
-                "Fecha Envío": new Date(d.fecha_envio).toLocaleString('es-CO'),
-                "Código Empleado": d.codEmp,
-                "Nombre Completo": d.nomEmp,
-                "Fecha Nacimiento": d.fecNac ? d.fecNac.split('T')[0] : '',
-                "Fecha Ingreso": d.fecIng ? d.fecIng.split('T')[0] : '',
-                "Tipo Notificación": d.tipo_notificacion
-            }));
+            let currMes = mesChoices.getValue(true);
+            let currCorte = corteChoices.getValue(true);
+            let currResp = respChoices.getValue(true);
 
-            const worksheet = XLSX.utils.json_to_sheet(rows);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Notificaciones_Enviadas");
-            XLSX.writeFile(workbook, "Reporte_Masivos_Casalimpia.xlsx");
+            mesChoices.setChoices(meses.map(t => ({ value: t, label: String(t), selected: currMes.includes(t) })), 'value', 'label', true);
+            corteChoices.setChoices(cortes.map(t => ({ value: t, label: String(t), selected: currCorte.includes(t) })), 'value', 'label', true);
+            respChoices.setChoices(responsables.map(t => ({ value: t, label: String(t), selected: currResp.includes(t) })), 'value', 'label', true);
         }
 
-        // Iniciar al cargar
-        document.addEventListener("DOMContentLoaded", function() {
-            inicializarDashboard();
-        });
-    </script>
+        function aplicarFiltros() {
+            const selMes = mesChoices.getValue(true);
+            const selCorte = corteChoices.getValue(true);
+            const selResp = respChoices.getValue(true);
+            const txt = document.getElementById('filtro-texto').value.toLowerCase();
 
+            // Filtrar Base Principal
+            datosFiltradosActuales = datosGlobales.filter(d => {
+                let mMes = selMes.length === 0 || selMes.includes(String(d['MES']));
+                let mCorte = selCorte.length === 0 || selCorte.includes(String(d['CORTE']));
+                let mResp = selResp.length === 0 || selResp.includes(String(d['RESPONSABLE CAUSACION']));
+                let mTexto = txt === '' || Object.values(d).join(" ").toLowerCase().includes(txt);
+                return mMes && mCorte && mResp && mTexto;
+            });
+            
+            // Filtrar Base Errores
+            datosErroresFiltrados = datosErroresGlobales.filter(d => {
+                let mMes = selMes.length === 0 || selMes.includes(String(d['MES']));
+                let mResp = selResp.length === 0 || selResp.includes(String(d['RESPONSABLE CAUSACION']));
+                let mTexto = txt === '' || Object.values(d).join(" ").toLowerCase().includes(txt);
+                return mMes && mResp && mTexto;
+            });
+            
+            actualizarDashboard();
+            generarTablaCruzada();
+            generarTablaResumen(); 
+            generarTablaDetalle();
+
+            actualizarDashboardErrores();
+        }
+
+        function resetFilters() {
+            mesChoices.removeActiveItems();
+            corteChoices.removeActiveItems();
+            respChoices.removeActiveItems();
+            document.getElementById('filtro-texto').value = '';
+            aplicarFiltros();
+        }
+
+        // --- SECCIÓN ERRORES ---
+        function actualizarDashboardErrores() {
+            let totalErrores = 0;
+            let motivosCount = {};
+
+            datosErroresFiltrados.forEach(d => {
+                let cant = d['CANTIDAD ERROR'];
+                let motivo = d['MOTIVO'] || 'Desconocido';
+                
+                totalErrores += cant;
+                motivosCount[motivo] = (motivosCount[motivo] || 0) + cant;
+            });
+
+            // KPIs
+            document.getElementById('kpi-err-total').innerText = totalErrores;
+            document.getElementById('kpi-err-tipos').innerText = Object.keys(motivosCount).length;
+
+            let topMotivo = Object.keys(motivosCount).sort((a,b) => motivosCount[b] - motivosCount[a])[0] || '-';
+            document.getElementById('kpi-err-motivo').innerText = topMotivo;
+
+            // Tabla 1: Errores por Responsable y Calidad
+            let sumRespMes = {};
+            datosErroresFiltrados.forEach(d => {
+                let key = `${d['RESPONSABLE CAUSACION'] || 'N/A'}|${d['MES'] || 'N/A'}`;
+                if(!sumRespMes[key]) sumRespMes[key] = { sub: 0, noSub: 0 };
+                
+                let cant = d['CANTIDAD ERROR'] || 0;
+                if(d['TIPOLOGIA'] === 'NO SUBSANABLE') {
+                    sumRespMes[key].noSub += cant;
+                } else {
+                    // Por defecto o si es explícitamente "SUBSANABLE"
+                    sumRespMes[key].sub += cant;
+                }
+            });
+
+            // Ordenamiento por persona y mes
+            let arrRespMes = Object.keys(sumRespMes).map(k => {
+                let parts = k.split('|');
+                let sub = sumRespMes[k].sub;
+                let noSub = sumRespMes[k].noSub;
+                let pct = 0;
+                
+                // Lógica de cumplimiento
+                if (noSub > 0) {
+                    pct = 0;
+                } else if (sub <= 15) {
+                    pct = 100;
+                } else if (sub >= 16 && sub <= 20) {
+                    pct = 50;
+                } else {
+                    pct = 0; // Más de 20
+                }
+
+                return { resp: parts[0], mes: parts[1], sub, noSub, pct };
+            }).sort((a,b) => a.resp.localeCompare(b.resp) || a.mes.localeCompare(b.mes));
+
+            let tbodyResp = "";
+            arrRespMes.forEach(r => {
+                let colorPct = r.pct === 100 ? '#166534' : (r.pct === 50 ? '#9A3412' : '#991B1B');
+                tbodyResp += `<tr>
+                    <td><strong>${r.resp}</strong></td>
+                    <td>${r.mes}</td>
+                    <td><span style="color:#64748B; font-weight:bold;">${r.sub}</span></td>
+                    <td><span style="color:#EF4444; font-weight:bold;">${r.noSub}</span></td>
+                    <td><strong style="color:${colorPct}; font-size:1rem;">${r.pct}%</strong></td>
+                </tr>`;
+            });
+            document.getElementById('tbody-err-resp').innerHTML = tbodyResp || "<tr><td colspan='5'>No hay registros.</td></tr>";
+
+            // Tabla 2: Errores por Motivo
+            let arrMotivos = Object.keys(motivosCount).map(k => ({ motivo: k, cant: motivosCount[k] })).sort((a,b) => b.cant - a.cant);
+            let tbodyMotivo = "";
+            arrMotivos.forEach(m => {
+                tbodyMotivo += `<tr><td>${m.motivo}</td><td><span class="badge-error">${m.cant} Errores</span></td></tr>`;
+            });
+            document.getElementById('tbody-err-motivo').innerHTML = tbodyMotivo || "<tr><td colspan='2'>No hay registros.</td></tr>";
+
+            // Tabla 3: Detalle Maestra (Ordenada Alfabéticamente)
+            let tbodyMaestraErr = "";
+            
+            let erroresOrdenados = [...datosErroresFiltrados].sort((a,b) => {
+                let rA = a['RESPONSABLE CAUSACION'] || '';
+                let rB = b['RESPONSABLE CAUSACION'] || '';
+                let mA = a['MES'] || '';
+                let mB = b['MES'] || '';
+                return rA.localeCompare(rB) || mA.localeCompare(mB);
+            });
+
+            erroresOrdenados.slice(0, 150).forEach(d => {
+                let tipoStr = d['TIPOLOGIA'] || '';
+                let tipoBadge = tipoStr === 'NO SUBSANABLE' 
+                    ? '<span class="badge-error">NO SUBSANABLE</span>' 
+                    : '<span class="badge-subsanable">SUBSANABLE</span>';
+
+                tbodyMaestraErr += `<tr>
+                    <td>${d['FECHA ERROR'] || ''}</td>
+                    <td>${d['MES'] || ''}</td>
+                    <td>${d['RESPONSABLE CAUSACION'] || ''}</td>
+                    <td>${d['MOTIVO'] || ''}</td>
+                    <td>${tipoBadge}</td>
+                    <td><strong>${d['CANTIDAD ERROR']}</strong></td>
+                </tr>`;
+            });
+            document.getElementById('tbody-err-maestra').innerHTML = tbodyMaestraErr || "<tr><td colspan='6'>No hay datos.</td></tr>";
+        }
+
+
+        // --- SECCIÓN CAUSACIÓN ---
+        function actualizarDashboard() {
+            let total = datosFiltradosActuales.length;
+            let cumplen = datosFiltradosActuales.filter(d => d['Cumplio']).length;
+            let noCumplen = total - cumplen;
+            let eficiencia = total > 0 ? (cumplen / total) * 100 : 0;
+
+            document.getElementById('kpi-total').innerText = total;
+            document.getElementById('kpi-cumple').innerText = cumplen;
+            document.getElementById('kpi-nocumple').innerText = noCumplen;
+            document.getElementById('kpi-eficiencia').innerText = eficiencia.toFixed(1) + '%';
+
+            let personasStats = {};
+            datosFiltradosActuales.forEach(d => {
+                let resp = d['RESPONSABLE CAUSACION'] || 'Sin Asignar';
+                if (!personasStats[resp]) personasStats[resp] = { totalRegistros: 0, cumplen: 0, totalFacturas: 0 };
+                
+                personasStats[resp].totalRegistros++;
+                if (d['Cumplio']) personasStats[resp].cumplen++;
+                personasStats[resp].totalFacturas += d['CANTIDAD FACTURAS'];
+            });
+
+            let htmlBaterias = '';
+            let personasArr = Object.keys(personasStats).sort();
+
+            personasArr.forEach(resp => {
+                let stats = personasStats[resp];
+                let pct = stats.totalRegistros > 0 ? (stats.cumplen / stats.totalRegistros) * 100 : 0;
+                let claseBateria = pct >= 90 ? 'alta' : (pct >= 50 ? 'media' : 'baja');
+
+                htmlBaterias += `
+                <div class="bateria-card">
+                    <div class="bateria-nombre">${resp}</div>
+                    <div class="bateria-outer">
+                        <div class="bateria-inner ${claseBateria}" style="width: ${pct}%"></div>
+                        <div class="bateria-texto">${pct.toFixed(1)}%</div>
+                    </div>
+                    <div class="bateria-stats">
+                        <span>Cant. Facturas <strong>${stats.totalFacturas}</strong></span>
+                        <span>Asignaciones <strong>${stats.totalRegistros}</strong></span>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('baterias-container').innerHTML = htmlBaterias;
+        }
+
+        function generarTablaCruzada() {
+            let stats = {};
+            let cortesIdentificados = ['CORTE 1', 'CORTE 2', 'CORTE 3'];
+
+            datosFiltradosActuales.forEach(d => {
+                let resp = d['RESPONSABLE CAUSACION'] || 'N/A';
+                let corte = String(d['CORTE'] || '').toUpperCase().trim();
+                
+                if (!stats[resp]) {
+                    stats[resp] = {};
+                    cortesIdentificados.forEach(c => stats[resp][c] = { total: 0, cumplen: 0 });
+                }
+                
+                if (stats[resp][corte]) {
+                    stats[resp][corte].total++;
+                    if (d['Cumplio']) stats[resp][corte].cumplen++;
+                }
+            });
+
+            let tbody = "";
+            let responsables = Object.keys(stats).sort();
+
+            responsables.forEach(resp => {
+                let filaHtml = `<td><strong>${resp}</strong></td>`;
+                
+                cortesIdentificados.forEach(c => {
+                    let data = stats[resp][c];
+                    if (data.total === 0) {
+                        filaHtml += `<td style='color: #94A3B8; text-align:center;'>-</td>`;
+                    } else {
+                        let pct = (data.cumplen / data.total) * 100;
+                        let colorTexto = pct >= 90 ? '#166534' : (pct >= 50 ? '#9A3412' : '#991B1B');
+                        let colorBg = pct >= 90 ? '#DCFCE7' : (pct >= 50 ? '#FFEDD5' : '#FEE2E2');
+                        filaHtml += `<td style="color: ${colorTexto}; background-color: ${colorBg}; font-weight: bold; text-align:center;">${pct.toFixed(1)}%</td>`;
+                    }
+                });
+
+                tbody += `<tr>${filaHtml}</tr>`;
+            });
+
+            document.getElementById('tbody-cruzada').innerHTML = tbody || "<tr><td colspan='4'>No hay datos.</td></tr>";
+        }
+
+        function generarTablaResumen() {
+            let resumen = {};
+
+            datosFiltradosActuales.forEach(d => {
+                let mes = d['MES'] || 'N/A';
+                let corte = d['CORTE'] || 'N/A';
+                let resp = d['RESPONSABLE CAUSACION'] || 'N/A';
+                
+                let key = `${mes}|${corte}|${resp}`;
+                if (!resumen[key]) resumen[key] = { mes, corte, resp, totalRegistros: 0, cumplen: 0, facturas: 0 };
+                
+                resumen[key].totalRegistros++;
+                if (d['Cumplio']) resumen[key].cumplen++;
+                resumen[key].facturas += d['CANTIDAD FACTURAS'];
+            });
+
+            let arrResumen = Object.values(resumen).sort((a,b) => 
+                a.resp.localeCompare(b.resp) || 
+                a.mes.localeCompare(b.mes) || 
+                a.corte.localeCompare(b.corte) 
+            );
+            
+            let tbody = "";
+            arrResumen.forEach(r => {
+                let nocumplen = r.totalRegistros - r.cumplen;
+                let pct = (r.cumplen / r.totalRegistros) * 100;
+                
+                tbody += `<tr>
+                    <td>${r.mes}</td>
+                    <td>${r.corte}</td>
+                    <td>${r.resp}</td>
+                    <td><strong>${r.facturas}</strong></td>
+                    <td>${r.totalRegistros}</td>
+                    <td style="color:#166534; font-weight:bold;">${r.cumplen}</td>
+                    <td style="color:#991B1B; font-weight:bold;">${nocumplen}</td>
+                    <td><strong>${pct.toFixed(1)}%</strong></td>
+                </tr>`;
+            });
+
+            document.getElementById('tbody-resumen').innerHTML = tbody || "<tr><td colspan='8'>No hay datos.</td></tr>";
+        }
+
+        function generarTablaDetalle() {
+            let tbody = "";
+            let limit = Math.min(datosFiltradosActuales.length, 200); 
+
+            for(let i = 0; i < limit; i++) {
+                let d = datosFiltradosActuales[i];
+                let spanEstado = d['Cumplio'] 
+                    ? `<span class="estado-cumple">Cumplió</span>` 
+                    : `<span class="estado-no-cumple">No Cumplió</span>`;
+
+                tbody += `<tr>
+                    <td>${d['MES'] || ''}</td>
+                    <td>${d['CORTE'] || ''}</td>
+                    <td>${d['AREA'] || ''}</td>
+                    <td>${d['RESPONSABLE CAUSACION'] || ''}</td>
+                    <td>${d['CANTIDAD FACTURAS'] || '0'}</td>
+                    <td>${d['FECHA META'] || ''}</td>
+                    <td>${d['FECHA CAUSACION'] || ''}</td>
+                    <td>${spanEstado}</td>
+                </tr>`;
+            }
+            document.getElementById('tbody-maestra').innerHTML = tbody || "<tr><td colspan='8'>No hay datos con los filtros actuales.</td></tr>";
+        }
+
+        function exportarExcel() {
+            let datosLimpios = datosFiltradosActuales.map(d => ({
+                "Mes": d['MES'], 
+                "Corte": d['CORTE'], 
+                "Área": d['AREA'],
+                "Responsable Causación": d['RESPONSABLE CAUSACION'],
+                "Cantidad Facturas": d['CANTIDAD FACTURAS'],
+                "Fecha Meta": d['FECHA META'], 
+                "Fecha Causación": d['FECHA CAUSACION'],
+                "Cumplió Meta": d['Cumplio'] ? 'SÍ' : 'NO'
+            }));
+            const worksheet = XLSX.utils.json_to_sheet(datosLimpios);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Data_Causacion");
+            XLSX.writeFile(workbook, "Detalle_Causacion.xlsx");
+        }
+
+        window.onload = inicializarDashboard;
+    </script>
 </body>
 </html>
